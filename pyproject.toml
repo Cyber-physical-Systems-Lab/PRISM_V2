@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "robotic-symbiosis-tarware"
+version = "0.1.0"
+description = "Robotic Symbiosis in Heterogeneous Multi-Agent Warehouse Systems"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Xuezhi Wang"},
+]
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "gymnasium",
+    "torch>=2.0",
+    "networkx==3.2.1",
+    "six==1.16.0",
+    "pyglet==1.5.11",
+    "pyyaml",
+    "pandas",
+    "matplotlib",
+    "seaborn",
+    "scikit-learn",
+    "skrl>=1.3.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "black", "isort"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["symbiosis*", "tarware*", "training*", "experiments*", "analysis*"]

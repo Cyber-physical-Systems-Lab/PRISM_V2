@@ -1,0 +1,28 @@
+# C3 Experiment 3 — Heterogeneity gradient configuration
+#
+# h = 0.0 -> homogeneous limit: classification should provide no advantage
+# h = 1.0 -> heterogeneous limit: classification should provide maximal advantage
+
+experiment:
+  name: "gradient_c3"
+  type: "heterogeneity_gradient"
+  n_seeds: 5
+
+gradient:
+  h_values: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+  curve_points: 40
+
+env:
+  homogeneous_id: "tarware-tiny-4agvs-0pickers-partialobs-chg-v1"
+  heterogeneous_id: "tarware-small-4agvs-2pickers-partialobs-chg-v1"
+
+training:
+  timesteps: 500_000
+  rollout_steps: 1024
+  epochs: 4
+  lr: 3.0e-4
+  entropy_coef: 0.01
+
+logging:
+  checkpoint_dir: "runs/c3_gradient"
+  output: "results/gradient_results.json"

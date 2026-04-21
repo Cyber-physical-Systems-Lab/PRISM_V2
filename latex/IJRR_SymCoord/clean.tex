@@ -1,0 +1,125 @@
+% sage_latex_guidelines.tex V1.20, 14 January 2017
+\documentclass[Afour,sageh,times]{sagej}
+\usepackage{algpseudocode, algorithm, subcaption}
+\usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=red,urlcolor=red]{hyperref}
+
+\newcommand\BibTeX{{\rmfamily B\kern-.05em \textsc{i\kern-.025em b}\kern-.08em
+T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\def\volumeyear{2000}
+
+\begin{document}
+
+% \runninghead{Niu and Broo}
+\runninghead{A and B}
+
+\title{Bio-Inspired Symbiotic Cooperation in Multi-Robot Systems: A Unified Framework for Cooperative Learning and Resource Management}
+
+\author{Author A and Author B} %\affilnum{1}
+ 
+% \affiliation{\affilnum{1}Cyber-Physical Systems Lab, Department of Information Technology, Uppsala University, Uppsala, 751 05, Sweden}
+
+% \corrauth{Didem G\"{u}rd\"{u}r Broo, Cyber-Physical Systems Lab, 
+% Department of Information Technology, 
+% Uppsala University, Uppsala,
+% 751 05, Sweden}
+% \email{didem.gurdur.broo@it.uu.se}
+
+\begin{abstract}
+This paper describes .
+
+An IJRR paper is as long as necessary, but no longer. The normal length of an IJRR paper is \textcolor{red}{12} pages in the final, two-column format. Substantially shorter or longer submissions may be considered only if they are of sufficient merit. \textcolor{red}{copied from official website \href{https://journals.sagepub.com/author-instructions/IJR}{here}}.
+\end{abstract}
+
+\keywords{Class file, \LaTeXe, \textit{SAGE Publications}}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+Multi-robot systems (MRS) are increasingly used in applications ranging from manufacturing, entertainment, warehouse automation and site inspection to search and rescue, offering improved efficiency, redundancy, and adaptability (\cite{parker2008Distributed, yan2013Survey, laviers2025Robots}). However, their potential is often limited by cooperation and resource management challenges. Contemporary multi-robot cooperation approaches typically rely on centralized planning algorithms, distributed consensus protocols, or market-based task allocation mechanisms (\cite{gerkey2004formal, khamis2015Multirobot}). While these methods have demonstrated success in structured environments, they exhibit significant limitations when faced with dynamic, uncertain, or resource-constrained scenarios. Centralized methods also face scalability and single-point-of-failure risks, while purely distributed approaches can yield suboptimal results due to limited information sharing (\cite{gerkey2004formal, khamis2015Multirobot, farinelli2017Distributed}). Moreover, most frameworks model heterogeneous robots as independent competitors for shared resources or as elements of a dynamic environment, rather than as agents with potential cooperative relationships. This perspective often results in operational inefficiencies, such as unnecessary energy consumption caused by contention at charging stations in warehouse systems (\cite{riazi2021Energy}) or poor force distribution in collaborative manipulation (\cite{erden2008Free}). These shortcomings underscore the need for cooperative frameworks that integrate individual autonomy with collective intelligence. 
+
+Nature offers compelling examples of sophisticated cooperative mechanisms through symbiotic relationships, where organisms develop mutually beneficial interactions that enhance survival and performance. Mycorrhizal networks enable forests to share resources and respond collectively to environmental changes, while coordinated behaviors in ant colonies and bee swarms demonstrate how simple local interactions can produce sophisticated global behaviors without centralized control (\cite{simard2012Mycorrhizal, bonabeau1999Swarm}). In many of these systems, cooperation is not a negotiated choice but a structural necessity, each partner fills capability gaps the other cannot address alone, much as AGVs and pickers depend on each other to complete warehouse tasks. The translation of biological symbiotic principles into robotic systems represents a promising yet underexplored research direction. While bio-inspired approaches have shown success in individual robot design and swarm robotics (\cite{brambilla2013Swarm}), the systematic integration of symbiotic relationships into multi-robot cooperation remains largely unaddressed. Recent advances in multi-agent reinforcement learning (MARL) provide a suitable foundation for developing such bio-inspired cooperative mechanisms, offering the capability to learn adaptive policies through interaction while maintaining decentralized execution (\cite{foerster2018Counterfactuala}). What is needed is a collaborative framework grounded in biological symbiosis that employs appropriately designed reward structures and distributed protocols to exploit the inherent complementarity between heterogeneous agents for joint task allocation and energy scheduling.
+
+This research hypothesizes that bio-inspired symbiotic mechanisms, in which heterogeneous agents are structurally coupled rather than merely dividing labor, can significantly enhance multi-robot system performance. Natural symbiotic relationships have evolved sophisticated strategies for resource sharing, conflict resolution, and adaptive cooperation that address fundamental challenges also present in MRS. We posit that these biological mechanisms, when appropriately abstracted and integrated into MARL reward frameworks, can provide principled solutions to credit assignment, resource management, and cooperative learning difficulties that limit current multi-robot implementations.
+
+To validate this hypothesis, our research addresses three questions. 
+\begin{itemize}
+    \item \textbf{RQ1}: How can ecological symbiotic principles be incorporated into multi-agent reinforcement learning to improve cooperation in heterogeneous multi-robot systems?
+    \item \textbf{RQ2}: How should symbiotic principles be integrated into MARL reward structures to enhance cooperation, and what design considerations ensure computational tractability while preserving biological fidelity?
+    \item \textbf{RQ3}: How do symbiotic reward structures influence learning dynamics, convergence properties, and cooperation quality across tasks of varying complexity?
+\end{itemize}
+
+This work makes three contributions. First, it introduces a formal framework translating symbiotic relationships from ecology into robotics, establishing mathematical models for mutualistic, commensal, and parasitic interactions among heterogeneous agents. Second, it presents a reward-shaping methodology that embeds symbiotic principles into MARL algorithms, enabling agents to learn behaviors that improve both individual and collective outcomes. Third, it evaluates the approach across multiple robotic domains, demonstrating gains in task completion efficiency, resource utilization, and learning stability. Beyond immediate performance, this work lays a foundation for symbiotic cooperation in heterogeneous multi-robot systems, emphasizing robustness and sustainable resource use, which might be qualities critical for real-world deployment.
+
+The remainder of this paper is organized as follows. Section 2 reviews related work in multi-robot cooperation, bio-inspired robotics, and multi-agent reinforcement learning. Section 3 presents our systematic methodology for investigating symbiotic cooperation across the three research questions. Section 4 introduces the theoretical framework for symbiotic robotics, including formal definitions and mathematical models. Section 5 details the symbiotic MARL implementation and algorithm design. Section 6 describes our experimental approach and validation across multiple robotic domains. Section 7 presents comprehensive results and analysis. Section 8 discusses our findings concerning each research question, addresses limitations, and outlines future directions. Section 9 concludes with key contributions and implications for the field.
+
+\section{Related Works}
+\subsection{Multi-Robot cooperation Approaches}
+Multi-robot cooperation has been studied for over three decades. Foundational work by \cite{parker1998ALLIANCE} on fault-tolerant cooperative control established principles of adaptive task allocation that remain influential. The field subsequently developed along several paradigmatic lines: market-based mechanisms that treat allocation as economic optimization through competitive bidding (\cite{gerkey2004formal, dias2006Marketbased}), consensus-based protocols that achieve distributed agreement on shared state variables (\cite{olfati-saber2007Consensus, ren2008Consensus, amirkhani2022Consensus}), and graph-based approaches that model interaction topologies for coverage and formation control (\cite{cortes2004Coverage, spanos2005Dynamic}). In warehouse settings, combinatorial auctions with VCG payment rules have been applied to heterogeneous robot scheduling, producing fair outcomes even under estimation errors (\cite{kattepur2021aspects}). Market mechanisms assume tasks can be independently partitioned among competing bidders, yet in AGV-picker scenarios, withholding cooperation by either party renders the task infeasible. Consensus protocols assume homogeneous node roles and symmetric updates, ignoring fundamental differences in function, energy model, and safety requirements (\cite{amirkhani2022Consensus}). Game-theoretic controllers relying on symmetric Nash equilibria (\cite{nash1950Equilibrium}) reduce to homogeneous behaviors that cannot capture asymmetric team structures. Energy-aware coordination has received attention in related settings: \cite{goulet2025dynamic} proposed a receding-horizon framework for planning charging rendezvous between mobile host vehicles and battery-powered workers in off-road missions, demonstrating trade-offs between task delays, energy utilization, and update frequency. Yet even such approaches treat energy management as a scheduling overlay rather than as a consequence of structurally coupled roles. In settings where agents occupy distinct functional niches with asymmetric constraints, AGVs depending on battery endurance, pickers requiring rest and operating under stricter safety thresholds, cooperation is not a strategic choice but a structural necessity, demanding a fundamentally different cooperation perspective.
+
+The concept of symbiosis has recently gained traction across multiple domains as a framework for understanding and designing tightly coupled cooperative systems. In sustainability research, \cite{cao2025designing} synthesized ecological theory with institutional economics to derive principles of functional reciprocity and nested modular architectures for scaling cooperative interventions. In manufacturing, \cite{barravecchia2023redefining} and \cite{wu2026empowering} reinterpreted human-robot collaboration through the lens of biological symbiotic relationships, arguing that reducing symbiosis to simple mutual benefit overlooks the full spectrum of interactions, mutualistic, commensal, and parasitic, that shape real partnerships. Closest to our setting, \cite{nguyen2023mutualistic} introduced mutualistic interactions for heterogeneous multi-agent systems using barrier function composition, enabling agents with different capabilities to accomplish tasks collaboratively. \cite{nguyen2025mutualisms} further explored how ecological mutualisms, jointly beneficial interactions between members of different species, can inform collaborative architectures for heterogeneous multi-robot teams, demonstrating that landscape configuration impacts the benefits of forming mutualisms and introducing notions of robot fitness analogous to biological fitness. These works collectively signal a growing recognition that cooperation among fundamentally different agents requires frameworks beyond competition or consensus, yet a systematic integration of symbiotic principles into learning-based coordination for heterogeneous multi-robot systems remains absent.
+
+\subsection{Bio-Inspired Approaches in Multi-Robot Learning}
+Biological principles have long shaped multi-robot coordination, especially in swarm robotics. Early surveys by \cite{sahin2005Swarm} highlighted how simple local interactions can produce robust global behavior, and established core goals such as scalability, flexibility, and robustness. Ant colony methods have been widely used for path planning and task allocation, with \cite{dorigo2019Ant} and \cite{garnier2007Biological} showing their value in collective foraging and collaborative construction. Flocking and schooling models have also been influential: \cite{reynolds1987Flocks} introduced the boids paradigm, \cite{tanner2007Flocking} added stability analysis for formation control and obstacle avoidance, and \cite{vasarhelyi2018Optimized} demonstrated large-scale flocking with real quadrotor teams. Other studies have addressed self-organization, safety, and distributed monitoring in robot groups (\cite{trianni2006Selforganisation, winfield2006Safety, fagiolini2024Distributed}). Still, most of this work has focused on homogeneous swarms and relatively simple tasks, while richer biological relationships such as symbiosis remain largely unexplored in multi-robot coordination.
+
+Ecological principles have begun to influence multi-agent learning research, offering alternative strategies for adaptive and cooperative systems. While some recent work has explored predator-prey dynamics and biomimetic communication strategies, The ecological principle of symbiosis, encompassing mutualistic, commensal, and parasitic relationships between organisms occupying distinct niches, remains largely untapped for multi-robot coordination. Preliminary investigations have applied symbiotic reward shaping to multi-robot cooperation (\cite{niu2025Investigating}) and warehouse scenarios (\cite{niu2025Enabling}), demonstrating initial promise but highlighting the need for systematic theoretical foundations and broader evaluation. the rich domain of ecological symbiosis, with its emphasis on mutual benefit and sustainable resource sharing, remains largely untapped for informing multi-robot cooperative mechanisms.
+
+\subsection{Multi-Agent Reinforcement Learning in Robotics}
+MARL has emerged as a powerful paradigm for adaptive multi-robot cooperation. Key advances include counterfactual reasoning for credit assignment (\cite{foerster2018Counterfactuala}), MADDPG for continuous action spaces under centralized-training-decentralized-execution (\cite{lowe2017Multiagent}), MAPPO for cooperative settings (\cite{yu2022Surprising}), asynchronous learning for heterogeneous teams (\cite{zhang2024Heterogeneous}), and value decomposition methods such as VDN that enable decentralized execution while maintaining global objectives (\cite{sunehag2018valuedecomposition}). \cite{liu2023Partially} further showed that structured information sharing reduces the doubly exponential complexity of solving partially observable stochastic games, motivating approaches where symbiotic information exchange serves as compressed shared context.
+
+Despite this progress, most MARL approaches rely on hand-crafted reward functions that do not naturally capture structured interdependencies between heterogeneous agents,  particularly the mutual benefit relationships arising when cooperation is obligate rather than optional. The systematic integration of biological principles into reward design remains underexplored, representing an opportunity to provide more principled incentive structures for cooperative learning.
+
+\subsection{Gaps and Research Opportunities}
+Despite bio-inspired approaches in multi-robot systems have successfully adapted concepts such as flocking, foraging, and swarm intelligence, the ecological principle of symbiosis remains underexplored. Existing cooperation mechanisms, including market-based and consensus-based methods, achieve task allocation and agreement but do not capture the longer-term interdependencies that sustain collective advantage. Similarly, reward shaping in MARL is often ad hoc and fails to represent the structured benefit relationships that arise in heterogeneous teams. As a result, potential complementarities from differences in sensing, actuation, or endurance are often left unexploited, leading instead to inefficiencies such as idle robots, uneven energy use, or redundant actions.
+
+Integrating symbiotic principles into cooperation frameworks presents several opportunities. By explicitly distinguishing mutualistic, commensal, and parasitic interactions, systems can balance individual and collective objectives while making hidden imbalances visible. This perspective also enables richer strategies for ongoing resource sharing and adaptive cooperation that respond to changing environments and team compositions. Systematically mapping biological symbiosis to robotic interactions and embedding these structures into MARL offers both a new theoretical foundation and practical benefits for improving efficiency, fairness, and resilience in heterogeneous multi-robot teams. \textcolor{red}{goal: provides an advantage to efficiency, fairness, and resilience}
+
+\section{Problem Definition}
+\label{sec:pre}
+
+Multi-agent task allocation with rendezvous constraints. We consider a robotic warehouse composed of a structured grid of shelf locations, highway cells, goal stations, and charging stations. A heterogeneous robot team, consisting of autonomous guided vehicles (AGVs) and pickers, is tasked with fulfilling a set of package transport requests between shelf locations and goal stations. Pickers can access shelves and perform package pickup or placement operations, but cannot transport packages across the warehouse. AGVs can transport packages between locations, but cannot retrieve from or place to shelves without picker assistance. Therefore, each request requires coordinated execution by at least one picker and one AGV. The problem is to compute coordinated action and motion plans for all robots such that all requests are completed efficiently, robot collisions are avoided, charging constraints are respected, and no robot exhausts its battery during operation.
+
+To make the general problem tractable, we impose the following assumptions.
+\begin{enumerate}
+    \item The robot team consists of two agent classes: pickers and AGVs.
+    \item Pickers are the only agents that can perform package retrieval from or placement to shelves.
+    \item AGVs are the only agents that can transport packages between shelf areas and goal stations. They move in constant speed with/without loaded.
+    \item A package request is completed only when the required picker-assisted handling and AGV transport operations are both executed successfully and sequentially.
+    \item Robots move only along predefined highway cells in the warehouse.
+    \item Collisions and cell conflicts are not allowed; at most one robot may occupy a grid cell at a time.
+    \item Each robot has limited onboard battery and may recharge only at designated charging stations.
+    \item Charging station capacity is limited and may induce waiting or queuing.
+    \item The set of transport requests is known at the planning stage, while robot positions, battery levels, and task progress evolve during execution.
+    \item Robots can communicate task-relevant state information needed for cooperation.
+    \item Packages are unknown before taken for weight, but range from minimal weight to maximal payload.
+    \item 
+\end{enumerate}
+
+First, both AGVs and pickers operate under finite onboard energy reserves with fundamentally different consumption profiles: AGV energy expenditure is dominated by payload mass and travel distance, while picker energy is driven by action frequency and movement duration. Critically, package payload — the primary driver of AGV energy consumption — is unknown at task assignment time and revealed only when the picker physically scans the package at the pickup location. Existing energy-aware planners, including the state-of-the-art REACH-MP framework, assume known edge costs at planning time and provide no mechanism for handling progressive cost revelation during execution. Planning with worst-case payload assumptions leads to systematic over-reservation of energy budgets, reducing fleet utilization, while ignoring payload uncertainty risks energy exhaustion mid-delivery — an operationally unacceptable failure mode with direct safety implications for picker agents.
+
+Second, because pickers and AGVs must cooperate to complete each task — the picker retrieves the package while the AGV transports it — their energy lifecycles are coupled through mutualistic dependence. When a picker's energy depletes and forces a charging stop, the paired AGV becomes operationally idle, consuming energy without productive output. Existing bio-inspired cooperative frameworks model symbiotic relationships qualitatively and through hand-crafted rules, but provide no formal model of coupled energy depletion across heterogeneous agent types, no analytical safety guarantee for either agent class, and no mechanism for jointly optimizing charging windows to minimize the throughput cost of this inevitable coupling. The asymmetric safety requirements of the two agent types — picker charging failures carry direct human safety implications absent from purely robotic systems — further complicate joint planning.
+
+Third, the coordination policies governing when agents charge, which roles they assume, and how they cooperate with partners must adapt to dynamic, stochastic operating conditions: package arrival rates vary, payload distributions shift with product mix changes, battery characteristics degrade over time, and floor conditions evolve. Static pre-programmed coordination rules, as employed in existing bio-inspired frameworks, cannot adapt to these non-stationary conditions. Multi-agent reinforcement learning offers a principled mechanism for adaptive policy learning, but standard MARL formulations optimize for individual reward maximization without modeling the biological relationship types — mutualism, commensalism, competition — that determine whether cooperative behavior actually emerges. Furthermore, delegating safety constraints to learned policies provides no formal guarantee against energy exhaustion, a critical deficiency in safety-critical warehouse environments.
+
+Consider a heterogeneous multi-robot system composed of $n$ robots indexed by $i \in \mathcal{N} := \{1,\dots,n\}$. The global system state at time $t$ is $s_t = (x_t, z_t),$ where $x_t \in \mathcal{X}$ denotes the task and environment state, and $z_t = (z_t^1,\dots,z_t^n) \in \mathcal{Z} \subset \mathbb{R}_+^n$ denotes robot resource states (e.g., battery levels, shared capacity usage). Each robot is characterized by a capability type $\tau_i \in \mathcal{T}$, which constrains its admissible actions $a_t^i \in \mathcal{A}_i(s_t;\tau_i)$.
+
+
+\begin{acks}
+The simulation and data analyses were enabled by resources in project UPPMAX 2025/2-381 provided by Uppsala University at UPPMAX.
+\end{acks}
+% \begin{ac}
+% The authors confirm contribution to the paper as follows: study conception and design: X. Author, Y. Author; data collection: Y. Author; analysis and interpretation of results: X. Author, Y. Author. Z. Author; draft manuscript preparation: Y. Author. Z. Author. All authors reviewed the results and approved the final version of the manuscript.
+% \end{ac}
+\begin{dci}
+To typeset a "Declaration of conflicting interests" section.
+\end{dci}
+\begin{funding}
+To typeset a "Funding" section.
+\end{funding}
+
+
+\bibliographystyle{SageH}
+\bibliography{ref}
+
+\end{document}

@@ -1,0 +1,308 @@
+\subsection{Mathematical Modeling and Reward Mapping}
+\textcolor{red}{some raw notes to explain the symbiosis using Riemannian geometry}
+The underlying coordination dynamics among heterogeneous robots are formalized through a multi-agent Markov decision process (MAMDP) framework, defined as $\langle \mathcal{S}, \{\mathcal{A}_i\}, \mathcal{P}, \{r_i\}, \gamma \rangle$, where $\mathcal{S}$ denotes the global state space, $\mathcal{A}_i$ the action space of agent $i$, $\mathcal{P}$ the transition function, $r_i$ the individual reward function, and $\gamma$ the discount factor. To provide a formal basis for symbiotic interactions among agents, we construct a Riemannian geometric interpretation over the joint state space of the multi-agent system. Let $\mathcal{M} \subseteq \mathbb{R}^n$ denote the smooth manifold representing the global state space of $n$-dimensional continuous system configurations. We equip $\mathcal{M}$ with a Riemannian metric $g_x: T_x\mathcal{M} \times T_x\mathcal{M} \rightarrow \mathbb{R}$ that varies smoothly with $x \in \mathcal{M}$, defining the local interaction structure.
+
+In this formulation, the coordination dynamics are influenced by the curvature of the manifold. Specifically, positive sectional curvature in subspaces of $\mathcal{M}$ associated with agent pairs indicates a tendency toward behavioral alignment or convergence, while negative curvature suggests competitive divergence. This allows symbiotic relationships to be embedded geometrically via metric modulation.
+
+Let each agent $i$ aim to optimize its trajectory $\tau_i(t) \in \mathcal{M}$ such that:
+\[
+\tau_i^* = \arg \min_{\tau_i} \int_0^T \| \dot{\tau}_i(t) \|_{g_{\tau_i(t)}}^2 \, dt + \lambda \cdot \Phi(\tau_1, \dots, \tau_N),
+\]
+where $\Phi$ is a potential function encoding symbiotic utility based on joint progress, spatial coordination, and resource usage. The first term measures trajectory cost via path length under $g$, and the second encourages mutualistic behavior.
+
+We construct $g$ as a composite metric:
+\[
+g = g^{\text{ind}} + \lambda \cdot g^{\text{sym}},
+\]
+where $g^{\text{ind}}$ encodes standard locomotion or manipulation cost (e.g., energy, time), and $g^{\text{sym}}$ encodes mutual alignment preferences such as inter-agent distance minimization or energy parity. For example, in the warehouse domain, $g^{\text{sym}}$ can penalize excessive deviations in energy usage or idle time between robots:
+\[
+g^{\text{sym}}_{x}(v, w) = \alpha \cdot \sum_{i \neq j} \left( \frac{\partial E_i}{\partial v} - \frac{\partial E_j}{\partial w} \right)^2,
+\]
+where $E_i$ denotes the energy function of agent $i$ over the state tangent vector $v$.
+
+This formulation supports gradient-based policy learning over the manifold using Riemannian natural gradients or geodesic-aware updates. In practice, the metric is implemented implicitly via reward shaping:
+\textcolor{red}{The formula needs to be fixed. We may need to provide more information or just refer to the preliminaries section for more detail.}
+We define the symbiotic reward function as
+\[
+R_i = \alpha P_i + \beta \sum_{j \neq i} \Delta P(a_i, a_j),
+\]
+where $R_i$ represents the total reward for agent $i$, $P_i$ captures individual performance, and $\Delta P(a_i, a_j)$ quantifies the performance change of agent $j$ due to agent $i$'s actions. The scaling parameters $\alpha$ and $\beta$ balance individual objectives with cooperative benefits, while the specific implementation of performance measures $P_i$ and $\Delta P$varies according to domain requirements and task characteristics.
+
+The reward geometry can be interpreted as a deformation of the base manifold metric:
+\[
+g_i' = g_i + \beta \sum_{j \neq i} \nabla^2 \Delta P(a_i, a_j),
+\]
+where $\nabla^2 \Delta P$ introduces curvature aligned with mutualistic objectives. In this setting, agents implicitly follow geodesics on a reshaped manifold that reflect both individual utility and inter-agent synergy.
+
+To optimize policies, we employ Riemannian gradient ascent or natural policy gradient methods, which adapt updates to the manifold structure:
+\[
+\theta_i^{(t+1)} = \theta_i^{(t)} + \eta G_i^{-1} \nabla_{\theta_i} J_i,
+\]
+where $G_i$ is the local metric tensor (e.g., Fisher information matrix) and $J_i$ is the expected cumulative reward. This allows stable and efficient convergence in non-Euclidean settings, especially under partial observability.
+
+To facilitate reproducibility and theoretical analysis, the reward functions are discretized over milestone-based evaluations and encoded using piecewise linear formulations. This structure supports gradient-based optimization while maintaining interpretability of agent interactions. The modeling approach thus bridges biological coordination concepts with formal MARL structures, providing a consistent basis for policy learning, convergence analysis, and performance attribution.
+
+
+\paragraph{Agents and type descriptors.}
+Let $H=\{a_1,\dots,a_n\}$ be heterogeneous robots. Each agent $i$ has
+capabilities $C_i$, resource state $D_i\in\mathcal{R}_i$ (e.g., battery),
+information profile $E_i$ (sensors, compute, bandwidth), and performance map
+$P_i:\mathcal{X}_i\times\mathcal{U}_i\to\mathbb{R}$.
+
+\paragraph{Global process as a POMG with typed agents.}
+We model coordination as a partially observable Markov game
+$\mathcal{G}=\langle N,\mathcal{S},\{\mathcal{A}^i\}_{i=1}^n,T,
+\{\Omega^i\}_{i=1}^n,\mathcal{O},\{r^i\}_{i=1}^n,\gamma\rangle$ with the following structure.
+
+\textbf{State.}
+The system state at time $t$ is
+\[
+s_t=\big(x_{1:n,t},\, d_{1:n,t},\, q_t,\, \theta_t\big)\in\mathcal{S},
+\]
+where $x_{i,t}\in\mathcal{X}_i$ is the physical state of agent $i$,
+$d_{i,t}\in\mathcal{R}_i$ is its resource state, $q_t$ encodes task queues or jobs,
+and $\theta_t$ captures exogenous environment variables.
+
+\textbf{Actions.}
+Each agent chooses
+\[
+a_{i,t}=\big(u_{i,t},\, \tau_{i,t},\, m_{i,t}\big)\in\mathcal{A}^i
+\]
+with $u_{i,t}$ a low-level control (e.g., velocity), $\tau_{i,t}$ a discrete task/role decision,
+and $m_{i,t}$ a communication/message.
+
+\textbf{Dynamics.}
+The transition kernel $T:\mathcal{S}\times\mathcal{A}\to\Delta(\mathcal{S})$
+factorizes as
+\[
+\begin{aligned}
+x_{i,t+1} &= f_i(x_{i,t},u_{i,t};\,\theta_t,\omega_{i,t}), \\
+d_{i,t+1} &= g_i(d_{i,t},x_{i,t},u_{i,t};\,\xi_{i,t}), \\
+q_{t+1} &= h(q_t,\tau_{1:n,t},x_{1:n,t};\,\zeta_t),\qquad
+\theta_{t+1} = \varphi(\theta_t,\nu_t).
+\end{aligned}
+\]
+Here $\omega_{i,t},\xi_{i,t},\zeta_t,\nu_t$ are bounded disturbances.
+
+\textbf{Observation and information profile.}
+Each agent receives
+\[
+o_{i,t} = \mathcal{O}\big(s_t;E_i,G_t\big) + v_{i,t}\in\Omega^i,
+\]
+where $G_t=(V,E_t)$ is a time-varying communication/sensing graph determined by $E_i$ and proximity,
+and $v_{i,t}$ is noise. Messages obey $m_{i,t}\in\mathcal{M}_i$ with rate limit
+$b_i(E_i)$ and local neighborhood $\mathcal{N}_i(G_t)$.
+
+\paragraph{Capability embeddings and complementarity.}
+Map capabilities to a feature vector $\phi(C_i)\in\mathbb{R}^p$ and define
+a symmetric complementarity kernel
+\[
+\kappa_{ij} \;=\; \sigma\!\left(\phi(C_i)^\top W\,\phi(C_j)\right)\in[0,1],
+\]
+with learnable $W$ and squashing function $\sigma(\cdot)$.
+This captures how well agents $i$ and $j$ can benefit each other given $C_i,C_j$.
+
+\paragraph{Utilities, cooperation, and the team objective.}
+Let the instantaneous local utility of agent $i$ be
+\[
+u_i(s_t,a_t)=R^{\text{task}}_i(s_t,a_t)-R^{\text{energy}}_i(s_t,a_t)-R^{\text{risk}}_i(s_t,a_t),
+\]
+and define a pairwise synergy term
+\[
+S_{ij}(s_t,a_t)=\kappa_{ij}\,\psi_{ij}\!\left(x_{i,t},x_{j,t},d_{i,t},d_{j,t},\tau_{i,t},\tau_{j,t}\right),
+\]
+where $\psi_{ij}$ measures performance lift when $i$ and $j$ coordinate.
+The team welfare is
+\[
+G(s_t,a_t)=\sum_{i=1}^n u_i(s_t,a_t) \;+\; \beta \sum_{(i,j)\in E_t} S_{ij}(s_t,a_t) \;-\; \lambda\,\mathrm{Var}\!\big(\text{workload}_{1:n,t}\big).
+\]
+The cooperative objective is to maximize
+\[
+\max_{\{\pi_i\}} \;\; \mathbb{E}\!\left[\sum_{t=0}^{\infty}\gamma^t\, G(s_t,a_t)\right],
+\quad a_{i,t}\sim \pi_i(\cdot\mid o_{i,t},m_{\mathcal{N}_i,t}).
+\]
+
+\paragraph{Credit assignment and shaping for learning.}
+Each agent trains with a shaped reward
+\[
+r^i_t \;=\; D_i(s_t,a_t)\;+\;F_i(s_t,s_{t+1})\;-\;R^{\text{constraint}}_i(s_t,a_t),
+\]
+where
+\[
+D_i(s_t,a_t)=G(s_t,a_t)-G(s_t,a_t^{-i})
+\]
+is a difference-reward proxy for marginal contribution, and
+\[
+F_i(s_t,s_{t+1})=\gamma\,\Phi(s_{t+1})-\Phi(s_t)
+\]
+is potential-based shaping with team potential $\Phi$ that encodes symbiosis, e.g.,
+\[
+\Phi(s)=\sum_{(i,j)} \kappa_{ij}\,\varphi\!\left(d_{i},d_{j},\text{task-adjacency}(i,j)\right).
+\]
+Potential shaping preserves optimal joint policies while accelerating learning.
+
+\paragraph{Constraints.}
+Safety and resource limits are encoded as admissible sets:
+\[
+\mathcal{C}=\Big\{(s,a):\, \mathrm{dist}(x_{i},x_{j})\ge r_{\min},\;
+d_{i}\ge d_{\min},\;
+\|m_{i}\|\le b_i(E_i),\;
+x_i\in\mathcal{X}^{\text{safe}}_i\Big\}.
+\]
+For continuous control, enforce control barrier functions $h_k(s)\ge 0$ via
+$\dot h_k+\alpha h_k\ge 0$ or discrete analogs in a quadratic program.
+
+\paragraph{Coordination variables for control.}
+Define a per-agent coordination variable (a shared invariant) as
+\[
+z_{i,t} = \sum_{j\in\mathcal{N}_i(G_t)} w_{ij}\,\eta\!\left(d_{i,t},d_{j,t},x_{i,t},x_{j,t},\phi(C_i),\phi(C_j)\right),
+\]
+which the low-level controller and high-level policy both use.
+A practical choice is a “need–supply” field
+\[
+\eta=\big(\text{task-demand}_i-\text{service-capacity}_j\big)_+,
+\quad w_{ij}\propto \kappa_{ij}.
+\]
+Policies take the form $\pi_i(a_i\mid o_{i,t},z_{i,t})$.
+
+\paragraph{Hierarchical control and learning.}
+Use CTDE with a central critic $V(s)$ or $Q(s,a)$ and decentralized actors:
+\[
+\begin{aligned}
+&\text{High level: } \tau_{i,t}\sim \pi^{\text{role}}_i(\cdot\mid o_{i,t},z_{i,t}); \\
+&\text{Low level: } u_{i,t}=\arg\min_{u\in\mathcal{U}_i}\ J_i(x_{i,t},d_{i,t},z_{i,t})
+\ \text{s.t. }(s_t,a_t)\in\mathcal{C},
+\end{aligned}
+\]
+with $J_i$ penalizing energy, path length, and barrier slack.
+
+\paragraph{Symbiosis as interaction structure.}
+We encode pairwise complementarity via an embedding $\phi(C_i)\in\mathbb{R}^p$ and a symmetric kernel
+\[
+\kappa_{ij}=\sigma\!\big(\phi(C_i)^\top W\,\phi(C_j)\big)\in[0,1],
+\]
+with parameters $W$ and squashing $\sigma$. The \emph{interaction lift} on $i$ due to $j$ is
+\[
+\Delta P_i^{(j)}(s_t,a_t)\;=\; \underbrace{\mathbb{E}\!\left[P_i(x_{i,t+1},a_{i,t})\,\middle|\,s_t,a_t\right]}_{\text{with }j}
+-\underbrace{\mathbb{E}\!\left[P_i(x_{i,t+1},a_{i,t})\,\middle|\,s_t,(a_t)^{-j}\right]}_{\text{counterfactual no-$j$}},
+\]
+and the pairwise \emph{synergy} is
+\[
+S_{ij}(s_t,a_t)=\kappa_{ij}\,\psi_{ij}\!\big(s_t,a_t\big),
+\quad \psi_{ij}\equiv \alpha_{ij}\,\Delta P_i^{(j)}+\alpha_{ji}\,\Delta P_j^{(i)}.
+\]
+Symbiosis types follow signs of $\Delta P_i^{(j)},\Delta P_j^{(i)}$ (mutualism, commensalism, etc.).
+
+\paragraph{Team welfare with symbiosis.}
+Let local utility $u_i(s_t,a_t)$ capture task gain, energy cost, and risk. Define welfare
+\[
+G(s_t,a_t)=\sum_{i=1}^n u_i(s_t,a_t)
+\;+\;\beta \sum_{(i,j)\in E_t} S_{ij}(s_t,a_t)
+\;-\;\lambda\,\mathrm{Var}\!\big(\text{workload}_{1:n,t}\big),
+\]
+with knobs $\beta,\lambda\ge 0$. The control objective is
+\[
+\max_{\{\pi^i\}}\;\; \mathbb{E}\!\left[\sum_{t=0}^{\infty}\gamma^t\,G(s_t,a_t)\right],
+\qquad a_t^i\sim \pi^i(\cdot|o_t^i,m_{t}^{i\leftarrow\mathcal{N}_i(t)},z_{i,t}).
+\]
+
+\paragraph{Symbiosis potential and reward shaping.}
+Define a \emph{symbiosis potential}
+\[
+\Phi(s)\;=\;\sum_{(i,j)\in E_t} \kappa_{ij}\,\varphi\!\big(\underbrace{d_i,d_j}_{\text{resources}},
+\underbrace{x_i,x_j}_{\text{spatial}}, \underbrace{q_t}_{\text{task adjacency}}\big),
+\]
+e.g., $\varphi(d_i,d_j,x_i,x_j,q_t)=w_1(d_i\!-\!d_j)^2+w_2\,\text{adj}(i,j;q_t)-w_3\,\text{overlap}(i,j)$.
+Each agent trains on a \emph{symbiotically shaped} reward
+\[
+\boxed{~\tilde r_t^i \;=\; \underbrace{\big[G(s_t,a_t)-G\!\big(s_t,(a_t)^{-i}\big)\big]}_{\text{difference reward }D_i}
+\;+\;\underbrace{\gamma\,\Phi(s_{t+1})-\Phi(s_t)}_{\text{potential shaping }F_i}
+\;-\;R^{\text{constraint}}_i(s_t,a_t).~}
+\]
+Facts: (i) Potential shaping with $\Phi$ leaves the optimal joint policies invariant. (ii) $D_i$ improves credit assignment by approximating the agent’s marginal contribution to $G$.
+
+\paragraph{Symbiosis within MARL (architecture).}
+Use CTDE. Let $z_{i,t}$ be a learned \emph{coordination latent} from message passing over $\mathcal{G}_c(t)$:
+\[
+z_{i,t} \;=\; \mathrm{Agg}\big\{\,g_\eta(o_t^i,o_t^j,e_{ij,t}) \;:\; j\in\mathcal{N}_i(t)\big\},
+\quad e_{ij,t}=\big[\kappa_{ij},\,\|x_i\!-\!x_j\|,\,d_i,d_j,\,\text{task\_rel}(i,j)\big].
+\]
+Actors condition on $(o_t^i,z_{i,t})$:
+\[
+a_t^i \sim \pi_{\theta_i}( \cdot \mid o_t^i, z_{i,t} ),
+\]
+and a central critic $Q_\psi$ augments state with symbiosis terms:
+\[
+Q_\psi(s_t,a_t) \;\approx\; \underbrace{\sum_i u_i(s_t,a_t)}_{\text{local}}
+\;+\;\beta \sum_{(i,j)} S_{ij}(s_t,a_t)
+\;-\;\lambda\,\mathrm{Var}(\text{workload}_{1:n,t}).
+\]
+Policy gradients (stochastic actors):
+\[
+\nabla_{\theta_i} J \;=\; \mathbb{E}\left[ \nabla_{\theta_i}\log \pi_{\theta_i}(a_t^i \mid o_t^i,z_{i,t})\;
+\underbrace{\big( Q_\psi(s_t,a_t)-b_i(s_t,(a_t)^{-i})\big)}_{\text{COMA-like advantage}}\right],
+\]
+with a counterfactual baseline $b_i$ to further sharpen credit assignment.
+
+\paragraph{Constraints and safety.}
+Admissible set $\mathcal{C}=\{(s,a):\text{collision-free},\,d_i\ge d_{\min},\,\|m_i\|\le b_i(E_i)\}$.
+For continuous control, enforce barrier conditions $h_k(s)\ge 0$ via QP-based filters.
+
+\paragraph{Minimal instantiation (warehouse example).}
+\vspace{-0.2em}
+\begin{align*}
+&u_i = \underbrace{\text{pick/place gain}}_{\text{throughput}}
+-\underbrace{c_v\|v_i\|^2 + c_\omega\|\omega_i\|^2}_{\text{energy}}
+-\underbrace{c_q\,\text{queue\_delay}}_{\text{latency}},\\
+&S_{ij} = \kappa_{ij}\Big[\underbrace{\mathbb{I}\{\text{handoff}_{ij}\}\,p_{\text{succ}}}_{\text{handoff lift}}
+-\underbrace{c_o\,\text{coverage\_overlap}(i,j)}_{\text{negative coupling}}\Big],\\
+&\Phi(s)=\sum_{(i,j)}\kappa_{ij}\big[w_1(d_i-d_j)^2+w_2\,\text{adj}(i,j;q_t)-w_3\,\text{overlap}(i,j)\big].
+\end{align*}
+
+\paragraph{What is heterogeneous here?}
+\begin{itemize}[leftmargin=1.1em]
+\item $\mathcal{A}^i$ (actuation/task sets), $\mathcal{O}^i$ and $\Omega$ marginals (sensing), $T$ via $f_i,g_i$ (dynamics/resources),
+$r^i$ (utilities/roles), and $E_i$ (bandwidth, range) differ across agents.
+\item Heterogeneity is summarized in $\phi(C_i)$ and $E_i$, which shape $\kappa_{ij}$, the messages $e_{ij,t}$, and thus $z_{i,t}$.
+\end{itemize}
+
+
+Compatibility can be formalized for a resource $k$ in terms of production and consumption rates. For actions $u_i$ and $u_j$, let $p_{i,k}(u_i)$ and $q_{i,k}(u_i)$ denote the respective production and consumption rates. A complementarity score is then defined as
+\[
+G_{ij,k}:=\max_{t}\big[p_{j,k}(u_j(t)) - q_{i,k}(u_i(t))\big],
+\]
+and $(a_i,a_j)$ are compatible on $k$ if $G_{ij,k}>0$, or by capability complementarity such as the pairing of grasping and perception skills.
+
+Interfaces are modeled through transfer and communication coefficients. For each pair $(i,j)$, let $\tau_{ij,k}\in[0,\bar\tau]$ denote the physical transfer coefficient for resource $k$, $\kappa_{ij}$ the communication capacity, and $\rho_{ij}\in\{0,1\}$ a recognition or calibration indicator. An interface is feasible if $\rho_{ij}=1$, $\tau_{ij,k}\ge\tau_{\min}$ for physical flows, and $\kappa_{ij}\ge\kappa_{\min}$ for information sharing. Constraints are imposed through conservation and resource dynamics. Denoting by $F_{i\leftarrow j,k}(t)$ the flow of resource $k$ from $j$ to $i$, we require
+\[
+0 \leq F_{i\leftarrow j,k}(t) \leq \tau_{ij,k}, \qquad
+\sum_{i}F_{i\leftarrow j,k}(t) \leq p_{j,k}(u_j(t)),
+\]
+and the evolution of resources is given by
+\[
+D_i(t{+}1) = D_i(t)+\sum_{j,k}F_{i\leftarrow j,k}(t) - q_{i,k}(u_i(t)).
+\]
+Information fusion is admissible only when $\kappa_{ij}$ supports the payload, and estimator updates follow deterministic mappings such as information-form Riccati or covariance intersection. Additional constraints ensure safety and rationality, requiring that each agent’s performance with interaction does not fall below its solo performance, i.e.\ $P_i^{\text{with}} \ge P_i^{\text{solo}}$, and, when transfers involve payments, that budget balance is maintained. These conditions together define the feasibility set $\mathcal{F}$.
+
+Planning over a horizon $T$ can then be formulated as the deterministic optimization
+\[
+\max_{u,\,F,\,\text{share}} \;\; \sum_{i} P_i
+\quad \text{subject to dynamics, interface feasibility, and } \mathcal{F}.
+\]
+
+From a system perspective, incorporating symbiosis is necessary to (i) exploit complementarities between heterogeneous agents, (ii) prevent hidden imbalances in energy or task load, and (iii) improve resilience through structured interdependencies. By aligning agent-level learning with these ecological patterns, SymMARL bridges individual incentives with collective performance, enabling robust and efficient cooperation in heterogeneous teams. 
+
+
+For any subset $S\subseteq H$, define the unordered edge set $E_2(S)=\{\{a_i,a_j\}\subseteq S: i<j\}$.
+The pairwise interaction expansion writes
+\begin{equation}
+\label{eq:system-performance}
+P_{\mathrm{total}}(S)\;=\;\sum_{a_i\in S} P_i\;+\;\sum_{\{a_i,a_j\}\in E_2(S)} I(a_i,a_j)\;+\;\sum_{\{a_i,a_j,a_k\}\in E_3(S)} I(a_i,a_j,a_k)\;+\cdots,
+\end{equation}
+where $I(\cdot)$ terms capture higher-order interactions (triplets, etc.). When higher-order effects are negligible or purposefully suppressed by task design, the pairwise model (first two terms) is adequate:
+\begin{equation}
+\label{eq:pairwise-only}
+P_{\mathrm{total}}(S)\;\approx\;\sum_{a_i\in S} P_i\;+\;\sum_{\{a_i,a_j\}\in E_2(S)} I(a_i,a_j).
+\end{equation}
+
+These interaction types can be observed in real-world robotic contexts. In mobile manipulation, mutualism may occur when the base positions itself to optimize the arm’s reachability, while the arm completes manipulation tasks that support the base’s navigation goals. Commensalism arises if the arm performs its task independently, but the base benefits by reusing the same trajectory, simplifying its planning without affecting the arm. Parasitism appears when the arm executes aggressive joint movements to optimize its own performance, forcing the base into inefficient or unstable configurations. In this work, reward shaping is used to promote mutualistic behavior and suppress undesired asymmetric interactions.

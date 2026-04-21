@@ -1,0 +1,150 @@
+{
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-symbiosis-v1",
+  "backend": "ippo",
+  "backends": [
+    "ippo"
+  ],
+  "methods": {
+    "individual": {
+      "backend": "ippo",
+      "mean_completion": 5.0,
+      "std_completion": 0.0,
+      "deliveries_curves": [
+        [
+          5
+        ]
+      ],
+      "mutualism_curves": [
+        [
+          0.00035
+        ]
+      ],
+      "tsi": 0.9675666689872742,
+      "rsi": 1.0
+    },
+    "team": {
+      "backend": "ippo",
+      "mean_completion": 5.0,
+      "std_completion": 0.0,
+      "deliveries_curves": [
+        [
+          5
+        ]
+      ],
+      "mutualism_curves": [
+        [
+          0.00035
+        ]
+      ],
+      "tsi": 0.9684333205223083,
+      "rsi": 1.0
+    },
+    "unclassified": {
+      "backend": "ippo",
+      "mean_completion": 5.0,
+      "std_completion": 0.0,
+      "deliveries_curves": [
+        [
+          5
+        ]
+      ],
+      "mutualism_curves": [
+        [
+          0.00035
+        ]
+      ],
+      "tsi": 0.9679667353630066,
+      "rsi": 1.0
+    },
+    "symbiotic": {
+      "backend": "ippo",
+      "mean_completion": 5.0,
+      "std_completion": 0.0,
+      "deliveries_curves": [
+        [
+          5
+        ]
+      ],
+      "mutualism_curves": [
+        [
+          0.00035
+        ]
+      ],
+      "tsi": 0.9652667045593262,
+      "rsi": 1.0
+    }
+  },
+  "results": {
+    "ippo": {
+      "individual": {
+        "backend": "ippo",
+        "mean_completion": 5.0,
+        "std_completion": 0.0,
+        "deliveries_curves": [
+          [
+            5
+          ]
+        ],
+        "mutualism_curves": [
+          [
+            0.00035
+          ]
+        ],
+        "tsi": 0.9675666689872742,
+        "rsi": 1.0
+      },
+      "team": {
+        "backend": "ippo",
+        "mean_completion": 5.0,
+        "std_completion": 0.0,
+        "deliveries_curves": [
+          [
+            5
+          ]
+        ],
+        "mutualism_curves": [
+          [
+            0.00035
+          ]
+        ],
+        "tsi": 0.9684333205223083,
+        "rsi": 1.0
+      },
+      "unclassified": {
+        "backend": "ippo",
+        "mean_completion": 5.0,
+        "std_completion": 0.0,
+        "deliveries_curves": [
+          [
+            5
+          ]
+        ],
+        "mutualism_curves": [
+          [
+            0.00035
+          ]
+        ],
+        "tsi": 0.9679667353630066,
+        "rsi": 1.0
+      },
+      "symbiotic": {
+        "backend": "ippo",
+        "mean_completion": 5.0,
+        "std_completion": 0.0,
+        "deliveries_curves": [
+          [
+            5
+          ]
+        ],
+        "mutualism_curves": [
+          [
+            0.00035
+          ]
+        ],
+        "tsi": 0.9652667045593262,
+        "rsi": 1.0
+      }
+    }
+  },
+  "canonical_backend": "ippo"
+}

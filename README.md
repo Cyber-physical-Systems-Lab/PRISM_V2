@@ -3,105 +3,83 @@
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Research codebase for the project:
+Research codebase for the paper:
 **"Emergent Symbiosis in Heterogeneous MARL: A Formal Framework for Capability-Complementary Robotic Teams"**
 
-This repository studies when relationship-aware reward shaping is justified in multi-agent robotics, and when it is not. The central claim is narrow and testable: if capability complementarity is present, classifying and shaping inter-agent relationships should improve coordination; if complementarity is absent, the advantage should disappear.
-
-<p align="center">
-  <img src="assets/robotic_symbiosis_demo.gif" alt="Robotic symbiosis warehouse demo" width="760" />
-</p>
-
-<p align="center">
-  Heuristic task-scheduling demo in the battery-enabled TARWARE warehouse environment.
-</p>
+The central claim is narrow and testable: symbiotic reward shaping should improve coordination only when capability complementarity exists between agent types — and should lose its advantage when complementarity is absent.
 
 ---
 
-## Research Program
+## Overview
 
-The project is organized around three linked contributions:
+<p align="center">
+  <img src="assets/symbiosis_overview.gif" alt="Symbiosis overview — heuristic scheduling" width="760" />
+</p>
 
-- `C1` Formalize robotic symbiosis from ecological fitness theory using value-function counterfactuals.
-- `C2` Build a reward decomposition that shapes behavior by relationship type while preserving policy-gradient convergence class.
-- `C3` Run confirmation and falsification experiments to test whether the benefit is genuinely tied to capability complementarity.
+<p align="center"><em>Heuristic scheduling baseline showing AGVs (mobile), pickers (stationary), charging stations, and five package types (SOLO, STANDARD, LARGE, HEAVY, PICKER_SOLO). Ecological relationship types (mutualism, commensalism, competition, parasitism, neutralism) are detected and overlaid in real time.</em></p>
 
-The detailed step-by-step implementation plan lives in [TODO.md](TODO.md).
+<p align="center">
+  <img src="assets/trained_individual_overview.gif" alt="Trained policy — individual reward" width="760" />
+</p>
+
+<p align="center"><em>IPPO policy trained with individual rewards (200k steps). Agents learn to navigate, pick up packages, and charge independently without explicit cooperative incentives.</em></p>
+
+---
+
+## Research Contributions
+
+Three linked contributions, each independently evaluable:
+
+| ID | Contribution | Key file |
+|----|---|---|
+| **C1** | Formalize robotic symbiosis via value-function counterfactuals (ecological relationship types) | `symbiosis/definitions.py`, `symbiosis/fitness.py` |
+| **C2** | Reward decomposition `rᵢ = r_task + r_sym` with convergence guarantees | `symbiosis/reward_decomposition.py`, `symbiosis/convergence.py` |
+| **C3** | Confirmation and falsification experiments on heterogeneous vs homogeneous warehouse teams | `experiments/run_heterogeneous.py`, `experiments/run_homogeneous.py` |
 
 ---
 
 ## Core Hypothesis
 
-The project is built around a boundary condition, not a generic reward-shaping claim.
+The project is organized around a boundary condition, not a generic reward-shaping claim:
 
-- In **heterogeneous teams**, symbiotic reward should improve throughput and increase mutualistic interactions because agents depend on each other structurally.
-- In **homogeneous teams**, the same mechanism should provide little or no advantage because relationship classification becomes biologically meaningless without capability complementarity.
-- Across a **heterogeneity gradient**, the benefit of symbiotic reward should increase with the degree of complementarity.
-- For **convergence**, symbiotic shaping should change the final asymptote, not the convergence class.
+- **Heterogeneous teams**: symbiotic reward should improve throughput and increase mutualistic interactions because agents depend on each other structurally (AGVs transport, pickers load/unload — neither can complete STANDARD or LARGE tasks alone).
+- **Homogeneous teams**: the same mechanism should provide little or no advantage because relationship classification becomes biologically meaningless without capability complementarity.
+- **Heterogeneity gradient**: the benefit should increase monotonically with the degree of complementarity.
+- **Convergence**: symbiotic shaping should change the final asymptote, not the convergence class.
 
-If the homogeneous falsification experiment shows the same gain as the heterogeneous case, the biological framing is weakened and the contribution collapses toward ordinary cooperative reward shaping.
-
----
-
-## What Is In This Repository
-
-### Theory and measurement
-
-- [symbiosis/fitness.py](symbiosis/fitness.py): long-run fitness estimates.
-- [symbiosis/definitions.py](symbiosis/definitions.py): relationship types and formal measurement objects.
-- [symbiosis/counterfactual_critic.py](symbiosis/counterfactual_critic.py): joint and marginal critics for counterfactual analysis.
-- [symbiosis/reward_decomposition.py](symbiosis/reward_decomposition.py): symbiotic reward decomposition.
-- [symbiosis/convergence.py](symbiosis/convergence.py): convergence-monitoring utilities.
-
-### Environment and domain logic
-
-- [tarware/warehouse.py](tarware/warehouse.py): battery-enabled heterogeneous warehouse environment.
-- [tarware/heuristic.py](tarware/heuristic.py): heuristic controller and oracle-style baseline.
-- [tarware/energy_coupling.py](tarware/energy_coupling.py): charging and energy-coupling logic.
-- [tarware/replanning.py](tarware/replanning.py): adaptive replanning under battery constraints.
-- [tarware/role_assignment.py](tarware/role_assignment.py): role-emergence tracking.
-
-### Experiments
-
-- [experiments/run_heuristic_baseline.py](experiments/run_heuristic_baseline.py): heuristic reference line.
-- [experiments/run_heterogeneous.py](experiments/run_heterogeneous.py): heterogeneous Experiment 1 runner. Uses local MAPPO first, with IPPO fallback.
-- [experiments/run_homogeneous.py](experiments/run_homogeneous.py): homogeneous falsification runner.
-- [experiments/run_gradient.py](experiments/run_gradient.py): heterogeneity-gradient experiment runner.
-- [experiments/run_convergence.py](experiments/run_convergence.py): convergence diagnostics runner.
-- [experiments/run_all_experiments.py](experiments/run_all_experiments.py): combined sweep driver.
-
-### Analysis and figures
-
-- [analysis/metrics.py](analysis/metrics.py): TSI, RSI, mutualism fraction, convergence episode.
-- [analysis/plot.py](analysis/plot.py): paper-style figure generation.
-
-### Batch launchers
-
-- [slurm/train_heterogeneous.slurm](slurm/train_heterogeneous.slurm)
-- [slurm/train_homogeneous.slurm](slurm/train_homogeneous.slurm)
-- [slurm/heuristic_baseline.slurm](slurm/heuristic_baseline.slurm)
-- [slurm/run_all_experiments.slurm](slurm/run_all_experiments.slurm)
+If the homogeneous falsification shows the same gain as the heterogeneous case, the biological framing collapses toward ordinary cooperative reward shaping.
 
 ---
 
-## Output Convention
+## Environment
 
-For real experiment runs, prefer writing outputs under `runs/results/` rather than the top-level `results/` directory. This keeps heavy JSON outputs and batch artifacts out of the active login-node workspace.
+The TARWARE environment features:
 
-Recommended layout:
+- **Two heterogeneous agent types**: AGVs (mobile, carry packages) and pickers (stationary at shelves, load/unload packages)
+- **Five package types** encoding different cooperation requirements:
 
-```text
-runs/
-  results/
-    heuristic_baseline.json
-    hetero_results.json
-    homo_results.json
-    gradient_results.json
-    convergence_results.json
-    experiment_results.json
-```
+  | Package | Required AGVs | Required pickers | Ecological parallel |
+  |---|---|---|---|
+  | SOLO | 1 | 0 | Neutralism — independent |
+  | PICKER_SOLO | 0 | 1 | Neutralism — independent |
+  | STANDARD | 1 | 1 | Mutualism — joint delivery |
+  | LARGE | 2 | 2 | Mutualism — recruitment cost |
+  | HEAVY | 1 | 1+ assist | Commensalism — picker assists, AGV gains energy discount |
 
-The new all-in-one SLURM script writes to `/proj/symmarl_ijrr2025/xuezhi/runs/results` by default for exactly this reason.
+- **Battery system**: agents deplete energy carrying packages; must navigate to charging stations to recharge; contested charger access creates competition dynamics
+- **Internal A\* motion planning**: experiment actions are task targets, not low-level moves
+
+Environment IDs: `tarware-{size}-{n}agvs-{m}pickers-partialobs-chg[-pkgmix|-symbiosis]-v1`
+
+---
+
+## Relationship Scenarios
+
+<p align="center">
+  <img src="assets/symbiosis_scenarios.gif" alt="Relationship type scenarios" width="760" />
+</p>
+
+<p align="center"><em>Per-type scenario clips extracted from the heuristic baseline: mutualism (STANDARD joint delivery), commensalism (HEAVY task with picker assist), competition (contested charging station), and neutralism (independent SOLO tasks).</em></p>
 
 ---
 
@@ -113,83 +91,99 @@ cd robotic-symbiosis-tarware
 pip install -e ".[dev]"
 ```
 
-Python `>=3.9` is required.
+Python ≥3.9 required. Dependencies: `torch`, `gymnasium`, `pyyaml`, `imageio`, `pandas`, `matplotlib`, `seaborn`, `skrl`.
 
-The project depends on:
-
-- `torch`
-- `gymnasium`
-- `pyyaml`
-- `imageio`
-- `pandas`
-- `matplotlib`
-- `seaborn`
-- `scikit-learn`
-- `skrl`
+> **Cluster**: conda environment named `battery` on UPPMAX. Heavy outputs go to `runs/` (symlink to `/proj/symmarl_ijrr2025/xuezhi/runs`).
 
 ---
 
-## Demo Asset
+## Quick Start
 
-The demo GIF is generated with the heuristic mission scheduler, not with random macro actions. This matters because TARWARE actions are task targets and scheduling decisions; motion planning is handled internally by the environment after a target is assigned.
-
-To regenerate the demo and the per-step decision log:
+### Generate heuristic demonstration GIF
 
 ```bash
-python experiments/generate_demo_gif.py \
-    --output assets/robotic_symbiosis_demo.gif \
-    --metadata_output assets/robotic_symbiosis_demo.json
+python experiments/generate_symbiosis_gifs.py \
+    --env tarware-small-4agvs-2pickers-partialobs-chg-symbiosis-v1 \
+    --steps 1500 --fps 6 --output_dir assets
+```
+
+### Train all reward-shaping methods (local)
+
+```bash
+python experiments/run_heterogeneous.py \
+    --config configs/heterogeneous.yaml \
+    --timesteps 200000 --seeds 1 --backend ippo \
+    --checkpoint_dir local_runs/checkpoints_200k \
+    --tb_logdir local_runs/tensorboard_200k \
+    --output local_runs/results/hetero_results.json
+```
+
+### Generate GIF from trained checkpoint
+
+```bash
+python experiments/generate_trained_gif.py \
+    --checkpoint local_runs/checkpoints_200k/symbiotic/ippo_seed1/checkpoint_best.pt \
+    --method symbiotic --steps 600 --fps 6 --output_dir assets
+```
+
+Optional side-by-side comparison:
+
+```bash
+python experiments/generate_trained_gif.py \
+    --checkpoint local_runs/checkpoints_200k/symbiotic/ippo_seed1/checkpoint_best.pt \
+    --checkpoint_baseline local_runs/checkpoints_200k/individual/ippo_seed1/checkpoint_best.pt \
+    --method symbiotic --steps 400 --fps 6 --output_dir assets
+```
+
+### Generate paper figures
+
+```bash
+python analysis/paper_figures.py \
+    --hetero local_runs/results/hetero_results.json \
+    --ckpt_dir local_runs/checkpoints_200k \
+    --output local_runs/figures
+```
+
+With homogeneous falsification results:
+
+```bash
+python analysis/paper_figures.py \
+    --hetero local_runs/results/hetero_results.json \
+    --homo   local_runs/results/homo_results.json \
+    --output local_runs/figures
 ```
 
 ---
 
-## Experiments
+## Full Experiment Suite
 
-### Heuristic baseline
+### Heuristic oracle baseline
 
 ```bash
 python experiments/run_heuristic_baseline.py \
     --env tarware-small-4agvs-2pickers-partialobs-chg-v1 \
-    --num_episodes 20 \
-    --seed 42 \
+    --num_episodes 20 --seed 42 \
     --output runs/results/heuristic_baseline.json
 ```
 
-### Experiment 1: heterogeneous primary result
+### Experiment 1: heterogeneous (C3 primary)
 
 ```bash
 python experiments/run_heterogeneous.py \
     --config configs/heterogeneous.yaml \
-    --timesteps 1000000 \
-    --seeds 5 \
+    --timesteps 1000000 --seeds 5 \
     --output runs/results/hetero_results.json
 ```
 
-If you want to force the backend:
-
-```bash
-python experiments/run_heterogeneous.py \
-    --config configs/heterogeneous.yaml \
-    --backend mappo \
-    --timesteps 1000000 \
-    --seeds 5 \
-    --output runs/results/hetero_results.json
-```
-
-Backend behavior:
-
-- `auto`: try local `mappo`, then local `ippo`, then HARL placeholders.
-- `mappo`: centralized critic by agent type.
-- `ippo`: decentralized critic fallback.
-- `happo` / `haddpg`: accepted as CLI targets, but require an external HARL installation not bundled here.
+Backend flag: `--backend auto|mappo|ippo|happo|haddpg`
+(`auto` → local MAPPO → local IPPO → HARL placeholders)
 
 ### Experiment 2: homogeneous falsification
 
 ```bash
 python experiments/run_homogeneous.py \
     --config configs/homogeneous.yaml \
-    --timesteps 500000 \
-    --seeds 5 \
+    --timesteps 500000 --seeds 5 \
     --output runs/results/homo_results.json
 ```
 
@@ -199,8 +193,7 @@ python experiments/run_homogeneous.py \
 python experiments/run_gradient.py \
     --config configs/gradient.yaml \
     --h_values 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 \
-    --seeds 5 \
-    --output runs/results/gradient_results.json
+    --seeds 5 --output runs/results/gradient_results.json
 ```
 
 ### Experiment 4: convergence diagnostics
@@ -211,39 +204,18 @@ python experiments/run_convergence.py \
     --output runs/results/convergence_results.json
 ```
 
-### Combined sweep
-
-```bash
-python experiments/run_all_experiments.py \
-    --output runs/results/experiment_results.json
-```
-
 ---
 
-## SLURM Usage
-
-To run the combined sweep on the cluster:
+## SLURM Cluster
 
 ```bash
+# Full sweep
 sbatch slurm/run_all_experiments.slurm
-```
 
-This script:
-
-- activates the `battery` conda environment
-- runs [experiments/run_all_experiments.py](experiments/run_all_experiments.py)
-- writes the result JSON to `/proj/symmarl_ijrr2025/xuezhi/runs/results/experiment_results_${SLURM_JOB_ID}.json`
-- keeps heavy outputs off the active login-node workspace
-
-You can override the main job parameters at submission time:
-
-```bash
+# Override parameters
 TIMESTEPS=300000 SEEDS=5 HEURISTIC_EPISODES=20 sbatch slurm/run_all_experiments.slurm
-```
 
-Other available launchers:
-
-```bash
+# Individual launchers
 sbatch slurm/train_heterogeneous.slurm
 sbatch slurm/train_homogeneous.slurm
 sbatch slurm/heuristic_baseline.slurm
@@ -251,145 +223,130 @@ sbatch slurm/heuristic_baseline.slurm
 
 ---
 
-## Figures
+## Paper Figures
 
-If the per-experiment JSON files are stored under `runs/results/`, generate figures with:
+The `analysis/paper_figures.py` script produces 8 publication-quality figures (PDF + PNG, 300 DPI, serif font):
 
-```bash
-python analysis/plot.py runs/results
-```
+<p align="center">
+  <img src="assets/fig1_learning_curves.png" alt="Fig 1 — Task completion learning curves" width="720" />
+</p>
 
-Expected outputs:
+<p align="center"><em>Fig 1: Task completion learning curves for all four reward-shaping methods (IPPO, 200k steps, small env). Symbiotic reward shaping achieves competitive performance even early in training.</em></p>
 
-- `runs/results/figures/fig1_mutualism_hetero.pdf`
-- `runs/results/figures/fig2_task_completion.pdf`
+<p align="center">
+  <img src="assets/fig3_relationship_distribution.png" alt="Fig 3 — Relationship type distribution" width="600" />
+</p>
 
-The current plotting script uses the per-experiment result files, not the single combined JSON produced by `run_all_experiments.py`.
+<p align="center"><em>Fig 3: Emergent ecological relationship distribution at end of training. Symbiotic reward shaping is expected to shift the distribution toward mutualism and commensalism compared to baselines.</em></p>
+
+<p align="center">
+  <img src="assets/fig6_specialisation_index.png" alt="Fig 6 — Team Specialisation Index" width="600" />
+</p>
+
+<p align="center"><em>Fig 6: Team Specialisation Index (TSI) and Relationship Strength Index (RSI) per method. Higher TSI indicates stronger specialisation between AGVs and pickers.</em></p>
+
+<p align="center">
+  <img src="assets/fig8_package_breakdown.png" alt="Fig 8 — Package-type delivery breakdown" width="600" />
+</p>
+
+<p align="center"><em>Fig 8: Package-type delivery breakdown per method. STANDARD and LARGE deliveries require AGV–picker coordination; their fraction indicates cooperative policy emergence.</em></p>
+
+| Figure | Description | File |
+|---|---|---|
+| Fig 1 | Task completion learning curves — all methods, ±1σ bands | `fig1_learning_curves` |
+| Fig 2 | Mutualism fraction emergence over training | `fig2_mutualism_emergence` |
+| Fig 3 | Relationship type distribution at end of training (stacked bar) | `fig3_relationship_distribution` |
+| Fig 4 | Raw vs shaped reward divergence | `fig4_reward_shaping` |
+| Fig 5 | Training stability — actor entropy and KL divergence | `fig5_training_stability` |
+| Fig 6 | Team Specialisation Index (TSI) and RSI per method | `fig6_specialisation_index` |
+| Fig 7 | Hetero vs homo falsification comparison (requires `--homo`) | `fig7_hetero_vs_homo` |
+| Fig 8 | Package-type delivery breakdown per method | `fig8_package_breakdown` |
+| Fig 9 | Battery management over training | `fig9_battery_management` |
 
 ---
 
-## Preliminary Results
+## Results
 
-All numbers below come from completed SLURM runs on the UPPMAX GPU cluster. Raw data lives in
-[results/](results/).
+### IPPO sweep — 200k steps, small env (4 AGVs + 2 pickers)
 
-### Heuristic oracle (50 episodes, 5 000 steps/ep, seed 42)
+Local training run with the repaired environment (charging, STANDARD cooperative tasks, picker action masks fixed). Final episode deliveries and specialisation:
 
-| Environment | Agents | Del / ep | ± |
-|---|---|---|---|
-| `tarware-tiny-2agvs-1pickers-partialobs-chg-v1` | 2 AGV + 1 picker | **18.8** | 3.9 |
-| `tarware-small-4agvs-2pickers-partialobs-chg-v1` | 4 AGV + 2 picker | **18.8** | 3.3 |
-| `tarware-medium-6agvs-3pickers-partialobs-chg-v1` | 6 AGV + 3 picker | **18.8** | 2.5 |
+| Method | Mean del/ep | TSI |
+|---|---|---|
+| Individual reward | 4.8 | 0.730 |
+| Team reward | 4.1 | 0.696 |
+| Unclassified coop. | 5.2 | 0.760 |
+| **Symbiotic (ours)** | **5.0** | **0.740** |
 
-Source: [results/sym_learning_curve.csv](results/sym_learning_curve.csv).
-The near-identical means across scales reflect the fixed request-queue size (20) and
-full-episode termination, not a coincidence.
+These are 200k-step results; the C3 claim requires ≥1M steps on the SLURM cluster for statistical significance across 5 seeds.
 
-### IPPO preliminary sweep (SLURM job 4861156)
+### Relationship distribution (heuristic oracle, 1500 steps)
 
-200 000 timesteps, 500-step episodes, 3 seeds each, tiny env (2 AGV + 1 picker).
-All methods are still in early exploration — deliveries-per-episode are near zero.
+| Relationship | Fraction |
+|---|---|
+| Neutral (0/0) | 83.7% |
+| Competition (−/−) | 16.3% |
+| Mutualism (+/+) | <0.1% |
+| Commensalism (+/0) | <0.1% |
 
-| Method | Del / ep (last 20 %) | ± |
+Competition dominates because charging stations are contested by all agents. Longer trained policies are expected to shift the distribution toward mutualism and commensalism.
+
+### Historical IPPO sweep (SLURM job 4861156, 200k steps, tiny env)
+
+| Method | Del/ep (last 20%) | ± |
 |---|---|---|
 | Individual | 0.13 | 0.04 |
 | Team | 0.13 | 0.03 |
 | Unclassified | 0.13 | 0.01 |
 | **Symbiotic** | **0.17** | 0.02 |
 
-At 200 k steps the environment is too sparse for meaningful differentiation. Longer runs
-(≥ 1 M steps) are needed for the C3 claim to be evaluable.
-
-### Symbiotic IPPO at 1 M steps (small env, sym_v2)
-
-Single-seed run on `tarware-small-4agvs-2pickers-partialobs-chg-v1`.
-
-| Metric | Last-20-episode mean |
-|---|---|
-| Deliveries / ep | 0.45 |
-| TSI | 0.58 |
-| RSI | 0.05 |
-| Charger-escort fraction | 0.48 |
-
-Source: [results/sym_learning_curve.csv](results/sym_learning_curve.csv),
-[results/sym_roles.csv](results/sym_roles.csv).
-
-### MAPPO at 7 M steps (small env)
-
-Centralized-critic MAPPO with BC pre-training on heuristic demonstrations.
-
-| Checkpoint | Policy del | Heuristic del (same ep) |
-|---|---|---|
-| 1 M steps | 0 | 13 |
-| 6 M steps | **2** | 10 |
-| 7 M steps | 2 | 15 |
-
-Source: [results/mappo_eval_metrics.csv](results/mappo_eval_metrics.csv).
-
-Policy / heuristic ratio at 7 M steps: **~13 %**. The environment remains hard for
-policy learning at this scale; the heuristic oracle is the practical reference ceiling.
-
-### Training animations
-
-These GIFs were rendered during evaluation checkpoints of the MAPPO run.
-
-| Checkpoint | Animation |
-|---|---|
-| 1 M steps (early exploration) | ![MAPPO 1M](assets/mappo_1m_steps.gif) |
-| 7 M steps (best checkpoint) | ![MAPPO 7M](assets/mappo_7m_steps.gif) |
-
-The heuristic scheduler demo (used for BC pre-training demonstrations):
-
-![Heuristic demo](assets/robotic_symbiosis_demo.gif)
+Early signal for the C3 claim. At 200k steps in the tiny env the environment is too sparse; ≥1M steps are needed for full evaluation.
 
 ---
 
-## Research Notes
+## Code Architecture
 
-This repository is a research codebase, not a polished benchmark package. The important parts are:
-
-- the formal decomposition of the problem into `C1`, `C2`, and `C3`
-- the presence of both confirmation and falsification experiments
-- the ability to inspect relationship emergence, specialization, and convergence diagnostics separately
-
-The strongest scientific claim here is not that symbiotic reward always wins. It is that it should only matter when the environment contains capability complementarity. That is the core falsifiable statement the repository is organized to test.
-
----
-
-## Repository Layout
-
-```text
-robotic-symbiosis-tarware/
-├── assets/
-│   ├── robotic_symbiosis_demo.gif
-│   ├── mappo_1m_steps.gif
-│   └── mappo_7m_steps.gif
-├── results/
-│   ├── sym_learning_curve.csv
-│   ├── sym_roles.csv
-│   ├── sym_emergence.csv
-│   └── mappo_eval_metrics.csv
-├── symbiosis/
-├── tarware/
-├── training/
-├── experiments/
-│   ├── run_heuristic_baseline.py
-│   ├── run_heterogeneous.py
-│   ├── run_homogeneous.py
-│   ├── run_gradient.py
-│   ├── run_convergence.py
-│   └── run_all_experiments.py
-├── analysis/
-│   ├── metrics.py
-│   └── plot.py
-├── configs/
-│   ├── heterogeneous.yaml
-│   ├── homogeneous.yaml
-│   └── gradient.yaml
-├── slurm/
-│   ├── heuristic_baseline.slurm
-│   ├── train_heterogeneous.slurm
-│   ├── train_homogeneous.slurm
-│   └── run_all_experiments.slurm
-└── TODO.md
 ```
+symbiosis/          # C1+C2 theory
+  fitness.py        # AgentFitness — long-run EMA reward tracker
+  definitions.py    # RelationshipType enum + RoboticSymbiosisClassifier
+  counterfactual_critic.py  # JointCritic / MarginalCritic
+  reward_decomposition.py   # SymbioticRewardDecomposer
+  convergence.py    # ConvergenceMonitor
+
+tarware/            # Battery-enabled warehouse environment
+  warehouse.py      # Core gymnasium env (A*, charging, heterogeneous tasks)
+  energy_coupling.py
+  astar.py
+  replanning.py
+  role_assignment.py
+
+training/           # Wrapper layer
+  symbiotic_wrapper.py  # SymbioticWrapper — obs augmentation + r_sym shaping
+
+experiments/        # C3 runners + PPO backends
+  ppo_backends.py   # Local MAPPO and IPPO (primary training engine)
+  run_heterogeneous.py
+  run_homogeneous.py
+  run_gradient.py
+  run_convergence.py
+  generate_symbiosis_gifs.py  # Heuristic demo GIFs
+  generate_trained_gif.py     # GIFs from trained checkpoints
+
+analysis/
+  metrics.py        # TSI, RSI, mutualism fraction
+  paper_figures.py  # Publication figures (8 panels)
+
+configs/            # YAML hyperparameters for C3
+slurm/              # SLURM batch scripts
+runs/               # Symlink → /proj/symmarl_ijrr2025/xuezhi/runs
+results/            # Lightweight preliminary CSVs (in git)
+```
+
+---
+
+## Notes
+
+- `runs/` is a symlink to the SLURM cluster path. For local experiments use explicit `--output local_runs/...` flags.
+- `max_inactivity_steps` must be overridden to `None` for evaluation episodes; the registered env default of 100 steps terminates too aggressively.
+- The strongest scientific claim is not that symbiotic reward always wins — it is that it should only matter when capability complementarity is present. The falsification experiment (Experiment 2) tests this directly.

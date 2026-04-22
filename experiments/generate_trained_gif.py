@@ -156,8 +156,14 @@ def policy_actions(actors: List[nn.Module], obs: tuple, masks: np.ndarray,
 # ── Episode runner ────────────────────────────────────────────────────────────
 
 def run_trained_episode(wrapper: SymbioticWrapper, raw_env, actors: List[nn.Module],
-                        seed: int, max_steps: int, deterministic: bool = True):
-    """Run one episode with the trained policy; return frames + rel_events."""
+                        seed: int, max_steps: int, deterministic: bool = True,
+                        raw_obs_dims: Optional[List[int]] = None):
+    """Run one episode with the trained policy; return frames + rel_events.
+
+    raw_obs_dims: if set, slice the first N features from each agent's (possibly
+    augmented) observation before passing to the actor network. This handles
+    checkpoints trained on raw env obs before SymbioticWrapper augmentation.
+    """
     obs, _ = wrapper.reset(seed=seed)
     # Full battery at episode start for a clean visual
     for agent in raw_env.agents:
@@ -171,7 +177,11 @@ def run_trained_episode(wrapper: SymbioticWrapper, raw_env, actors: List[nn.Modu
 
     for step in range(max_steps):
         masks = raw_env.compute_valid_action_masks()
-        actions = policy_actions(actors, obs, masks, deterministic=deterministic)
+        actor_obs = obs
+        if raw_obs_dims is not None:
+            actor_obs = tuple(np.asarray(o, dtype=np.float32)[:d]
+                              for o, d in zip(obs, raw_obs_dims))
+        actions = policy_actions(actors, actor_obs, masks, deterministic=deterministic)
         obs, rewards, term, trunc, info = wrapper.step(actions)
 
         for k, v in info.get("deliveries_by_pkg_type", {}).items():
@@ -250,8 +260,14 @@ def main():
     agv_idx    = env._agv_indices
     picker_idx = env._picker_indices
     act_dim    = raw.action_size
-    obs_dims   = [int(np.prod(o.shape)) for o in obs]
     hidden_dim = 128
+
+    # Compute obs dims from the RAW env (without symbiotic augmentation).
+    # Checkpoints are trained on raw env obs; the wrapper adds extra features
+    # that must be stripped before passing to the actor networks.
+    raw_obs, _ = base_env.reset(seed=args.seed)
+    raw_obs_dims = [int(np.prod(o.shape)) for o in raw_obs]
+    obs_dims = raw_obs_dims  # used to reconstruct actor network input size
 
     print(f"Loading checkpoint: {args.checkpoint}")
     actors, ckpt = load_actors(
@@ -264,7 +280,8 @@ def main():
     print(f"Running trained episode (max {args.steps} steps, "
           f"{'stochastic' if args.stochastic else 'deterministic'}) …")
     frames, rel_events, final_counts = run_trained_episode(
-        env, raw, actors, args.seed, args.steps, deterministic=not args.stochastic
+        env, raw, actors, args.seed, args.steps,
+        deterministic=not args.stochastic, raw_obs_dims=raw_obs_dims
     )
     n_nonneutral = len(rel_events)
     print(f"  {len(frames)} frames, {n_nonneutral} non-neutral relationship events")
@@ -347,7 +364,7 @@ def main():
         print(f"Running baseline episode …")
         frames_base, _, counts_base = run_trained_episode(
             env_base, raw_base, actors_base, args.seed, args.steps,
-            deterministic=not args.stochastic,
+            deterministic=not args.stochastic, raw_obs_dims=raw_obs_dims,
         )
         print(f"  Deliveries (baseline): {dict(counts_base)}")
 

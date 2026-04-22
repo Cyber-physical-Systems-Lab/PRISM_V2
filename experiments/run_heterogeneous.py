@@ -462,6 +462,7 @@ def _train_local_ppo_backend(method: str, seed: int, args, backend: str) -> dict
         dominant_role_history = []
 
         ep_deliveries = 0
+        ep_pkg_deliveries: Dict[str, int] = {}
         ep_rel_counts = defaultdict(int)
         ep_battery_sum = np.zeros(n_agents, dtype=np.float64)
         ep_battery_count = 0
@@ -548,6 +549,8 @@ def _train_local_ppo_backend(method: str, seed: int, args, backend: str) -> dict
                 episode_role_counts[i, role] += 1.0
 
             ep_deliveries += int(info.get("shelf_deliveries", 0))
+            for pkg_name, cnt in info.get("deliveries_by_pkg_type", {}).items():
+                ep_pkg_deliveries[pkg_name] = ep_pkg_deliveries.get(pkg_name, 0) + int(cnt)
             for rel in rels:
                 ep_rel_counts[rel] += 1
 
@@ -606,6 +609,8 @@ def _train_local_ppo_backend(method: str, seed: int, args, backend: str) -> dict
                 for i in range(n_agents):
                     episode_payload[f"battery_mean_agent_{i}"] = float(battery_mean[i])
                     episode_payload[f"battery_end_agent_{i}"] = float(battery_end[i])
+                for pkg_name in ["SOLO", "STANDARD", "LARGE", "HEAVY", "PICKER_SOLO"]:
+                    episode_payload[f"deliveries_{pkg_name.lower()}"] = float(ep_pkg_deliveries.get(pkg_name, 0))
                 episode_rows.append(episode_payload)
 
                 if tb_writer is not None:
@@ -630,6 +635,7 @@ def _train_local_ppo_backend(method: str, seed: int, args, backend: str) -> dict
                     _save_checkpoint(f"checkpoint_ep{episode_idx:05d}.pt", episode_idx, is_best=False)
 
                 ep_deliveries = 0
+                ep_pkg_deliveries = {}
                 ep_rel_counts = defaultdict(int)
                 ep_battery_sum.fill(0.0)
                 ep_battery_count = 0

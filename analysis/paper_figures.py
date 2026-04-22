@@ -535,14 +535,8 @@ def fig8_package_breakdown(
         found_cols = [f"deliveries_{p.lower()}" for p in pkg_types
                       if f"deliveries_{p.lower()}" in df.columns]
         if not found_cols:
-            # Try "deliveries" total column and normalise
-            if "deliveries" not in df.columns:
-                continue
-            # Just show total if no breakdown available
-            method_names.append(method)
-            for p in pkg_types:
-                pkg_counts[p].append(0.0)
-            pkg_counts["SOLO"][-1] = df["deliveries"].mean()
+            # No per-package-type breakdown available — skip this method.
+            # Run training with the updated run_heterogeneous.py to get this data.
             continue
 
         method_names.append(method)

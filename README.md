@@ -22,7 +22,13 @@ The central claim is narrow and testable: symbiotic reward shaping should improv
   <img src="assets/trained_individual_overview.gif" alt="Trained policy — individual reward" width="760" />
 </p>
 
-<p align="center"><em>IPPO policy trained with individual rewards (200k steps). Agents learn to navigate, pick up packages, and charge independently without explicit cooperative incentives.</em></p>
+<p align="center"><em>IPPO policy trained with individual rewards (200k steps). Agents learn to navigate, pick up packages, and charge independently.</em></p>
+
+<p align="center">
+  <img src="assets/trained_symbiotic_overview.gif" alt="Trained policy — symbiotic reward" width="760" />
+</p>
+
+<p align="center"><em>IPPO policy trained with symbiotic reward shaping (200k steps). Ecological relationship types (mutualism, commensalism, competition) are detected and overlaid in real time from the trained policy's behavior.</em></p>
 
 ---
 
@@ -267,29 +273,40 @@ The `analysis/paper_figures.py` script produces 8 publication-quality figures (P
 
 ## Results
 
-### IPPO sweep — 200k steps, small env (4 AGVs + 2 pickers)
+### Package-type delivery breakdown (50k steps)
 
-Local training run with the repaired environment (charging, STANDARD cooperative tasks, picker action masks fixed). Final episode deliveries and specialisation:
+<p align="center">
+  <img src="assets/fig8_package_breakdown.png" alt="Fig 8 — Package type delivery breakdown" width="680" />
+</p>
 
-| Method | Mean del/ep | TSI |
-|---|---|---|
-| Individual reward | 4.8 | 0.730 |
-| Team reward | 4.1 | 0.696 |
-| Unclassified coop. | 5.2 | 0.760 |
-| **Symbiotic (ours)** | **5.0** | **0.740** |
+All methods complete both **SOLO** (single-AGV) and **STANDARD** (AGV + picker, mutualism) deliveries from the first episodes of training. HEAVY deliveries (commensalism, picker assists AGV) also emerge early. LARGE (2 AGVs + 2 pickers) and PICKER_SOLO deliveries require longer training.
 
-These are 200k-step results; the C3 claim requires ≥1M steps on the SLURM cluster for statistical significance across 5 seeds.
+| Method | SOLO / ep | STANDARD / ep | HEAVY / ep | Total / ep |
+|---|---|---|---|---|
+| Individual reward | 1.60 | 1.90 | 0.90 | 4.4 |
+| Team reward | 2.10 | 1.60 | 2.00 | 5.7 |
+| Unclassified coop. | 2.10 | 2.40 | 1.80 | 6.4 |
+| **Symbiotic (ours)** | **1.50** | **1.80** | **1.80** | **5.1** |
 
-### Relationship distribution (heuristic oracle, 1500 steps)
+> 50k-step preliminary run, 1 seed. These results are too early for the C3 claim — the symbiotic advantage should emerge at ≥1M steps with 5 seeds on the SLURM cluster.
 
-| Relationship | Fraction |
-|---|---|
-| Neutral (0/0) | 83.7% |
-| Competition (−/−) | 16.3% |
-| Mutualism (+/+) | <0.1% |
-| Commensalism (+/0) | <0.1% |
+### Learning curves and mutualism emergence (50k steps)
 
-Competition dominates because charging stations are contested by all agents. Longer trained policies are expected to shift the distribution toward mutualism and commensalism.
+<p align="center">
+  <img src="assets/fig1_learning_curves.png" alt="Fig 1 — Learning curves" width="680" />
+</p>
+
+<p align="center">
+  <img src="assets/fig2_mutualism_emergence.png" alt="Fig 2 — Mutualism emergence" width="680" />
+</p>
+
+### Relationship distribution and specialisation
+
+<p align="center">
+  <img src="assets/fig4_reward_shaping.png" alt="Fig 4 — Raw vs shaped reward" width="760" />
+</p>
+
+<p align="center"><em>Fig 4: The shaped reward in the symbiotic method adds ecological relationship bonuses/penalties on top of the raw task reward, creating divergence between the training signal and pure task performance.</em></p>
 
 ### Historical IPPO sweep (SLURM job 4861156, 200k steps, tiny env)
 
@@ -300,7 +317,7 @@ Competition dominates because charging stations are contested by all agents. Lon
 | Unclassified | 0.13 | 0.01 |
 | **Symbiotic** | **0.17** | 0.02 |
 
-Early signal for the C3 claim. At 200k steps in the tiny env the environment is too sparse; ≥1M steps are needed for full evaluation.
+Early signal for the C3 claim on the tiny env. ≥1M steps on the full small env are needed for the complete evaluation.
 
 ---
 

@@ -1,4 +1,4 @@
-# Robotic Symbiosis in Heterogeneous Multi-Agent Warehouse Systems
+# PRISM: Policy-shaping via Reward decomposition for Inter-agent Symbiosis in MARL
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)

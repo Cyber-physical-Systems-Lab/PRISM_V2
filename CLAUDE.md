@@ -104,7 +104,7 @@ experiments/    # C3 experiment runners + PPO
 analysis/       # Post-hoc metrics (TSI, RSI) and paper figure generation
 configs/        # YAML configs for C3 experiments
 slurm/          # SLURM batch scripts for GPU cluster
-runs/           # Symlink → /proj/symmarl_ijrr2025/xuezhi/runs (heavy outputs go here)
+runs/           # Symlink → /proj/prism_v2/runs (heavy outputs go here)
 results/        # Lightweight preliminary CSVs checked into git
 ```
 

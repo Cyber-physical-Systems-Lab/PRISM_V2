@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH --job-name=prism_symbiotic
-#SBATCH --output=/proj/symmarl_ijrr2025/xuezhi/runs/prism_symbiotic_%j.out
-#SBATCH --error=/proj/symmarl_ijrr2025/xuezhi/runs/prism_symbiotic_%j.err
+#SBATCH --output=/proj/prism_v2/runs/prism_symbiotic_%j.out
+#SBATCH --error=/proj/prism_v2/runs/prism_symbiotic_%j.err
 #SBATCH --partition=gpu
 #SBATCH --account=UPPMAX2025-2-381
 #SBATCH --nodes=1
@@ -16,8 +16,8 @@ module load CUDA/12.9.0
 source ~/miniconda/etc/profile.d/conda.sh
 conda activate battery
 
-cd /home/xuezhi/robotic-symbiosis-tarware
-mkdir -p runs/results
+cd /home/didemgb/PRISM_V2
+mkdir -p /proj/prism_v2/runs/results
 
 # Override at submission time: NUM_SEEDS=5 sbatch slurm/train_symbiotic.slurm
 NUM_SEEDS="${NUM_SEEDS:-3}"
@@ -31,8 +31,8 @@ python experiments/run_symbiotic.py \
     --config configs/prism_symbiotic.yaml \
     --timesteps 1000000 \
     --seeds ${SEEDS} \
-    --checkpoint_dir runs/${RUN_ID} \
-    --tb_logdir runs/tensorboard/${RUN_ID} \
-    --output runs/results/prism_symbiotic_${RUN_ID}.json
+    --checkpoint_dir /proj/prism_v2/runs/${RUN_ID} \
+    --tb_logdir /proj/prism_v2/runs/tensorboard/${RUN_ID} \
+    --output /proj/prism_v2/runs/results/prism_symbiotic_${RUN_ID}.json
 
 echo "=== Done: $? ==="

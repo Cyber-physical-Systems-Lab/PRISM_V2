@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH --job-name=prism_all
-#SBATCH --output=/proj/symmarl_ijrr2025/xuezhi/runs/prism_all_%j.out
-#SBATCH --error=/proj/symmarl_ijrr2025/xuezhi/runs/prism_all_%j.err
+#SBATCH --output=/proj/prism_v2/runs/prism_all_%j.out
+#SBATCH --error=/proj/prism_v2/runs/prism_all_%j.err
 #SBATCH --partition=gpu
 #SBATCH --account=UPPMAX2025-2-381
 #SBATCH --nodes=1
@@ -20,7 +20,7 @@ source ~/miniconda/etc/profile.d/conda.sh
 conda activate battery
 set -u
 
-REPO_DIR="/home/xuezhi/robotic-symbiosis-tarware"
+REPO_DIR="/home/didemgb/PRISM_V2"
 
 # Override at submission time, e.g.:
 #   TIMESTEPS=2000000 NUM_SEEDS=5 sbatch slurm/run_all_experiments.slurm
@@ -32,15 +32,14 @@ ROLLOUT="${ROLLOUT:-1024}"
 PPO_EPOCHS="${PPO_EPOCHS:-4}"
 LR="${LR:-3e-4}"
 ENTROPY="${ENTROPY:-0.01}"
-HEURISTIC_EPISODES="${HEURISTIC_EPISODES:-50}"
 MAX_EP_STEPS="${MAX_EP_STEPS:-5000}"
-RESULTS_DIR="runs/results"
+RESULTS_DIR="/proj/prism_v2/runs/results"
 JOB_ID="${SLURM_JOB_ID:-local}"
 
-SYMBIOTIC_CKPT_DIR="runs/prism_symbiotic/${JOB_ID}"
-SYMBIOTIC_TB_DIR="runs/tensorboard/prism_symbiotic/${JOB_ID}"
-FLAT_COOP_CKPT_DIR="runs/prism_flat_cooperative/${JOB_ID}"
-FLAT_COOP_TB_DIR="runs/tensorboard/prism_flat_cooperative/${JOB_ID}"
+SYMBIOTIC_CKPT_DIR="/proj/prism_v2/runs/prism_symbiotic/${JOB_ID}"
+SYMBIOTIC_TB_DIR="/proj/prism_v2/runs/tensorboard/prism_symbiotic/${JOB_ID}"
+FLAT_COOP_CKPT_DIR="/proj/prism_v2/runs/prism_flat_cooperative/${JOB_ID}"
+FLAT_COOP_TB_DIR="/proj/prism_v2/runs/tensorboard/prism_flat_cooperative/${JOB_ID}"
 
 OUTPUT_PATH="${RESULTS_DIR}/prism_results_${JOB_ID}.json"
 
@@ -59,22 +58,20 @@ for stage in ${SKIP:-}; do
 done
 
 python experiments/run_all_experiments.py \
-    --timesteps          "${TIMESTEPS}"                                             \
-    --seeds              ${SEEDS}                                                   \
-    --rollout            "${ROLLOUT}"                                               \
-    --ppo_epochs         "${PPO_EPOCHS}"                                            \
-    --lr                 "${LR}"                                                    \
-    --entropy            "${ENTROPY}"                                               \
-    --heuristic_episodes "${HEURISTIC_EPISODES}"                                    \
-    --max_ep_steps       "${MAX_EP_STEPS}"                                          \
-    --symbiotic_checkpoint_dir "${SYMBIOTIC_CKPT_DIR}"                             \
-    --symbiotic_tb_logdir      "${SYMBIOTIC_TB_DIR}"                               \
-    --flat_coop_checkpoint_dir "${FLAT_COOP_CKPT_DIR}"                             \
-    --flat_coop_tb_logdir      "${FLAT_COOP_TB_DIR}"                               \
-    --heuristic_output   "${RESULTS_DIR}/heuristic_baseline_${JOB_ID}.json"        \
-    --symbiotic_output   "${RESULTS_DIR}/prism_symbiotic_${JOB_ID}.json"           \
-    --flat_coop_output   "${RESULTS_DIR}/prism_flat_coop_${JOB_ID}.json"           \
-    --output             "${OUTPUT_PATH}"                                           \
+    --timesteps          "${TIMESTEPS}"                      \
+    --seeds              ${SEEDS}                            \
+    --rollout            "${ROLLOUT}"                        \
+    --ppo_epochs         "${PPO_EPOCHS}"                     \
+    --lr                 "${LR}"                             \
+    --entropy            "${ENTROPY}"                        \
+    --max_ep_steps       "${MAX_EP_STEPS}"                   \
+    --symbiotic_checkpoint_dir "${SYMBIOTIC_CKPT_DIR}"       \
+    --symbiotic_tb_logdir      "${SYMBIOTIC_TB_DIR}"         \
+    --flat_coop_checkpoint_dir "${FLAT_COOP_CKPT_DIR}"       \
+    --flat_coop_tb_logdir      "${FLAT_COOP_TB_DIR}"         \
+    --symbiotic_output   "${RESULTS_DIR}/prism_symbiotic_${JOB_ID}.json"    \
+    --flat_coop_output   "${RESULTS_DIR}/prism_flat_coop_${JOB_ID}.json"    \
+    --output             "${OUTPUT_PATH}"                    \
     "${SKIP_ARGS[@]}"
 
 echo "=== Done: $? ==="

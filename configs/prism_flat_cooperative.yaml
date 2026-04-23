@@ -1,9 +1,14 @@
 # PRISM — Flat-cooperative reward condition config
 #
 # Team: 4 AGVs + 2 pickers  ← IDENTICAL to prism_symbiotic.yaml
-# Reward: r_i = r_task_i + alpha_collab * mean_j(r_task_j)
-#   Simple shared team bonus. No relationship classification. No ecological
-#   typing. Every agent receives an undifferentiated cooperative incentive.
+# Reward: r_i = r_task_i + max(0, alpha_collab * mean_j(r_task_j))
+#   Shared team bonus, clamped to non-negative so individual battery depletion
+#   penalties are not broadcast across the team.  No relationship classification.
+#   No ecological typing. Every agent receives an undifferentiated cooperative
+#   incentive proportional to collective task output.
+#
+# Calibration: on a STANDARD delivery step, collab_bonus ≈ 0.175 per agent
+# vs symbiotic mutualism bonus of 0.25 for the delivering AGV — same order.
 #
 # All env, team, architecture, and training hyperparameters are identical to
 # prism_symbiotic.yaml. Only the reward structure differs.

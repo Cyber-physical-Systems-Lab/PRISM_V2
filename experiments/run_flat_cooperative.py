@@ -157,7 +157,8 @@ def classify_rel(agv_reward: float, picker_reward: float,
                  agv_bat_delta: float, picker_bat_delta: float) -> int:
     """Classify the (AGV, Picker) relationship for measurement only."""
     delivered          = agv_reward    > 0.5
-    picker_just_lifted = picker_reward > 0.05
+    # >= 0.05: STANDARD load signal is exactly 0.05 * reward_scale (= 0.05 for STANDARD)
+    picker_just_lifted = picker_reward >= 0.05
     agv_charging       = agv_bat_delta    > 0.5
     picker_charging    = picker_bat_delta > 0.5
 
@@ -179,10 +180,20 @@ def shape_rewards_flat(
     bat_d: np.ndarray,
     alpha_collab: float,
 ) -> tuple[list, list]:
-    """r_i = r_task_i + alpha_collab * mean_j(r_task_j).
+    """r_i = r_task_i + max(0, alpha_collab * mean_j(r_task_j)).
 
-    Also computes relationship classifications for logging — these are NOT
-    used to modify rewards.
+    The collab bonus is clamped to non-negative so that individual battery
+    depletion penalties (large negative spikes) are not broadcast across the
+    team.  Symbiotic penalises specific bad relationships (competition,
+    parasitism); flat-cooperative should only reward collective success, not
+    punish collective failure, to keep the comparison structurally equivalent.
+
+    Calibration: on a STANDARD delivery step (AGV reward=1.0, picker=0.05,
+    4 others=0), team_mean ≈ 0.175, so collab_bonus ≈ 0.175 per agent.
+    The symbiotic mutualism bonus for the delivering AGV is w_mutualism/n_pairs
+    = 2.0/8 = 0.25.  These are in the same order of magnitude.
+
+    Relationship classifications are computed for logging — NOT used to modify rewards.
     """
     # Measure relationships passively
     rels: list[int] = []
@@ -191,9 +202,9 @@ def shape_rewards_flat(
             rel = classify_rel(raw_rewards[ai], raw_rewards[pi], bat_d[ai], bat_d[pi])
             rels.append(rel)
 
-    # Flat cooperative shaping: shared team mean bonus
-    team_mean = float(np.mean(raw_rewards))
-    shaped    = [r + alpha_collab * team_mean for r in raw_rewards]
+    # Flat cooperative shaping: shared team mean bonus, clamped to non-negative
+    collab = max(0.0, alpha_collab * float(np.mean(raw_rewards)))
+    shaped = [r + collab for r in raw_rewards]
     return shaped, rels
 
 

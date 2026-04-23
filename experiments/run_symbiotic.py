@@ -155,7 +155,8 @@ def classify_rel(agv_reward: float, picker_reward: float,
     agv_charging    = agv_bat_delta    > 0.5
     picker_charging = picker_bat_delta > 0.5
     delivered           = agv_reward    > 0.5
-    picker_just_lifted  = picker_reward > 0.05
+    # >= 0.05: STANDARD load signal is exactly 0.05 * reward_scale (= 0.05 for STANDARD)
+    picker_just_lifted  = picker_reward >= 0.05
 
     if delivered or picker_just_lifted:
         return REL_MUTUALISM
@@ -201,8 +202,9 @@ def shape_rewards_symbiotic(
 
             rewards[ai] += w_val
             if rel == REL_MUTUALISM:
-                # Picker bonus only when it actively lifted this step.
-                if raw_rewards[pi] > 0.05:
+                # Picker bonus when it actively lifted this step.
+                # >= 0.05 because the STANDARD load signal is exactly 0.05.
+                if raw_rewards[pi] >= 0.05:
                     rewards[pi] += w_val
             elif rel != REL_COMMENSALISM:
                 rewards[pi] += w_val

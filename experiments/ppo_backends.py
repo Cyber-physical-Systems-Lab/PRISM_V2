@@ -270,7 +270,7 @@ def classify_rel(
     """Return one of REL_* constants for a single (AGV, picker) pair.
 
     agv_delivery : raw reward to the AGV  (> 0.5  → delivery occurred)
-    picker_lift  : raw reward to the Picker (> 0.05 → lift-assist reward fired)
+    picker_lift  : raw reward to the Picker (>= 0.05 → lift-assist reward fired)
 
     Cooperation happens at TOGGLE_LOAD time (picker gets +0.1 lift-assist),
     not at goal-station delivery time. Classifying purely on delivery assigns
@@ -279,7 +279,8 @@ def classify_rel(
     agv_charging = agv_bat_delta > 0.5
     picker_charging = picker_bat_delta > 0.5
     delivered = agv_delivery > 0.5
-    picker_just_lifted = picker_lift > 0.05  # +0.1 load-assist reward
+    # >= 0.05: STANDARD load signal is exactly 0.05 * reward_scale (= 0.05 for STANDARD)
+    picker_just_lifted = picker_lift >= 0.05
 
     if delivered or picker_just_lifted:
         return REL_MUTUALISM
@@ -341,9 +342,9 @@ def shape_rewards(
                 w = w_table[rel] * conf / n_pairs
                 rewards[ai] += w
                 if rel == REL_MUTUALISM:
-                    # Picker bonus only when it actively lifted this step.
-                    # Prevents free-rider effect: pickers must help to share credit.
-                    if raw_rewards[pi] > 0.05:
+                    # Picker bonus when it actively lifted this step.
+                    # >= 0.05 because the STANDARD load signal is exactly 0.05.
+                    if raw_rewards[pi] >= 0.05:
                         rewards[pi] += w
                 elif rel != REL_COMMENSALISM:
                     rewards[pi] += w

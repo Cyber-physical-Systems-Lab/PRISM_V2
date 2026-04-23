@@ -311,7 +311,7 @@ def shape_rewards(
                and the effective weight is φ × conf.  Pass None (or omit)
                to use flat φ (backward-compatible behaviour).
 
-    When pick_idx is empty (homogeneous env):
+    When pick_idx is empty (AGV-only team):
     - symbiotic  → identical to individual (no pairs → no shaping)
     - unclassified → identical to individual (no pairs → no shaping)
     - team        → mean reward shared across all AGVs
@@ -427,7 +427,7 @@ def build_hetppo(
     """
     HetPPO: type-shared decentralised — one policy per agent TYPE, local critics.
     All AGVs share agv_agent; all pickers share pick_agent.
-    Equivalent to the "ippo" backend in run_heterogeneous.py.
+    Equivalent to the "ippo" backend in run_symbiotic.py / run_flat_cooperative.py.
     """
     agv_agent = PPOAgent(agv_obs_dim, agv_obs_dim, act_dim, hidden_dim, lr, device)
     pick_agent = PPOAgent(pick_obs_dim, pick_obs_dim, act_dim, hidden_dim, lr, device)
@@ -446,7 +446,7 @@ def build_mappo(
     """
     MAPPO: type-shared centralised — one policy per agent TYPE, centralised critics.
     Critics see the full global state (concatenation of all agent observations).
-    Equivalent to the "mappo" backend in run_heterogeneous.py.
+    Equivalent to the "mappo" backend in run_symbiotic.py / run_flat_cooperative.py.
     """
     agv_agent = PPOAgent(agv_obs_dim, state_dim, act_dim, hidden_dim, lr, device)
     pick_agent = PPOAgent(pick_obs_dim, state_dim, act_dim, hidden_dim, lr, device)

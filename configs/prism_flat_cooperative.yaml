@@ -1,0 +1,49 @@
+# PRISM — Flat-cooperative reward condition config
+#
+# Team: 4 AGVs + 2 pickers  ← IDENTICAL to prism_symbiotic.yaml
+# Reward: r_i = r_task_i + alpha_collab * mean_j(r_task_j)
+#   Simple shared team bonus. No relationship classification. No ecological
+#   typing. Every agent receives an undifferentiated cooperative incentive.
+#
+# All env, team, architecture, and training hyperparameters are identical to
+# prism_symbiotic.yaml. Only the reward structure differs.
+#
+# Ecological relationships are still MEASURED (logged to eval_metrics.csv)
+# but do NOT influence the reward signal.
+
+experiment:
+  name: "prism_flat_cooperative"
+  condition: "flat_cooperative"
+  n_seeds: 3
+
+env:
+  id: "tarware-small-4agvs-2pickers-partialobs-chg-v1"   # SAME as symbiotic
+  max_inactivity_steps: null
+  max_steps: 5000
+  package_distribution:                                    # SAME as symbiotic
+    SOLO:        0.20
+    STANDARD:    0.30
+    LARGE:       0.10
+    HEAVY:       0.25
+    PICKER_SOLO: 0.15
+
+training:                    # SAME as symbiotic
+  timesteps: 1_000_000
+  rollout_steps: 1024
+  epochs: 4
+  lr: 3.0e-4
+  entropy_coef: 0.01
+  mini_batches: 8
+
+safety:
+  low_battery_threshold: 10.0
+  depletion_penalty: 5.0
+
+flat_cooperative:
+  alpha_collab: 1.0           # scale on shared team mean bonus
+
+logging:
+  checkpoint_dir: "runs/prism_flat_cooperative"
+  tb_logdir: "runs/tensorboard/prism_flat_cooperative"
+  log_interval: 10
+  output: "runs/results/prism_flat_cooperative.json"

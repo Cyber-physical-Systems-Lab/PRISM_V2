@@ -3,7 +3,7 @@ Robotic Symbiosis — core theoretical framework.
 
 C1: Formal definition of robotic symbiosis from value functions.
 C2: Reward decomposition with convergence guarantees.
-C3: Experimental validation on heterogeneous TARWARE scenarios.
+C3: Experimental validation — symbiotic vs flat-cooperative reward conditions.
 """
 
 from symbiosis.fitness import AgentFitness

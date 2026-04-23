@@ -1,31 +1,32 @@
 """
-Publication-quality figures for the IJRR paper.
+PRISM — Publication-quality figures.
 
-Produces up to 8 figures depending on which result files are available:
+Produces up to 9 figures depending on which result files are available:
 
-  Fig 1  — Task completion learning curves (all methods, hetero env)
-  Fig 2  — Mutualism fraction emergence curves (all methods)
+  Fig 1  — Task completion learning curves (symbiotic condition)
+  Fig 2  — Mutualism fraction emergence over training
   Fig 3  — Relationship type distribution at end of training (stacked bar)
   Fig 4  — Raw vs shaped reward divergence (shows shaping effect)
   Fig 5  — Training stability: actor entropy + KL divergence
-  Fig 6  — Team Specialisation Index (TSI) per method
-  Fig 7  — Hetero vs Homo task completion comparison (falsification result)
-  Fig 8  — Package-type delivery breakdown per method
+  Fig 6  — Team Specialisation Index (TSI) per condition
+  Fig 7  — Symbiotic vs flat-cooperative comparison (core PRISM result)
+  Fig 8  — Package-type delivery breakdown per condition
+  Fig 9  — Battery management convergence
 
 Usage
 -----
-# After running run_heterogeneous.py:
-python analysis/paper_figures.py \
-    --hetero   local_runs/results/symbiotic_200k.json \
-    --ckpt_dir local_runs/checkpoints_200k \
-    --output   local_runs/figures
+# After running run_symbiotic.py:
+python analysis/paper_figures.py \\
+    --symbiotic local_runs/results/prism_symbiotic.json \\
+    --ckpt_dir  local_runs/checkpoints/prism_symbiotic \\
+    --output    local_runs/figures
 
-# With homogeneous results too (Fig 7):
-python analysis/paper_figures.py \
-    --hetero   local_runs/results/symbiotic_200k.json \
-    --homo     local_runs/results/homo_results.json \
-    --ckpt_dir local_runs/checkpoints_200k \
-    --output   local_runs/figures
+# With flat-cooperative results (Fig 7):
+python analysis/paper_figures.py \\
+    --symbiotic local_runs/results/prism_symbiotic.json \\
+    --flat_coop local_runs/results/prism_flat_cooperative.json \\
+    --ckpt_dir  local_runs/checkpoints/prism_symbiotic \\
+    --output    local_runs/figures
 """
 
 from __future__ import annotations
@@ -46,29 +47,36 @@ import pandas as pd
 # ── Aesthetic constants ────────────────────────────────────────────────────────
 
 METHOD_COLOR = {
-    "individual":   "#E74C3C",   # red
-    "team":         "#3498DB",   # blue
-    "unclassified": "#F39C12",   # amber
-    "symbiotic":    "#27AE60",   # green  (proposed method)
-    "heuristic":    "#8E44AD",   # purple
+    # PRISM primary conditions
+    "symbiotic":       "#27AE60",   # green — proposed method
+    "flat_cooperative":"#3498DB",   # blue  — baseline
+    # Legacy method names kept for backwards compatibility
+    "individual":      "#E74C3C",   # red
+    "team":            "#3498DB",   # blue
+    "unclassified":    "#F39C12",   # amber
+    "heuristic":       "#8E44AD",   # purple
 }
 METHOD_LABEL = {
-    "individual":   "Individual reward",
-    "team":         "Team reward",
-    "unclassified": "Unclassified coop.",
-    "symbiotic":    "Symbiotic (ours)",
-    "heuristic":    "Heuristic oracle",
+    # PRISM primary conditions
+    "symbiotic":       "Symbiotic (PRISM)",
+    "flat_cooperative":"Flat-cooperative (baseline)",
+    # Legacy
+    "individual":      "Individual reward",
+    "team":            "Team reward",
+    "unclassified":    "Unclassified coop.",
+    "heuristic":       "Heuristic oracle",
 }
 METHOD_STYLE = {
-    "individual":   "-",
-    "team":         "--",
-    "unclassified": "-.",
-    "symbiotic":    "-",
-    "heuristic":    ":",
+    "symbiotic":       "-",
+    "flat_cooperative":"--",
+    "individual":      "-",
+    "team":            "--",
+    "unclassified":    "-.",
+    "heuristic":       ":",
 }
 METHOD_LW = {
-    "individual": 1.4, "team": 1.4, "unclassified": 1.4,
-    "symbiotic": 2.2, "heuristic": 1.4,
+    "symbiotic": 2.2, "flat_cooperative": 1.8,
+    "individual": 1.4, "team": 1.4, "unclassified": 1.4, "heuristic": 1.4,
 }
 
 REL_COLOR = {
@@ -149,7 +157,7 @@ def load_update_csv(ckpt_dir: Path, method: str, backend: str = "ippo",
 
 
 def _methods_from_json(data: dict) -> Dict[str, dict]:
-    """Extract the methods sub-dict from the hetero/homo JSON result."""
+    """Extract the methods sub-dict from a condition result JSON."""
     if "methods" in data:
         return data["methods"]
     return data
@@ -455,55 +463,61 @@ def fig6_specialisation_index(
     _save(fig, save_path, "fig6_specialisation_index")
 
 
-# ── Figure 7: Hetero vs Homo comparison ───────────────────────────────────────
+# ── Figure 7: Symbiotic vs Flat-cooperative comparison ────────────────────────
 
-def fig7_hetero_vs_homo(
-    hetero_results: dict,
-    homo_results: dict,
+def fig7_symbiotic_vs_flat_coop(
+    symbiotic_results: dict,
+    flat_coop_results: dict,
     save_path: Path,
 ) -> None:
-    """Grouped bar chart: hetero ENV-A vs homo ENV-B.
-    The key falsification result: symbiotic advantage disappears in homogeneous env."""
-    hetero = _methods_from_json(hetero_results)
-    homo   = _methods_from_json(homo_results)
+    """Grouped bar chart: symbiotic reward vs flat-cooperative reward.
 
-    all_methods = sorted(set(hetero) | set(homo))
-    x = np.arange(len(all_methods))
+    The core PRISM falsification result: if symbiotic reward provides no
+    advantage over flat-cooperative on the same team, the ecological framing
+    of C1 and C2 has no measurable empirical support.
+    """
+    sym  = _methods_from_json(symbiotic_results)
+    flat = _methods_from_json(flat_coop_results)
+
+    all_conditions = sorted(set(sym) | set(flat))
+    x = np.arange(len(all_conditions))
     w = 0.35
 
-    hetero_means = [hetero.get(m, {}).get("mean_completion", 0) for m in all_methods]
-    homo_means   = [homo.get(m, {}).get("mean_completion", 0)   for m in all_methods]
-    hetero_stds  = [hetero.get(m, {}).get("std_completion", 0)  for m in all_methods]
-    homo_stds    = [homo.get(m, {}).get("std_completion", 0)    for m in all_methods]
+    sym_means  = [sym.get(c, {}).get("mean_completion", 0)  for c in all_conditions]
+    flat_means = [flat.get(c, {}).get("mean_completion", 0) for c in all_conditions]
+    sym_stds   = [sym.get(c, {}).get("std_completion", 0)   for c in all_conditions]
+    flat_stds  = [flat.get(c, {}).get("std_completion", 0)  for c in all_conditions]
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    colors = [METHOD_COLOR.get(m, "gray") for m in all_methods]
+    colors = [METHOD_COLOR.get(c, "#27AE60") for c in all_conditions]
 
-    ax.bar(x - w / 2, hetero_means, w, yerr=hetero_stds, color=colors, alpha=0.9,
-           capsize=4, label="Heterogeneous (ENV A)", edgecolor="black", linewidth=0.4)
-    ax.bar(x + w / 2, homo_means,   w, yerr=homo_stds,   color=colors, alpha=0.45,
-           capsize=4, label="Homogeneous (ENV B)", edgecolor="black", linewidth=0.4, hatch="//")
+    ax.bar(x - w / 2, sym_means,  w, yerr=sym_stds,  color=colors, alpha=0.9,
+           capsize=4, label="Symbiotic (r_task + r_sym)",
+           edgecolor="black", linewidth=0.4)
+    ax.bar(x + w / 2, flat_means, w, yerr=flat_stds, color=colors, alpha=0.45,
+           capsize=4, label="Flat-cooperative (r_task + r_collab)",
+           edgecolor="black", linewidth=0.4, hatch="//")
 
     ax.set_xticks(x)
-    ax.set_xticklabels([METHOD_LABEL.get(m, m) for m in all_methods], rotation=15, ha="right")
+    ax.set_xticklabels([METHOD_LABEL.get(c, c) for c in all_conditions], rotation=15, ha="right")
     ax.set_ylabel("Mean deliveries per episode")
-    ax.set_title("Fig 7 — Symbiotic Advantage Disappears in Homogeneous Env (Falsification)")
+    ax.set_title("Fig 7 — Symbiotic vs Flat-Cooperative Reward (Same Team)")
 
-    # Annotate the symbiotic bars with the advantage
-    if "symbiotic" in hetero and "symbiotic" in homo:
-        si = all_methods.index("symbiotic")
-        diff = hetero_means[si] - homo_means[si]
-        ax.annotate(
-            f"Δ={diff:+.1f}",
-            xy=(si, max(hetero_means[si], homo_means[si])),
-            xytext=(si, max(hetero_means[si], homo_means[si]) + 0.5),
-            ha="center", fontsize=8, color=METHOD_COLOR["symbiotic"],
-            arrowprops=dict(arrowstyle="-", color="gray", lw=0.5),
-        )
+    # Annotate symbiotic advantage if present
+    for i, cond in enumerate(all_conditions):
+        if cond in sym and cond in flat:
+            diff = sym_means[i] - flat_means[i]
+            ymax = max(sym_means[i], flat_means[i])
+            ax.annotate(
+                f"Δ={diff:+.1f}",
+                xy=(i, ymax), xytext=(i, ymax + max(ax.get_ylim()[1] * 0.04, 0.3)),
+                ha="center", fontsize=8, color=METHOD_COLOR.get(cond, "gray"),
+                arrowprops=dict(arrowstyle="-", color="gray", lw=0.5),
+            )
 
     ax.legend()
     fig.tight_layout()
-    _save(fig, save_path, "fig7_hetero_vs_homo")
+    _save(fig, save_path, "fig7_symbiotic_vs_flat_coop")
 
 
 # ── Figure 8: Package type delivery breakdown ──────────────────────────────────
@@ -536,7 +550,7 @@ def fig8_package_breakdown(
                       if f"deliveries_{p.lower()}" in df.columns]
         if not found_cols:
             # No per-package-type breakdown available — skip this method.
-            # Run training with the updated run_heterogeneous.py to get this data.
+            # Per-package breakdown is logged when running run_symbiotic.py / run_flat_cooperative.py.
             continue
 
         method_names.append(method)
@@ -616,87 +630,88 @@ def fig9_battery_management(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate paper figures from training results",
+        description="PRISM — Generate paper figures from training results",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("--hetero",   required=True,
-                        help="Path to heterogeneous results JSON (from run_heterogeneous.py)")
-    parser.add_argument("--homo",     default=None,
-                        help="Path to homogeneous results JSON (for Fig 7, optional)")
-    parser.add_argument("--ckpt_dir", required=True,
-                        help="Checkpoint directory containing per-method CSV files")
-    parser.add_argument("--output",   default="local_runs/figures",
+    parser.add_argument("--symbiotic", required=True,
+                        help="Path to symbiotic condition results JSON (from run_symbiotic.py)")
+    parser.add_argument("--flat_coop", default=None,
+                        help="Path to flat-cooperative results JSON (for Fig 7, optional)")
+    parser.add_argument("--ckpt_dir",  required=True,
+                        help="Checkpoint directory containing per-condition CSV files")
+    parser.add_argument("--output",    default="local_runs/figures",
                         help="Output directory for figures")
-    parser.add_argument("--backend",  default="ippo",
-                        help="Backend used (ippo/hetppo/mappo)")
-    parser.add_argument("--seed",     default=1, type=int)
+    parser.add_argument("--backend",   default="ippo",
+                        help="Backend used (ippo/mappo)")
+    parser.add_argument("--seed",      default=1, type=int)
     args = parser.parse_args()
 
     out = Path(args.output)
     out.mkdir(parents=True, exist_ok=True)
     ckpt = Path(args.ckpt_dir)
 
-    print(f"Loading results: {args.hetero}")
-    hetero = load_json(args.hetero)
+    print(f"Loading results: {args.symbiotic}")
+    symbiotic = load_json(args.symbiotic)
+    symbiotic_path = args.symbiotic
 
     print(f"Output directory: {out}/")
     print()
 
     print("Generating Fig 1 — Learning curves …")
     try:
-        fig1_learning_curves(hetero, ckpt, out)
+        fig1_learning_curves(symbiotic, ckpt, out)
     except Exception as e:
         print(f"  [SKIP] {e}")
 
     print("Generating Fig 2 — Mutualism emergence …")
     try:
-        fig2_mutualism_emergence(hetero, ckpt, out)
+        fig2_mutualism_emergence(symbiotic, ckpt, out)
     except Exception as e:
         print(f"  [SKIP] {e}")
 
     print("Generating Fig 3 — Relationship distribution …")
     try:
-        fig3_relationship_distribution(hetero, ckpt, out)
+        fig3_relationship_distribution(symbiotic, ckpt, out)
     except Exception as e:
         print(f"  [SKIP] {e}")
 
     print("Generating Fig 4 — Reward shaping effect …")
     try:
-        fig4_reward_shaping_effect(hetero, ckpt, out)
+        fig4_reward_shaping_effect(symbiotic, ckpt, out)
     except Exception as e:
         print(f"  [SKIP] {e}")
 
     print("Generating Fig 5 — Training stability …")
     try:
-        fig5_training_stability(hetero, ckpt, out)
+        fig5_training_stability(symbiotic, ckpt, out)
     except Exception as e:
         print(f"  [SKIP] {e}")
 
     print("Generating Fig 6 — Specialisation index …")
     try:
-        fig6_specialisation_index(hetero, out)
+        fig6_specialisation_index(symbiotic, out)
     except Exception as e:
         print(f"  [SKIP] {e}")
 
-    print("Generating Fig 7 — Hetero vs Homo (falsification) …")
-    if args.homo:
+    print("Generating Fig 7 — Symbiotic vs Flat-cooperative …")
+    if args.flat_coop:
         try:
-            homo = load_json(args.homo)
-            fig7_hetero_vs_homo(hetero, homo, out)
+            flat_coop = load_json(args.flat_coop)
+            fig7_symbiotic_vs_flat_coop(symbiotic, flat_coop, out)
         except Exception as e:
             print(f"  [SKIP] {e}")
     else:
-        print("  [SKIP] --homo not supplied; run homogeneous experiment first")
+        print("  [SKIP] --flat_coop not supplied; run run_flat_cooperative.py first")
 
     print("Generating Fig 8 — Package type breakdown …")
     try:
-        fig8_package_breakdown(hetero, ckpt, out)
+        fig8_package_breakdown(symbiotic, ckpt, out)
     except Exception as e:
         print(f"  [SKIP] {e}")
 
     print("Generating Fig 9 — Battery management …")
     try:
-        fig9_battery_management(hetero, ckpt, out)
+        fig9_battery_management(symbiotic, ckpt, out)
     except Exception as e:
         print(f"  [SKIP] {e}")
 

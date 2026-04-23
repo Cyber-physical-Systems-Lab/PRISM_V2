@@ -1,0 +1,54 @@
+# PRISM — Symbiotic reward condition config
+#
+# Team: 4 AGVs + 2 pickers (mixed, capability-complementary)
+# Reward: r_i = r_task_i + r_sym_i
+#   r_sym shaped by ecological relationship type per AGV-picker pair
+#
+# Compare against prism_flat_cooperative.yaml which uses the same team and
+# env with r_i = r_task_i + alpha_collab * mean_j(r_task_j).
+
+experiment:
+  name: "prism_symbiotic"
+  condition: "symbiotic"
+  n_seeds: 3
+
+env:
+  id: "tarware-small-4agvs-2pickers-partialobs-chg-v1"
+  max_inactivity_steps: null        # disable early termination for training
+  max_steps: 5000
+  # Package mix enabling all five ecological relationship types:
+  #   SOLO / PICKER_SOLO → neutralism   (independent tasks)
+  #   STANDARD           → mutualism    (AGV + picker joint delivery)
+  #   LARGE              → mutualism    (2 AGVs + 2 pickers, recruitment cost)
+  #   HEAVY              → commensalism (picker assists AGV, AGV gains energy discount)
+  #   Charger contention → competition  (from reduced station count)
+  package_distribution:
+    SOLO:        0.20
+    STANDARD:    0.30
+    LARGE:       0.10
+    HEAVY:       0.25
+    PICKER_SOLO: 0.15
+
+training:
+  timesteps: 1_000_000
+  rollout_steps: 1024
+  epochs: 4
+  lr: 3.0e-4
+  entropy_coef: 0.01
+  mini_batches: 8
+
+safety:
+  low_battery_threshold: 10.0   # force charging below this level
+  depletion_penalty: 5.0        # penalty if battery hits 0
+
+symbiotic:
+  w_mutualism:    2.0           # φ(+/+) — reward joint delivery
+  w_commensalism: 1.5           # φ(+/0) — reward unilateral help
+  w_competition: -1.5           # φ(-/-) — penalise mutual blocking
+  w_parasitism:  -0.5           # φ(+/-) — penalise exploitation
+
+logging:
+  checkpoint_dir: "runs/prism_symbiotic"
+  tb_logdir: "runs/tensorboard/prism_symbiotic"
+  log_interval: 10
+  output: "runs/results/prism_symbiotic.json"

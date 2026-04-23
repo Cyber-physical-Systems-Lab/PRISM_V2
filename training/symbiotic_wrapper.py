@@ -1,7 +1,7 @@
 """
 Symbiotic Environment Wrapper for Battery-TA-RWARE.
 
-Wraps the heterogeneous TARWARE environment with four additions:
+Wraps the TARWARE environment with four additions:
 
   1. Relationship detection  — classifies each AGV-picker pair every step
                                using observable step-level signals only.
@@ -190,7 +190,7 @@ class SymbioticRewardShaper:
 
 class SymbioticWrapper(gym.Wrapper):
     """
-    Battery-aware symbiotic wrapper for the TARWARE heterogeneous env.
+    Battery-aware symbiotic wrapper for the TARWARE env.
 
     Parameters
     ----------

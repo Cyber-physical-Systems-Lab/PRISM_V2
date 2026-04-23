@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Research codebase for **"Emergent Symbiosis in Heterogeneous MARL: A Formal Framework for Capability-Complementary Robotic Teams"**. The central hypothesis is narrow and falsifiable: symbiotic reward shaping helps coordination only when capability complementarity exists between agent types.
+Research codebase for **"PRISM: Policy-shaping via Reward decomposition for Inter-agent Symbiosis in MARL"**. The central hypothesis is narrow and falsifiable: symbiotic reward decomposition (`r_i = r_task + r_sym`) produces higher throughput, better energy efficiency, and identifiable ecological relationship signatures compared to flat cooperative reward shaping — on the same team, in the same environment.
 
 Three linked contributions:
 - **C1**: Formalize robotic symbiosis via value-function counterfactuals (ecological relationship types)
 - **C2**: Reward decomposition `r_i = r_task + r_sym` with convergence guarantees
-- **C3**: Confirmation and falsification experiments on heterogeneous vs homogeneous warehouse teams
+- **C3**: Symbiotic vs flat-cooperative reward comparison on identical mixed teams (4 AGVs + 2 pickers)
 
 ## Installation
 
@@ -30,48 +30,46 @@ python experiments/run_heuristic_baseline.py \
     --num_episodes 20 --seed 42 \
     --output runs/results/heuristic_baseline.json
 
-# Experiment 1: heterogeneous (primary result)
-python experiments/run_heterogeneous.py \
-    --config configs/heterogeneous.yaml \
-    --timesteps 1000000 --seeds 5 \
-    --output runs/results/hetero_results.json
+# C3 primary: symbiotic reward condition
+python experiments/run_symbiotic.py \
+    --config configs/prism_symbiotic.yaml \
+    --timesteps 1000000 --seeds 0 1 2 \
+    --output runs/results/prism_symbiotic.json
 
-# Force backend: --backend mappo|ippo|happo|haddpg
-# Backend auto-order: local mappo → local ippo → HARL placeholders
+# C3 falsification: flat-cooperative reward condition (same team, same env)
+python experiments/run_flat_cooperative.py \
+    --config configs/prism_flat_cooperative.yaml \
+    --timesteps 1000000 --seeds 0 1 2 \
+    --output runs/results/prism_flat_cooperative.json
 
-# Experiment 2: homogeneous falsification
-python experiments/run_homogeneous.py \
-    --config configs/homogeneous.yaml \
-    --timesteps 500000 --seeds 5 \
-    --output runs/results/homo_results.json
+# Backend flag: --backend auto|mappo|ippo
+# auto tries mappo first, falls back to ippo
 
-# Experiment 3: heterogeneity gradient
-python experiments/run_gradient.py \
-    --config configs/gradient.yaml \
-    --h_values 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 \
-    --seeds 5 --output runs/results/gradient_results.json
-
-# Experiment 4: convergence diagnostics
-python experiments/run_convergence.py \
-    --config configs/heterogeneous.yaml \
-    --output runs/results/convergence_results.json
-
-# Combined sweep (all experiments)
+# Combined sweep (both conditions)
 python experiments/run_all_experiments.py \
-    --output runs/results/experiment_results.json
+    --timesteps 1000000 --seeds 0 1 2 \
+    --output runs/results/prism_results.json
 ```
 
 ### Analysis and figures
 
 ```bash
-# Generate paper figures from per-experiment JSON files
-python analysis/plot.py runs/results
-# Outputs: runs/results/figures/fig1_mutualism_hetero.pdf, fig2_task_completion.pdf
+# Generate paper figures (symbiotic condition only)
+python analysis/paper_figures.py \
+    --symbiotic runs/results/prism_symbiotic.json \
+    --ckpt_dir  runs/prism_symbiotic \
+    --output    runs/figures
 
-# Regenerate demo GIF
-python experiments/generate_demo_gif.py \
-    --output assets/robotic_symbiosis_demo.gif \
-    --metadata_output assets/robotic_symbiosis_demo.json
+# With flat-cooperative comparison (Fig 7 — core PRISM result)
+python analysis/paper_figures.py \
+    --symbiotic runs/results/prism_symbiotic.json \
+    --flat_coop runs/results/prism_flat_cooperative.json \
+    --ckpt_dir  runs/prism_symbiotic \
+    --output    runs/figures
+
+# Quick comparison plots
+python analysis/plot.py runs/results
+# Outputs: runs/results/figures/fig1_mutualism_symbiotic.pdf, fig2_task_completion.pdf
 ```
 
 ### SLURM cluster
@@ -79,12 +77,11 @@ python experiments/generate_demo_gif.py \
 ```bash
 sbatch slurm/run_all_experiments.slurm
 # Override parameters:
-TIMESTEPS=300000 SEEDS=5 HEURISTIC_EPISODES=20 sbatch slurm/run_all_experiments.slurm
+TIMESTEPS=1000000 NUM_SEEDS=5 sbatch slurm/run_all_experiments.slurm
 
 # Individual launchers:
-sbatch slurm/train_heterogeneous.slurm
-sbatch slurm/train_homogeneous.slurm
-sbatch slurm/heuristic_baseline.slurm
+sbatch slurm/train_symbiotic.slurm
+sbatch slurm/train_flat_cooperative.slurm
 ```
 
 ### Linting and formatting
@@ -101,9 +98,9 @@ pytest  # no test suite currently exists; placeholder for future tests
 
 ```
 symbiosis/      # C1+C2 theory — relationship formalization and reward decomposition
-tarware/        # Environment — battery-enabled heterogeneous warehouse (TARWARE)
+tarware/        # Environment — battery-enabled warehouse (TARWARE)
 training/       # SymbioticWrapper — glues symbiosis theory onto the environment
-experiments/    # C3 experiment runners + PPO backends
+experiments/    # C3 experiment runners + PPO
 analysis/       # Post-hoc metrics (TSI, RSI) and paper figure generation
 configs/        # YAML configs for C3 experiments
 slurm/          # SLURM batch scripts for GPU cluster
@@ -122,9 +119,9 @@ results/        # Lightweight preliminary CSVs checked into git
 ### tarware/ — Environment Layer
 
 `warehouse.py` is the core gymnasium environment. Key design decisions:
-- Two heterogeneous agent types: **AGVs** (mobile, transport packages) and **pickers** (stationary, handle package manipulation)
+- Two agent types: **AGVs** (mobile, transport packages) and **pickers** (stationary, handle package manipulation)
 - Battery system with package-weight-dependent energy consumption (`energy_coupling.py`)
-- Task queue with three package types: SOLO (AGV only), STANDARD (1 AGV + 1 picker), LARGE (2 AGVs + 2 pickers)
+- Task queue with five package types: SOLO, PICKER_SOLO, STANDARD (1 AGV + 1 picker), LARGE (2 AGVs + 2 pickers), HEAVY
 - Internal motion planning via A* (`astar.py`) — experiment actions are task targets, not low-level moves
 - Adaptive replanning under battery constraints (`replanning.py`)
 - Role emergence tracking (charging/tasking/idle) in `role_assignment.py`
@@ -143,14 +140,17 @@ where size ∈ {tiny, small, medium, large, extralarge}.
 
 ### experiments/ — Training Layer
 
-- `ppo_backends.py`: Local MAPPO (centralized critic per agent type) and IPPO (decentralized) implementations built on `skrl`. This is the largest file and the primary training engine.
-- Per-experiment runners (`run_*.py`) instantiate the environment, wrap it with `SymbioticWrapper`, select the PPO backend, and write JSON results.
-- The `--backend auto` flag tries MAPPO first, falls back to IPPO; `happo`/`haddpg` require external HARL installation not bundled here.
+- `run_symbiotic.py`: Primary C3 experiment — symbiotic reward condition (`r_task + r_sym`). Self-contained PPO training loop (MAPPO/IPPO), full metrics logging.
+- `run_flat_cooperative.py`: C3 falsification — flat-cooperative reward condition (`r_task + alpha * mean_team`). Identical architecture; relationships are measured passively but do not shape rewards.
+- `run_all_experiments.py`: Orchestrates both conditions sequentially; produces combined summary JSON with C3 claim checks.
+- `ppo_backends.py`: Legacy multi-method runner (individual/team/unclassified/symbiotic backends via `skrl`). Used by older experiment scripts.
+- The `--backend auto` flag tries MAPPO first, falls back to IPPO.
 
 ### analysis/ — Metrics Layer
 
 - `metrics.py`: TSI (Team Symbiosis Index), RSI (Relationship Strength Index), mutualism fraction, convergence episode.
-- `plot.py`: Paper-style figures. Reads per-experiment JSONs, not the combined JSON from `run_all_experiments.py`.
+- `paper_figures.py`: Publication-quality figures (9 panels). Primary figure script. Use `--symbiotic` and `--flat_coop` flags.
+- `plot.py`: Quick comparison plots. Reads per-condition JSONs from `runs/results/`.
 
 ## Output Convention
 
@@ -158,8 +158,13 @@ where size ∈ {tiny, small, medium, large, extralarge}.
 
 ## Config Structure
 
-YAML configs (in `configs/`) control all hyperparameters. Key `symbiotic:` block fields:
+YAML configs (in `configs/`) control all hyperparameters.
+
+`prism_symbiotic.yaml` — key `symbiotic:` block fields:
 - `w_mutualism`, `w_commensalism`, `w_competition`, `w_parasitism`: relationship type weights (φ values in C2)
 - `sym_scale`: global scale on `r_sym` for boundedness (C2 convergence guarantee)
-- `rel_alpha`: EMA smoothing factor for relationship history
-- `activity_bonus`: set >0 only for sparse-reward ablation studies
+
+`prism_flat_cooperative.yaml` — key `flat_cooperative:` block field:
+- `alpha_collab`: scale on the shared team mean bonus
+
+Both configs use identical `env:`, `training:`, and `safety:` blocks — only the reward structure block differs.

@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "robotic-symbiosis-tarware"
+name = "prism-tarware"
 version = "0.1.0"
-description = "Robotic Symbiosis in Heterogeneous Multi-Agent Warehouse Systems"
+description = "PRISM: Policy-shaping via Reward decomposition for Inter-agent Symbiosis in MARL"
 readme = "README.md"
 license = {file = "LICENSE"}
 authors = [

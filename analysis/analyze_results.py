@@ -182,15 +182,19 @@ def plot_battery_curves(ax, methods_data, smooth_w=5, title=None, show_legend=Tr
     return plotted
 
 
-# ── Figure 1: Heterogeneous training curves ────────────────────────────────────
+# ── Figure 1: Symbiotic condition training curves ─────────────────────────────
 
-def fig_hetero_curves(data, out_dir, heuristic_mean=None):
-    h = data["results"]["heterogeneous"]
-    env = h["env"]
-    methods = h["methods"]
+def fig_symbiotic_curves(data, out_dir, heuristic_mean=None):
+    sym = data["results"]["symbiotic"]
+    env = sym.get("env", "")
+    canonical = sym.get("canonical_backend", next(iter(sym.get("results", {}).keys()), ""))
+    methods = sym.get("results", {}).get(canonical, {})
+    # Wrap in a single-key dict so plot_learning_curves receives {method: data}
+    if "deliveries_curves" in methods:
+        methods = {"symbiotic": methods}
 
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=False)
-    fig.suptitle(f"Heterogeneous env — {env}", fontsize=12, y=1.01)
+    fig.suptitle(f"Symbiotic condition — {env}", fontsize=12, y=1.01)
 
     # Left: deliveries
     plot_learning_curves(
@@ -221,7 +225,7 @@ def fig_hetero_curves(data, out_dir, heuristic_mean=None):
     ax.legend(loc="upper left", framealpha=0.7)
 
     fig.tight_layout()
-    path = out_dir / "fig1_hetero_curves.pdf"
+    path = out_dir / "fig1_symbiotic_curves.pdf"
     fig.savefig(path, bbox_inches="tight")
     fig.savefig(path.with_suffix(".png"), bbox_inches="tight")
     plt.close(fig)
@@ -493,10 +497,14 @@ def _fig_convergence_standalone(conv, out_dir):
 # ── Figure 5: TSI / RSI bar chart ─────────────────────────────────────────────
 
 def fig_tsi_rsi(data, out_dir):
-    """Grouped bar: TSI and RSI per method for hetero & homo."""
+    """Grouped bar: TSI and RSI per condition (symbiotic vs flat-cooperative)."""
+    def _methods_from_condition(cond_data):
+        canonical = cond_data.get("canonical_backend", next(iter(cond_data.get("results", {}).keys()), ""))
+        return {canonical: cond_data.get("results", {}).get(canonical, {})}
+
     sections = {
-        "Heterogeneous": data["results"].get("heterogeneous", {}).get("methods", {}),
-        "Homogeneous":   data["results"].get("homogeneous",   {}).get("methods", {}),
+        "Symbiotic":        _methods_from_condition(data["results"].get("symbiotic",        {})),
+        "Flat-cooperative": _methods_from_condition(data["results"].get("flat_cooperative", {})),
     }
 
     fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=False)
@@ -532,38 +540,38 @@ def fig_tsi_rsi(data, out_dir):
     print(f"  Saved {path}")
 
 
-# ── Figure 6: Hetero vs Homo final performance ────────────────────────────────
+# ── Figure 6: Symbiotic vs Flat-cooperative final performance ─────────────────
 
-def fig_hetero_vs_homo(data, out_dir):
-    """Bar chart: final mean_completion per method × environment."""
-    sections = {
-        "Heterogeneous": data["results"].get("heterogeneous", {}).get("methods", {}),
-        "Homogeneous":   data["results"].get("homogeneous",   {}).get("methods", {}),
-    }
+def fig_condition_comparison(data, out_dir):
+    """Bar chart: final mean_completion — symbiotic vs flat-cooperative."""
+    def _get_completion(cond_data, key):
+        canonical = cond_data.get("canonical_backend", next(iter(cond_data.get("results", {}).keys()), ""))
+        return float(cond_data.get("results", {}).get(canonical, {}).get(key, 0.0))
 
-    fig, ax = plt.subplots(figsize=(8, 4))
-    x       = np.arange(2)
-    width   = 0.18
-    offsets = np.linspace(-0.28, 0.28, len(METHODS))
+    sym_data  = data["results"].get("symbiotic",        {})
+    flat_data = data["results"].get("flat_cooperative", {})
 
-    for i, m in enumerate(METHODS):
-        means = []
-        errs  = []
-        for sec_data in sections.values():
-            md = sec_data.get(m, {})
-            means.append(md.get("mean_completion", 0.0))
-            errs.append(md.get("std_completion",   0.0))
-        ax.bar(x + offsets[i], means, width=width, yerr=errs,
-               color=METHOD_COLORS[m], label=METHOD_LABELS[m],
-               capsize=3, edgecolor="white", linewidth=0.5)
+    conditions = ["Symbiotic", "Flat-cooperative"]
+    means = [
+        _get_completion(sym_data,  "mean_completion"),
+        _get_completion(flat_data, "mean_completion"),
+    ]
+    errs  = [
+        _get_completion(sym_data,  "std_completion"),
+        _get_completion(flat_data, "std_completion"),
+    ]
+    colors = ["#27AE60", "#3498DB"]
 
+    fig, ax = plt.subplots(figsize=(6, 4))
+    x = np.arange(len(conditions))
+    ax.bar(x, means, color=colors, yerr=errs, capsize=4,
+           edgecolor="white", linewidth=0.5)
     ax.set_xticks(x)
-    ax.set_xticklabels(list(sections.keys()))
+    ax.set_xticklabels(conditions)
     ax.set_ylabel("Mean deliveries / episode (final)")
-    ax.set_title("Final delivery performance: heterogeneous vs. homogeneous")
-    ax.legend(fontsize=9, framealpha=0.7)
+    ax.set_title("PRISM: Symbiotic vs Flat-cooperative")
     fig.tight_layout()
-    path = out_dir / "fig6_hetero_vs_homo.pdf"
+    path = out_dir / "fig6_condition_comparison.pdf"
     fig.savefig(path, bbox_inches="tight")
     fig.savefig(path.with_suffix(".png"), bbox_inches="tight")
     plt.close(fig)
@@ -576,43 +584,37 @@ def fig_claims_summary(data, out_dir):
     checks = data["checks"]
 
     rows = []
-    # C1
-    c1 = checks["C1"]
+    # C3 (primary PRISM claim)
+    c3 = checks.get("C3", {})
     rows += [
-        ("C1", "Mutualism data present",
-         "Yes" if c1.get("heterogeneous_mutualism_data_present") else "No",
-         c1.get("heterogeneous_mutualism_data_present", False)),
-        ("C1", "TSI (symbiotic, hetero)",
-         f"{c1.get('heterogeneous_tsi_symbiotic',0):.3f}", True),
-        ("C1", "RSI (symbiotic, hetero)",
-         f"{c1.get('heterogeneous_rsi_symbiotic',0):.3f}", True),
+        ("C3", "Symbiotic > flat-coop completion",
+         "Yes" if c3.get("symbiotic_higher_completion") else "No",
+         c3.get("symbiotic_higher_completion", False)),
+        ("C3", "Symbiotic advantage (deliveries/ep)",
+         f"{c3.get('symbiotic_advantage', 0):+.3f}",
+         c3.get("symbiotic_higher_completion", False)),
+        ("C3", "Symbiotic mean completion",
+         f"{c3.get('symbiotic_mean_completion', 0):.3f}", True),
+        ("C3", "Flat-coop mean completion",
+         f"{c3.get('flat_coop_mean_completion', 0):.3f}", True),
+        ("C3", "Symbiotic higher mutualism",
+         "Yes" if c3.get("symbiotic_higher_mutualism") else "No",
+         c3.get("symbiotic_higher_mutualism", False)),
+        ("C3", "Symbiotic mutualism (final)",
+         f"{c3.get('symbiotic_mutualism_final', 0):.3f}", True),
+        ("C3", "Flat-coop mutualism (final)",
+         f"{c3.get('flat_coop_mutualism_final', 0):.3f}", True),
     ]
-    # C2
-    c2 = checks["C2"]
-    rows += [
-        ("C2", "Sym. rewards bounded",
-         "Yes" if c2.get("symbiotic_all_bounded") else "No",
-         c2.get("symbiotic_all_bounded", False)),
-        ("C2", "Max |r_sym| / r_task",
-         f"{c2.get('symbiotic_max_ratio',0):.3f}", True),
-        ("C2", "Conv. episode (symbiotic)",
-         f"{c2.get('symbiotic_mean_convergence_episode',0):.1f}", True),
-        ("C2", "Conv. episode (individual)",
-         f"{c2.get('individual_mean_convergence_episode',0):.1f}", True),
-    ]
-    # C3
-    c3 = checks["C3"]
-    rows += [
-        ("C3", "Hetero symbiotic > unclassified",
-         f"{c3.get('heterogeneous_symbiotic_minus_unclassified',0):+.3f}",
-         c3.get("heterogeneous_symbiotic_minus_unclassified", -1) >= 0),
-        ("C3", "Homo symbiotic > unclassified",
-         f"{c3.get('homogeneous_symbiotic_minus_unclassified',0):+.3f}",
-         c3.get("homogeneous_symbiotic_minus_unclassified", -1) >= 0),
-        ("C3", "Hetero advantage > homo",
-         "Yes" if c3.get("hetero_advantage_exceeds_homo") else "No",
-         c3.get("hetero_advantage_exceeds_homo", False)),
-    ]
+    # C2 (if convergence data present)
+    if "C2" in checks:
+        c2 = checks["C2"]
+        rows += [
+            ("C2", "Sym. rewards bounded",
+             "Yes" if c2.get("symbiotic_all_bounded") else "No",
+             c2.get("symbiotic_all_bounded", False)),
+            ("C2", "Max |r_sym| / r_task",
+             f"{c2.get('symbiotic_max_ratio', 0):.3f}", True),
+        ]
 
     fig, ax = plt.subplots(figsize=(9, 0.5 * len(rows) + 1.5))
     ax.axis("off")
@@ -642,25 +644,18 @@ def fig_claims_summary(data, out_dir):
     print(f"  Saved {path}")
 
 
-# ── Figure 8: Homogeneous training curves ─────────────────────────────────────
+# ── Figure 8: Flat-cooperative training curves ────────────────────────────────
 
-def fig_homo_curves(data, out_dir):
-    """
-    Works with new backend-nested format and old flat format.
-    Old: ho["methods"] = {method: {deliveries_curves}}
-    New: ho["results"] = {backend: {method: {deliveries_curves}}}
-    """
+def fig_flat_coop_curves(data, out_dir):
+    """Plot learning curves for the flat-cooperative condition."""
     ho = data.get("results", {})
-    # If we received the top-level homo JSON directly
-    if "methods" in data and "env" in data:
+    if "condition" in data and data.get("condition") == "flat_cooperative":
         ho = data
-    elif "falsification" in data:
-        ho = data
-    elif "homogeneous" in ho:
-        ho = ho["homogeneous"]
+    elif "flat_cooperative" in ho:
+        ho = ho["flat_cooperative"]
 
     if not ho:
-        print("  [skip] No homogeneous data found.")
+        print("  [skip] No flat-cooperative data found.")
         return
 
     env = ho.get("env", "")
@@ -689,10 +684,10 @@ def fig_homo_curves(data, out_dir):
         fig, ax = plt.subplots(figsize=(6.5, 4))
         plot_learning_curves(ax, results_block, smooth_w=5,
                              ylabel="Deliveries / episode",
-                             title=f"Homogeneous env — {env}")
+                             title=f"Flat-cooperative — {env}")
         fig.tight_layout()
 
-    path = out_dir / "fig8_homo_curves.pdf"
+    path = out_dir / "fig8_flat_coop_curves.pdf"
     fig.savefig(path, bbox_inches="tight")
     fig.savefig(path.with_suffix(".png"), bbox_inches="tight")
     plt.close(fig)
@@ -710,24 +705,22 @@ def fig_battery_checkups(data, out_dir):
     """
     sections = []
 
-    if "falsification" in data and "results" in data:
-        # Standalone homogeneous results: one panel per backend.
+    if "condition" in data and data.get("condition") == "flat_cooperative":
+        # Standalone flat-cooperative results JSON: one panel per backend.
         backends = data.get("backends", list(data.get("results", {}).keys()))
         for backend in backends:
-            b_methods = data.get("results", {}).get(backend, {})
-            sections.append((f"Homogeneous - {backend.upper()}", b_methods))
+            b_data = data.get("results", {}).get(backend, {})
+            sections.append((f"Flat-cooperative - {backend.upper()}", {"flat_cooperative": b_data}))
     else:
-        # Combined experiment JSON
-        hetero_methods = data.get("results", {}).get("heterogeneous", {}).get("methods", {})
-        if hetero_methods:
-            sections.append(("Heterogeneous", hetero_methods))
-
-        homo = data.get("results", {}).get("homogeneous", {})
-        if "results" in homo:
-            for backend in homo.get("backends", list(homo["results"].keys())):
-                sections.append((f"Homogeneous - {backend.upper()}", homo["results"].get(backend, {})))
-        elif "methods" in homo:
-            sections.append(("Homogeneous", homo.get("methods", {})))
+        # Combined PRISM experiment JSON
+        for cond_key, cond_label in [("symbiotic", "Symbiotic"), ("flat_cooperative", "Flat-cooperative")]:
+            cond = data.get("results", {}).get(cond_key, {})
+            if not cond:
+                continue
+            canonical = cond.get("canonical_backend", next(iter(cond.get("results", {}).keys()), ""))
+            b_data = cond.get("results", {}).get(canonical, {})
+            if b_data:
+                sections.append((cond_label, {cond_key: b_data}))
 
     plotted_sections = []
     for title, methods_data in sections:
@@ -941,10 +934,12 @@ def table_ablation(data: dict, out_dir: Path) -> None:
 def find_latest_result(results_dir: Path) -> Path:
     """Find the most recently modified experiment JSON in results_dir."""
     patterns = [
+        "prism_results_*.json",
         "experiment_results_*.json",
+        "prism_symbiotic_*.json",
+        "prism_flat_coop_*.json",
         "convergence_results_*.json",
         "gradient_results_*.json",
-        "homo_results_*.json",
         "ablation_results_*.json",
     ]
     files = []
@@ -1032,26 +1027,22 @@ def main():
         fig_battery_checkups(data, out_dir)
 
     else:
-        # Full combined experiment_results_*.json — generate all figures
+        # Full combined PRISM results JSON — generate all figures
         heuristic_mean = None
         try:
             hdata = data["results"]["heuristic"]
-            hetero_env = data["results"]["heterogeneous"]["env"]
-            if hetero_env in hdata:
-                heuristic_mean = hdata[hetero_env]["mean_deliveries"]
-            else:
-                heuristic_mean = next(iter(hdata.values()))["mean_deliveries"]
+            heuristic_mean = next(iter(hdata.values()))["mean_deliveries"]
         except (KeyError, StopIteration):
             pass
 
-        fig_hetero_curves(data, out_dir, heuristic_mean)
+        fig_symbiotic_curves(data, out_dir, heuristic_mean)
         fig_heuristic(data, out_dir)
         fig_gradient(data, out_dir)
         fig_convergence(data, out_dir)
         fig_tsi_rsi(data, out_dir)
-        fig_hetero_vs_homo(data, out_dir)
+        fig_condition_comparison(data, out_dir)
         fig_claims_summary(data, out_dir)
-        fig_homo_curves(data, out_dir)
+        fig_flat_coop_curves(data, out_dir)
         fig_battery_checkups(data, out_dir)
 
     n_png = len(list(out_dir.glob("*.png")))

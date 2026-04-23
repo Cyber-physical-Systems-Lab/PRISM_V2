@@ -1,7 +1,7 @@
 """
 Generate a GIF from a trained IPPO/HetPPO/MAPPO checkpoint.
 
-Loads the actor networks saved by run_heterogeneous.py and runs a
+Loads the actor networks saved by run_symbiotic.py or run_flat_cooperative.py and runs a
 deterministic evaluation rollout, then renders it with the same
 matplotlib renderer used by generate_symbiosis_gifs.py.
 
@@ -78,7 +78,7 @@ def load_actors(checkpoint_path: str, obs_dims: List[int], act_dim: int,
                 agv_indices: List[int], picker_indices: List[int],
                 hidden_dim: int = 128, device: str = "cpu"):
     """
-    Reconstruct actor networks from a checkpoint saved by run_heterogeneous.py.
+    Reconstruct actor networks from a checkpoint saved by run_symbiotic.py or run_flat_cooperative.py.
 
     Returns a list of actors (one per agent) in agent-index order.
     Handles both HetPPO (shared AGV actor, shared picker actor) and

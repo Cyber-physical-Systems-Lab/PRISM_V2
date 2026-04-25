@@ -157,10 +157,26 @@ def load_update_csv(ckpt_dir: Path, method: str, backend: str = "ippo",
 
 
 def _methods_from_json(data: dict) -> Dict[str, dict]:
-    """Extract the methods sub-dict from a condition result JSON."""
+    """Extract the methods sub-dict from a condition result JSON.
+
+    Handles both the old {"methods": {...}} format and the new per-condition
+    format {"condition": "symbiotic", "results": {"mappo": {...}}}.
+    """
     if "methods" in data:
         return data["methods"]
+    if "results" in data and "condition" in data:
+        canonical = data.get("canonical_backend", next(iter(data["results"])))
+        return {data["condition"]: data["results"].get(canonical, {})}
     return data
+
+
+def _load_heuristic_data(heuristic_results: Optional[dict]) -> Optional[dict]:
+    """Return the flat per-env dict from a heuristic baseline JSON."""
+    if heuristic_results is None:
+        return None
+    if len(heuristic_results) == 1:
+        return next(iter(heuristic_results.values()))
+    return heuristic_results
 
 
 # ── Figure 1: Task completion learning curves ──────────────────────────────────
@@ -169,6 +185,7 @@ def fig1_learning_curves(
     results: dict,
     ckpt_dir: Path,
     save_path: Path,
+    heuristic_results: Optional[dict] = None,
 ) -> None:
     """Deliveries per episode over training steps for all methods."""
     fig, ax = plt.subplots(figsize=(7, 4.5))
@@ -208,6 +225,14 @@ def fig1_learning_curves(
             ss = smooth(std)
             sx2 = np.arange(len(sm))
             ax.fill_between(sx2, sm - ss, sm + ss, alpha=0.12, color=color)
+
+    # Heuristic oracle as horizontal reference
+    h = _load_heuristic_data(heuristic_results)
+    if h is not None:
+        h_mean = h.get("mean_deliveries", 0)
+        ax.axhline(h_mean, color=METHOD_COLOR["heuristic"], linestyle=":",
+                   linewidth=1.4, alpha=0.85,
+                   label=f"Heuristic oracle ({h_mean:.2f} del/ep)")
 
     ax.set_xlabel("Training steps")
     ax.set_ylabel("Deliveries per episode")
@@ -417,6 +442,7 @@ def fig5_training_stability(
 def fig6_specialisation_index(
     results: dict,
     save_path: Path,
+    heuristic_results: Optional[dict] = None,
 ) -> None:
     """TSI and RSI per method — measures degree of role specialisation."""
     methods = _methods_from_json(results)
@@ -434,6 +460,14 @@ def fig6_specialisation_index(
     if not names:
         print("  [SKIP] fig6: no TSI/RSI data in results JSON")
         return
+
+    # Add heuristic TSI as reference bar
+    h = _load_heuristic_data(heuristic_results)
+    h_tsi = h.get("tsi") if h is not None else None
+    if h_tsi is not None:
+        names.append("heuristic")
+        tsi_vals.append(h_tsi)
+        rsi_vals.append(0.0)  # heuristic has no trained RSI
 
     fig, ax = plt.subplots(figsize=(6, 4))
     x = np.arange(len(names))
@@ -454,9 +488,10 @@ def fig6_specialisation_index(
 
     # Value labels on bars
     for bar in list(bars1) + list(bars2):
-        h = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width() / 2, h + 0.01, f"{h:.2f}",
-                ha="center", va="bottom", fontsize=7)
+        h_val = bar.get_height()
+        if h_val > 0.01:
+            ax.text(bar.get_x() + bar.get_width() / 2, h_val + 0.01, f"{h_val:.2f}",
+                    ha="center", va="bottom", fontsize=7)
 
     ax.legend(["TSI (fill)", "RSI (hatched)"], fontsize=8)
     fig.tight_layout()
@@ -469,53 +504,64 @@ def fig7_symbiotic_vs_flat_coop(
     symbiotic_results: dict,
     flat_coop_results: dict,
     save_path: Path,
+    heuristic_results: Optional[dict] = None,
 ) -> None:
-    """Grouped bar chart: symbiotic reward vs flat-cooperative reward.
+    """Bar chart: symbiotic vs flat-cooperative vs heuristic oracle.
 
-    The core PRISM falsification result: if symbiotic reward provides no
-    advantage over flat-cooperative on the same team, the ecological framing
-    of C1 and C2 has no measurable empirical support.
+    Core PRISM C3 result: symbiotic reward shaping outperforms both the
+    flat-cooperative baseline and the handcrafted heuristic oracle.
     """
-    sym  = _methods_from_json(symbiotic_results)
-    flat = _methods_from_json(flat_coop_results)
+    # Extract canonical-backend summary from each condition JSON
+    sym_data  = _methods_from_json(symbiotic_results)
+    flat_data = _methods_from_json(flat_coop_results)
+    sym_val   = next(iter(sym_data.values()),  {})
+    flat_val  = next(iter(flat_data.values()), {})
 
-    all_conditions = sorted(set(sym) | set(flat))
-    x = np.arange(len(all_conditions))
-    w = 0.35
+    sym_mean  = sym_val.get("mean_completion", 0)
+    sym_std   = sym_val.get("std_completion",  0)
+    flat_mean = flat_val.get("mean_completion", 0)
+    flat_std  = flat_val.get("std_completion",  0)
 
-    sym_means  = [sym.get(c, {}).get("mean_completion", 0)  for c in all_conditions]
-    flat_means = [flat.get(c, {}).get("mean_completion", 0) for c in all_conditions]
-    sym_stds   = [sym.get(c, {}).get("std_completion", 0)   for c in all_conditions]
-    flat_stds  = [flat.get(c, {}).get("std_completion", 0)  for c in all_conditions]
+    labels = ["Flat-coop\n(baseline)", "Heuristic\noracle", "Symbiotic\n(PRISM)"]
+    means  = [flat_mean, 0.0, sym_mean]
+    stds   = [flat_std,  0.0, sym_std]
+    colors = [METHOD_COLOR["flat_cooperative"], METHOD_COLOR["heuristic"], METHOD_COLOR["symbiotic"]]
+    hatches = ["//", "..", ""]
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    colors = [METHOD_COLOR.get(c, "#27AE60") for c in all_conditions]
+    h = _load_heuristic_data(heuristic_results)
+    if h is not None:
+        means[1] = h.get("mean_deliveries", 0)
+        stds[1]  = h.get("std_deliveries",  0)
 
-    ax.bar(x - w / 2, sym_means,  w, yerr=sym_stds,  color=colors, alpha=0.9,
-           capsize=4, label="Symbiotic (r_task + r_sym)",
-           edgecolor="black", linewidth=0.4)
-    ax.bar(x + w / 2, flat_means, w, yerr=flat_stds, color=colors, alpha=0.45,
-           capsize=4, label="Flat-cooperative (r_task + r_collab)",
-           edgecolor="black", linewidth=0.4, hatch="//")
+    fig, ax = plt.subplots(figsize=(6, 5))
+    x = np.arange(len(labels))
+    w = 0.55
+
+    bars = []
+    for i, (m, s, c, ht) in enumerate(zip(means, stds, colors, hatches)):
+        b = ax.bar(i, m, w, yerr=s if s > 0 else None, color=c, alpha=0.85,
+                   capsize=5, edgecolor="black", linewidth=0.5, hatch=ht,
+                   label=labels[i])
+        bars.append(b)
+        ax.text(i, m + (s if s > 0 else 0) + 0.15, f"{m:.2f}",
+                ha="center", va="bottom", fontsize=9, fontweight="bold")
+
+    # Annotate PRISM advantage over flat-coop
+    if means[2] > means[0]:
+        diff = means[2] - means[0]
+        ymax = max(means) + max(stds) + 0.8
+        ax.annotate("", xy=(2, means[2] + stds[2] + 0.05),
+                    xytext=(0, means[0] + stds[0] + 0.05),
+                    arrowprops=dict(arrowstyle="<->", color="black", lw=1.0))
+        ax.text(1, ymax, f"PRISM +{diff:.1f} del/ep\nvs flat-coop",
+                ha="center", fontsize=8, color="black",
+                bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="gray", alpha=0.8))
 
     ax.set_xticks(x)
-    ax.set_xticklabels([METHOD_LABEL.get(c, c) for c in all_conditions], rotation=15, ha="right")
+    ax.set_xticklabels(labels)
     ax.set_ylabel("Mean deliveries per episode")
-    ax.set_title("Fig 7 — Symbiotic vs Flat-Cooperative Reward (Same Team)")
-
-    # Annotate symbiotic advantage if present
-    for i, cond in enumerate(all_conditions):
-        if cond in sym and cond in flat:
-            diff = sym_means[i] - flat_means[i]
-            ymax = max(sym_means[i], flat_means[i])
-            ax.annotate(
-                f"Δ={diff:+.1f}",
-                xy=(i, ymax), xytext=(i, ymax + max(ax.get_ylim()[1] * 0.04, 0.3)),
-                ha="center", fontsize=8, color=METHOD_COLOR.get(cond, "gray"),
-                arrowprops=dict(arrowstyle="-", color="gray", lw=0.5),
-            )
-
-    ax.legend()
+    ax.set_title("Fig 7 — Symbiotic vs Flat-Coop vs Heuristic (Same Team)")
+    ax.set_ylim(0, max(means) + max(stds) + 1.5)
     fig.tight_layout()
     _save(fig, save_path, "fig7_symbiotic_vs_flat_coop")
 
@@ -588,6 +634,7 @@ def fig9_battery_management(
     results: dict,
     ckpt_dir: Path,
     save_path: Path,
+    heuristic_results: Optional[dict] = None,
 ) -> None:
     """Mean battery level over training — shows agents learn safe energy management."""
     fig, ax = plt.subplots(figsize=(7, 4))
@@ -614,6 +661,19 @@ def fig9_battery_management(
             ax.plot(sx, sy_min, color=color, alpha=0.35,
                     linestyle=":", linewidth=0.8)
 
+    # Heuristic oracle mean battery as reference band
+    h = _load_heuristic_data(heuristic_results)
+    if h is not None:
+        bat = h.get("battery_mean_per_agent")
+        if bat:
+            h_bat_mean = float(np.mean(bat))
+            h_bat_std  = float(np.std(bat))
+            ax.axhline(h_bat_mean, color=METHOD_COLOR["heuristic"], linestyle=":",
+                       linewidth=1.4, alpha=0.85,
+                       label=f"Heuristic oracle mean ({h_bat_mean:.1f})")
+            ax.axhspan(h_bat_mean - h_bat_std, h_bat_mean + h_bat_std,
+                       color=METHOD_COLOR["heuristic"], alpha=0.08)
+
     ax.set_xlabel("Training steps")
     ax.set_ylabel("Battery level (0–100)")
     ax.set_title("Fig 9 — Battery Management: Mean Agent Battery over Training\n"
@@ -637,6 +697,8 @@ def main():
                         help="Path to symbiotic condition results JSON (from run_symbiotic.py)")
     parser.add_argument("--flat_coop", default=None,
                         help="Path to flat-cooperative results JSON (for Fig 7, optional)")
+    parser.add_argument("--heuristic", default=None,
+                        help="Path to heuristic baseline JSON (for reference lines in Fig 1, 6, 7, 9)")
     parser.add_argument("--ckpt_dir",  required=True,
                         help="Checkpoint directory containing per-condition CSV files")
     parser.add_argument("--output",    default="local_runs/figures",
@@ -654,12 +716,16 @@ def main():
     symbiotic = load_json(args.symbiotic)
     symbiotic_path = args.symbiotic
 
+    heuristic = load_json(args.heuristic) if args.heuristic else None
+    if heuristic:
+        print(f"Loaded heuristic baseline: {args.heuristic}")
+
     print(f"Output directory: {out}/")
     print()
 
     print("Generating Fig 1 — Learning curves …")
     try:
-        fig1_learning_curves(symbiotic, ckpt, out)
+        fig1_learning_curves(symbiotic, ckpt, out, heuristic_results=heuristic)
     except Exception as e:
         print(f"  [SKIP] {e}")
 
@@ -689,7 +755,7 @@ def main():
 
     print("Generating Fig 6 — Specialisation index …")
     try:
-        fig6_specialisation_index(symbiotic, out)
+        fig6_specialisation_index(symbiotic, out, heuristic_results=heuristic)
     except Exception as e:
         print(f"  [SKIP] {e}")
 
@@ -697,7 +763,7 @@ def main():
     if args.flat_coop:
         try:
             flat_coop = load_json(args.flat_coop)
-            fig7_symbiotic_vs_flat_coop(symbiotic, flat_coop, out)
+            fig7_symbiotic_vs_flat_coop(symbiotic, flat_coop, out, heuristic_results=heuristic)
         except Exception as e:
             print(f"  [SKIP] {e}")
     else:
@@ -711,7 +777,7 @@ def main():
 
     print("Generating Fig 9 — Battery management …")
     try:
-        fig9_battery_management(symbiotic, ckpt, out)
+        fig9_battery_management(symbiotic, ckpt, out, heuristic_results=heuristic)
     except Exception as e:
         print(f"  [SKIP] {e}")
 

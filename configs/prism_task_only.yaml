@@ -1,0 +1,44 @@
+# PRISM — Task-only ablation config
+#
+# Identical team, env, and training budget to symbiotic and flat-cooperative.
+# Reward structure: r_i = r_task_i  (no shaping whatsoever)
+#
+# Purpose: isolates that PRISM's gain comes from reward shaping, not from
+# the shared team composition or observation structure.
+
+experiment:
+  name: "prism_task_only"
+  condition: "task_only"
+  n_seeds: 3
+
+env:
+  id: "tarware-small-4agvs-2pickers-partialobs-chg-v1"
+  max_inactivity_steps: null
+  max_steps: 1000
+  package_distribution:
+    SOLO:        0.20
+    STANDARD:    0.30
+    LARGE:       0.10
+    HEAVY:       0.25
+    PICKER_SOLO: 0.15
+
+training:
+  timesteps: 1_000_000
+  rollout_steps: 1024
+  epochs: 4
+  lr: 3.0e-4
+  entropy_coef: 0.01
+  mini_batches: 8
+
+safety:
+  low_battery_threshold: 10.0
+  depletion_penalty: 5.0
+
+flat_cooperative:
+  alpha_collab: 0.0   # no collab bonus → pure task reward
+
+logging:
+  checkpoint_dir: "runs/prism_task_only"
+  tb_logdir: "runs/tensorboard/prism_task_only"
+  log_interval: 10
+  output: "runs/results/prism_task_only.json"

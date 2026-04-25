@@ -59,7 +59,7 @@ from analysis.metrics import SymbiosisEmergenceTracker, compute_rsi, compute_tsi
 from tarware.definitions import AgentType
 
 
-CONDITION = "flat_cooperative"
+CONDITION = "flat_cooperative"  # overridden by --condition at runtime
 
 REL_MUTUALISM    = 0
 REL_COMMENSALISM = 1
@@ -107,7 +107,9 @@ parser.add_argument("--package_distribution", default=None, type=str,
                     help='JSON dict, e.g. \'{"SOLO":0.3,"STANDARD":0.4}\'')
 # Flat-cooperative shaping weight
 parser.add_argument("--alpha_collab", default=1.0, type=float,
-                    help="Scale on the shared team mean bonus.")
+                    help="Scale on the shared team mean bonus. Set 0.0 for task-only.")
+parser.add_argument("--condition", default=None,
+                    help="Override condition name in output JSON (e.g. 'task_only').")
 parser.add_argument("--low_battery_threshold", default=10.0, type=float)
 parser.add_argument("--depletion_penalty",      default=5.0,  type=float)
 
@@ -423,9 +425,11 @@ def _train(seed: int, args, backend: str) -> dict:
         best_deliveries = float("-inf")
         best_episode    = -1
 
+        _cond = args.condition if args.condition else CONDITION
+
         def _save_checkpoint(name: str, episode_idx: int, is_best: bool) -> None:
             payload: Dict[str, Any] = {
-                "condition": CONDITION,
+                "condition": _cond,
                 "seed": seed, "backend": backend, "env": args.env,
                 "total_steps": total_steps, "episode": episode_idx,
                 "is_best": is_best, "best_deliveries": best_deliveries,
@@ -596,7 +600,7 @@ def _train(seed: int, args, backend: str) -> dict:
 
         with open(run_dir / "seed_summary.json", "w") as f:
             json.dump({
-                "condition": CONDITION, "seed": seed, "backend": backend, "env": args.env,
+                "condition": _cond, "seed": seed, "backend": backend, "env": args.env,
                 "best_deliveries": best_deliveries if best_deliveries > float("-inf") else None,
                 "best_episode": best_episode, "n_episodes": len(deliveries_curve),
                 "tsi": float(tsi), "rsi": float(rsi),
@@ -655,16 +659,19 @@ def main():
 
     args = parser.parse_args()
 
+    # Allow --condition to override the module-level default
+    condition_name = args.condition if args.condition else CONDITION
+
     if args.backend == "auto":
         backends = ["mappo", "ippo"]
     else:
         backends = [args.backend]
 
-    print(f"PRISM — Flat-cooperative condition | env: {args.env}")
+    print(f"PRISM — {condition_name} condition | env: {args.env}")
     print(f"alpha_collab={args.alpha_collab} | seeds: {args.seeds} | timesteps: {args.timesteps:,}")
 
     all_results: dict = {
-        "condition": CONDITION,
+        "condition": condition_name,
         "env": args.env,
         "backends": backends,
         "results": {},

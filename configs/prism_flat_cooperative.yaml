@@ -24,7 +24,7 @@ experiment:
 env:
   id: "tarware-small-4agvs-2pickers-partialobs-chg-v1"   # SAME as symbiotic
   max_inactivity_steps: null
-  max_steps: 5000
+  max_steps: 1000
   package_distribution:                                    # SAME as symbiotic
     SOLO:        0.20
     STANDARD:    0.30

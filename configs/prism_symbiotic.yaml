@@ -15,7 +15,7 @@ experiment:
 env:
   id: "tarware-small-4agvs-2pickers-partialobs-chg-v1"
   max_inactivity_steps: null        # disable early termination for training
-  max_steps: 5000
+  max_steps: 1000
   # Package mix enabling all five ecological relationship types:
   #   SOLO / PICKER_SOLO → neutralism   (independent tasks)
   #   STANDARD           → mutualism    (AGV + picker joint delivery)
@@ -42,7 +42,7 @@ safety:
   depletion_penalty: 5.0        # penalty if battery hits 0
 
 symbiotic:
-  w_mutualism:    2.0           # φ(+/+) — reward joint delivery
+  w_mutualism:    8.0           # φ(+/+) — reward joint delivery
   w_commensalism: 1.5           # φ(+/0) — reward unilateral help
   w_competition: -1.5           # φ(-/-) — penalise mutual blocking
   w_parasitism:  -0.5           # φ(+/-) — penalise exploitation

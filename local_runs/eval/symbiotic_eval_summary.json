@@ -1,0 +1,37 @@
+{
+  "condition": "symbiotic",
+  "checkpoint": "local_runs/checkpoints/prism_symbiotic_v2/26-04-25_02-42-19-170947_symbiotic/ippo_seed873902/checkpoint_best.pt",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-v1",
+  "n_episodes": 3,
+  "mean_deliveries": 4.0,
+  "deliveries_by_episode": [
+    {
+      "SOLO": 0,
+      "STANDARD": 4,
+      "LARGE": 0,
+      "HEAVY": 0,
+      "PICKER_SOLO": 0
+    },
+    {
+      "SOLO": 0,
+      "STANDARD": 4,
+      "LARGE": 0,
+      "HEAVY": 0,
+      "PICKER_SOLO": 0
+    },
+    {
+      "SOLO": 0,
+      "STANDARD": 4,
+      "LARGE": 0,
+      "HEAVY": 0,
+      "PICKER_SOLO": 0
+    }
+  ],
+  "mean_rel_dist": {
+    "mutualism": 0.0023333333333333335,
+    "commensalism": 0.007666666666666666,
+    "competition": 0.0,
+    "parasitism": 0.0,
+    "neutral": 0.9900000000000001
+  }
+}

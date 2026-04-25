@@ -1,159 +1,226 @@
 """
-C2 Convergence Study — real PPO training across all algorithm × reward variants.
+PRISM — C2 Convergence Validation.
 
-Validates claim C2: symbiotic reward shaping preserves convergence class
-(gradient norms stay bounded, O(1/√T) rate maintained) while improving the
-asymptotic delivery performance.
+Validates that symbiotic reward shaping preserves convergence class:
+  - Gradient norms stay bounded (no explosion)
+  - r_sym stays bounded relative to r_task (boundedness ratio)
+  - Convergence speed comparison: symbiotic vs flat-cooperative
 
-Three algorithm backends are compared:
-  ippo   — per-agent independent PPO (one policy per agent ID, no sharing)
-  hetppo — type-shared decentralised PPO (one policy per TYPE, local critics)
-  mappo  — type-shared centralised PPO (one policy per TYPE, central critics)
+Runs both conditions at shorter budget (500k steps) and analyses the
+update_metrics.csv files written by each seed for gradient norm history.
 
-Four reward methods:
-  individual   — no shaping (raw task reward only)
-  team         — mean reward shared across all agents
-  unclassified — fixed bonus added to every agent every step
-  symbiotic    — relationship-classified, φ-weighted bonus
+Usage
+-----
+python experiments/run_convergence.py \\
+    --symbiotic_json  runs/results/prism_symbiotic_*.json \\
+    --flat_coop_json  runs/results/prism_flat_coop_*.json \\
+    --symbiotic_ckpt  runs/prism_symbiotic \\
+    --flat_coop_ckpt  runs/prism_flat_cooperative \\
+    --output          runs/results/convergence_results.json
 
-Output
-------
-runs/results/convergence_results_${SLURM_JOB_ID}.json
-
-Schema
-------
-{
-  "env": "...",
-  "backends": ["ippo", "hetppo", "mappo"],
-  "methods":  ["individual", "team", "unclassified", "symbiotic"],
-  "results": {
-    "<backend>": {
-      "<method>": {
-        "mean_completion": float,
-        "std_completion":  float,
-        "convergence_episodes": int,
-        "grad_norm_mean":  float,
-        "grad_norm_final": float,
-        "boundedness_ratio_mean": float,
-        "boundedness_bounded":    bool,
-        "deliveries_curves":  [[int, ...]],
-        "mutualism_curves":   [[float, ...]],
-        "grad_norm_history":  [float, ...],
-        "tsi": float,
-        "rsi": float,
-        "n_seeds": int
-      }
-    }
-  }
-}
+If the result JSONs don't exist yet, pass --run to train from scratch:
+    python experiments/run_convergence.py --run --timesteps 500000 --seeds 0 1 2
 """
+
+from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from pathlib import Path
+from typing import Dict, List, Optional
 
-ROOT = Path(__file__).parent.parent
-sys.path.insert(0, str(ROOT))
+import numpy as np
 
-import tarware  # noqa: F401
-
-from experiments.ppo_backends import aggregate_seeds, run_training
-
-METHODS = ["individual", "team", "unclassified", "symbiotic"]
-BACKENDS = ["ippo", "hetppo", "mappo"]
+ROOT = Path(__file__).resolve().parent.parent
 
 
-parser = argparse.ArgumentParser(
-    description="C2: Convergence study — real PPO, all backends × methods",
-    formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-)
-parser.add_argument("--env", default="tarware-small-4agvs-2pickers-partialobs-chg-v1")
-parser.add_argument("--backends", nargs="+", default=BACKENDS, choices=BACKENDS)
-parser.add_argument("--methods", nargs="+", default=METHODS, choices=METHODS)
-parser.add_argument("--timesteps", default=500_000, type=int)
-parser.add_argument("--rollout", default=256, type=int)
-parser.add_argument("--ppo_epochs", default=3, type=int)
-parser.add_argument("--mini_batches", default=4, type=int)
-parser.add_argument("--lr", default=3e-4, type=float)
-parser.add_argument("--gamma", default=0.99, type=float)
-parser.add_argument("--lam", default=0.95, type=float)
-parser.add_argument("--clip", default=0.2, type=float)
-parser.add_argument("--entropy_coef", default=0.01, type=float)
-parser.add_argument("--hidden_dim", default=128, type=int)
-parser.add_argument("--seeds", nargs="+", type=int, default=[0, 1, 2], help="Explicit seeds to run (e.g., --seeds 0 1 2)")
-parser.add_argument("--max_ep_steps", default=500, type=int)
-parser.add_argument("--max_inactivity_steps", default=None, type=int)
-parser.add_argument("--convergence_threshold", default=0.95, type=float,
-                    help="Fraction of final performance used to define convergence episode")
-parser.add_argument("--unclassified_bonus", default=0.5, type=float)
-parser.add_argument("--w_mutualism", default=2.0, type=float)
-parser.add_argument("--w_commensalism", default=1.0, type=float)
-parser.add_argument("--w_competition", default=-1.5, type=float)
-parser.add_argument("--w_parasitism", default=-0.5, type=float)
-parser.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda"])
-parser.add_argument("--log_interval", default=10, type=int)
-parser.add_argument("--output", default="runs/results/convergence_results.json")
+def _load_csv(path: Path) -> Optional[Dict[str, List[float]]]:
+    """Load a CSV into a dict of column → list of floats."""
+    if not path.exists():
+        return None
+    import csv
+    rows = []
+    with open(path) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            rows.append(row)
+    if not rows:
+        return None
+    cols = {k: [] for k in rows[0]}
+    for row in rows:
+        for k, v in row.items():
+            try:
+                cols[k].append(float(v))
+            except (ValueError, TypeError):
+                cols[k].append(0.0)
+    return cols
+
+
+def _convergence_episode(curve: List[float], threshold: float = 0.90) -> int:
+    """First episode where the smoothed curve exceeds threshold × final mean."""
+    arr = np.array(curve, dtype=float)
+    if len(arr) < 10:
+        return -1
+    target = threshold * arr[-20:].mean()
+    w = min(10, len(arr) // 5)
+    smoothed = np.convolve(arr, np.ones(w) / w, mode="valid")
+    above = np.where(smoothed >= target)[0]
+    return int(above[0]) if len(above) else -1
+
+
+def _boundedness_ratio(eval_csv: Dict[str, List[float]]) -> Dict[str, float]:
+    """Compute |mean_shaped - mean_raw| / (|mean_raw| + 1e-8) as boundedness proxy."""
+    shaped = np.array(eval_csv.get("mean_shaped_reward", [0.0]))
+    raw    = np.array(eval_csv.get("mean_raw_reward",    [0.0]))
+    diff   = np.abs(shaped - raw)
+    denom  = np.abs(raw) + 1e-8
+    ratio  = diff / denom
+    return {
+        "mean":    float(ratio.mean()),
+        "max":     float(ratio.max()),
+        "bounded": bool(ratio.max() < 10.0),   # bounded if shaping < 10× task reward
+    }
+
+
+def _analyse_condition(result_json: Path, ckpt_dir: Path,
+                       backend: str, n_seeds: int) -> Dict:
+    data = json.load(open(result_json))
+    canonical = data.get("canonical_backend", backend)
+    r = data.get("results", {}).get(canonical, {})
+
+    delivery_curves = r.get("deliveries_curves", [])
+    grad_norm_history: List[List[float]] = []
+    boundedness_per_seed: List[Dict] = []
+
+    for seed_idx in range(n_seeds):
+        seed_dir = ckpt_dir / f"{canonical}_seed{seed_idx}"
+        update_csv = _load_csv(seed_dir / "update_metrics.csv")
+        eval_csv   = _load_csv(seed_dir / "eval_metrics.csv")
+
+        if update_csv and "agv_grad_norm" in update_csv:
+            gn = [a + p for a, p in zip(update_csv["agv_grad_norm"],
+                                         update_csv.get("pick_grad_norm", [0.0]*len(update_csv["agv_grad_norm"])))]
+            grad_norm_history.append(gn)
+
+        if eval_csv:
+            boundedness_per_seed.append(_boundedness_ratio(eval_csv))
+
+    convergence_eps = [_convergence_episode(c) for c in delivery_curves if c]
+
+    return {
+        "mean_completion":      r.get("mean_completion", 0.0),
+        "std_completion":       r.get("std_completion",  0.0),
+        "tsi":                  r.get("tsi", 0.0),
+        "rsi":                  r.get("rsi", 0.0),
+        "convergence_episodes": int(np.mean(convergence_eps)) if convergence_eps else -1,
+        "grad_norm_mean":       float(np.mean([np.mean(g) for g in grad_norm_history])) if grad_norm_history else None,
+        "grad_norm_max":        float(np.max([np.max(g)  for g in grad_norm_history])) if grad_norm_history else None,
+        "grad_norm_bounded":    all(np.max(g) < 1.0 for g in grad_norm_history) if grad_norm_history else None,
+        "boundedness_ratio_mean": float(np.mean([b["mean"] for b in boundedness_per_seed])) if boundedness_per_seed else None,
+        "boundedness_ratio_max":  float(np.max( [b["max"]  for b in boundedness_per_seed])) if boundedness_per_seed else None,
+        "boundedness_bounded":    all(b["bounded"] for b in boundedness_per_seed) if boundedness_per_seed else None,
+        "deliveries_curves":    delivery_curves,
+        "mutualism_curves":     r.get("mutualism_curves", []),
+        "grad_norm_histories":  grad_norm_history,
+    }
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="PRISM C2 — Convergence validation",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument("--symbiotic_json",  default=None)
+    parser.add_argument("--flat_coop_json",  default=None)
+    parser.add_argument("--symbiotic_ckpt",  default="runs/prism_symbiotic")
+    parser.add_argument("--flat_coop_ckpt",  default="runs/prism_flat_cooperative")
+    parser.add_argument("--backend",         default="mappo")
+    parser.add_argument("--seeds", nargs="+", type=int, default=[0, 1, 2])
+    parser.add_argument("--output",          default="runs/results/convergence_results.json")
+    # If --run is passed, train from scratch first
+    parser.add_argument("--run",             action="store_true",
+                        help="Run training before analysing (uses configs/prism_*.yaml)")
+    parser.add_argument("--timesteps",       default=500_000, type=int)
+    parser.add_argument("--symbiotic_output", default="runs/results/convergence_symbiotic.json")
+    parser.add_argument("--flat_coop_output", default="runs/results/convergence_flat_coop.json")
     args = parser.parse_args()
 
-    print("=" * 60)
-    print("C2 Convergence Study")
-    print(f"  env:       {args.env}")
-    print(f"  backends:  {args.backends}")
-    print(f"  methods:   {args.methods}")
-    print(f"  timesteps: {args.timesteps:,}   seeds: {args.seeds}")
-    print("=" * 60)
+    py = sys.executable
 
-    all_results: dict = {
-        "env": args.env,
-        "backends": args.backends,
-        "methods": args.methods,
-        "results": {},
+    if args.run:
+        print("=== Training symbiotic condition (C2) ===")
+        subprocess.run([
+            py, "experiments/run_symbiotic.py",
+            "--config",       "configs/prism_symbiotic.yaml",
+            "--timesteps",    str(args.timesteps),
+            "--seeds",        *map(str, args.seeds),
+            "--checkpoint_dir", args.symbiotic_ckpt,
+            "--output",       args.symbiotic_output,
+        ], cwd=ROOT, check=True)
+
+        print("=== Training flat-cooperative condition (C2) ===")
+        subprocess.run([
+            py, "experiments/run_flat_cooperative.py",
+            "--config",       "configs/prism_flat_cooperative.yaml",
+            "--timesteps",    str(args.timesteps),
+            "--seeds",        *map(str, args.seeds),
+            "--checkpoint_dir", args.flat_coop_ckpt,
+            "--output",       args.flat_coop_output,
+        ], cwd=ROOT, check=True)
+
+        args.symbiotic_json  = args.symbiotic_output
+        args.flat_coop_json  = args.flat_coop_output
+
+    if not args.symbiotic_json or not args.flat_coop_json:
+        parser.error("Provide --symbiotic_json and --flat_coop_json, or use --run")
+
+    print("Analysing convergence metrics …")
+    sym  = _analyse_condition(Path(args.symbiotic_json),  Path(args.symbiotic_ckpt),
+                               args.backend, len(args.seeds))
+    flat = _analyse_condition(Path(args.flat_coop_json),  Path(args.flat_coop_ckpt),
+                               args.backend, len(args.seeds))
+
+    combined = {
+        "conditions": ["symbiotic", "flat_cooperative"],
+        "results": {
+            "symbiotic":       sym,
+            "flat_cooperative": flat,
+        },
+        "C2_checks": {
+            "symbiotic_grad_norms_bounded":     sym["grad_norm_bounded"],
+            "flat_coop_grad_norms_bounded":     flat["grad_norm_bounded"],
+            "symbiotic_r_sym_bounded":          sym["boundedness_bounded"],
+            "symbiotic_faster_convergence":     (
+                sym["convergence_episodes"] < flat["convergence_episodes"]
+                if sym["convergence_episodes"] > 0 and flat["convergence_episodes"] > 0
+                else None
+            ),
+            "symbiotic_convergence_ep":         sym["convergence_episodes"],
+            "flat_coop_convergence_ep":         flat["convergence_episodes"],
+            "symbiotic_grad_norm_mean":         sym["grad_norm_mean"],
+            "flat_coop_grad_norm_mean":         flat["grad_norm_mean"],
+            "symbiotic_boundedness_ratio_mean": sym["boundedness_ratio_mean"],
+        },
     }
 
-    for backend in args.backends:
-        all_results["results"][backend] = {}
-        for method in args.methods:
-            print(f"\n[{backend.upper()} / {method}]")
-            seed_results = []
-            for seed in args.seeds:
-                print(f"  seed {seed} ...", flush=True)
-                result = run_training(args.env, method, backend, seed, args)
-                final_ep = result["deliveries_curve"][-1] if result["deliveries_curve"] else 0
-                n_gn = len(result["grad_norms"])
-                print(f"    deliveries[-1]={final_ep}  grad_norms collected={n_gn}")
-                seed_results.append(result)
-
-            agg = aggregate_seeds(seed_results, convergence_threshold=args.convergence_threshold)
-            all_results["results"][backend][method] = agg
-            print(
-                f"  → mean_completion={agg['mean_completion']:.3f}  "
-                f"convergence_ep={agg['convergence_episodes']}  "
-                f"grad_norm_mean={agg['grad_norm_mean']:.4f}  "
-                f"bounded={agg['boundedness_bounded']}"
-            )
-
-    out = Path(args.output)
+    out = ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, "w") as f:
-        json.dump(all_results, f, indent=2)
-    print(f"\nResults saved to {out}")
+        json.dump(combined, f, indent=2)
 
-    # Print summary table
-    print("\n--- Convergence Summary ---")
-    print(f"{'Backend':<8} {'Method':<14} {'MeanDel':>8} {'ConvEp':>7} {'GradMean':>10} {'Bounded':>8}")
-    print("-" * 60)
-    for backend in args.backends:
-        for method in args.methods:
-            agg = all_results["results"][backend][method]
-            print(
-                f"{backend:<8} {method:<14} {agg['mean_completion']:>8.3f} "
-                f"{agg['convergence_episodes']:>7d} {agg['grad_norm_mean']:>10.4f} "
-                f"{'yes' if agg['boundedness_bounded'] else 'no':>8}"
-            )
+    print(f"\nC2 Convergence Results:")
+    print(f"{'Metric':<40} {'Symbiotic':>12} {'Flat-coop':>12}")
+    print("-" * 66)
+    print(f"{'Mean completion':<40} {sym['mean_completion']:>12.3f} {flat['mean_completion']:>12.3f}")
+    print(f"{'Convergence episode':<40} {sym['convergence_episodes']:>12} {flat['convergence_episodes']:>12}")
+    if sym["grad_norm_mean"] is not None:
+        print(f"{'Grad norm mean':<40} {sym['grad_norm_mean']:>12.4f} {flat['grad_norm_mean']:>12.4f}")
+    if sym["boundedness_ratio_mean"] is not None:
+        print(f"{'Boundedness ratio (r_sym/r_task)':<40} {sym['boundedness_ratio_mean']:>12.4f} {'N/A':>12}")
+    print(f"{'Grad norms bounded (<1.0)':<40} {str(sym['grad_norm_bounded']):>12} {str(flat['grad_norm_bounded']):>12}")
+    print(f"\nResults saved to {out}")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,11 @@
+{
+  "condition": "flat_cooperative",
+  "seed": 416454,
+  "backend": "mappo",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-v1",
+  "best_deliveries": 15.0,
+  "best_episode": 14,
+  "n_episodes": 200,
+  "tsi": 0.6024601459503174,
+  "rsi": 0.32160804020100503
+}

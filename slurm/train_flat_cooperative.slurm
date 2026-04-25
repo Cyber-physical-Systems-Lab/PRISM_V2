@@ -29,7 +29,7 @@ RUN_ID="$(date +%y-%m-%d_%H-%M-%S-%6N)_flat_coop"
 # Same team (4 AGVs + 2 pickers), same env, same training budget as symbiotic.
 # Only the reward structure changes: r_i = r_task_i + max(0, alpha * mean_team_reward).
 echo "=== PRISM — Flat-cooperative condition ==="
-python experiments/run_flat_cooperative.py \
+python -u experiments/run_flat_cooperative.py \
     --config configs/prism_flat_cooperative.yaml \
     --timesteps 1000000 \
     --seeds ${SEEDS} \

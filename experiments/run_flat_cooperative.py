@@ -322,7 +322,7 @@ class TypePPOAgent:
         adv_t = (adv_t - adv_t.mean()) / (adv_t.std() + 1e-8)
 
         mini_batch_size = max(32, n // max(1, mini_batches))
-        a_losses, v_losses, entropies, kls = [], [], [], []
+        a_losses, v_losses, entropies, kls, grad_norms = [], [], [], [], []
         for _ in range(epochs):
             perm = np.random.permutation(n)
             for start in range(0, n, mini_batch_size):
@@ -337,14 +337,15 @@ class TypePPOAgent:
                 ent    = dist.entropy().mean()
                 loss   = a_loss + 0.5 * v_loss - entropy_coef * ent
                 self.optimizer.zero_grad(); loss.backward()
-                nn.utils.clip_grad_norm_(
+                grad_norm = float(nn.utils.clip_grad_norm_(
                     list(self.actor.parameters()) + list(self.critic.parameters()), 0.5
-                )
+                ))
                 self.optimizer.step()
                 a_losses.append(float(a_loss.item()))
                 v_losses.append(float(v_loss.item()))
                 entropies.append(float(ent.item()))
                 kls.append(float((old_logp_t[idx_t] - new_logp).mean().item()))
+                grad_norms.append(grad_norm)
 
         self.clear()
         return {
@@ -352,6 +353,7 @@ class TypePPOAgent:
             "value_loss": float(np.mean(v_losses)) if v_losses else 0.0,
             "entropy":    float(np.mean(entropies)) if entropies else 0.0,
             "approx_kl":  float(np.mean(kls)) if kls else 0.0,
+            "grad_norm":  float(np.mean(grad_norms)) if grad_norms else 0.0,
         }
 
 
@@ -398,8 +400,12 @@ def _train(seed: int, args, backend: str) -> dict:
 
         prev_bat     = np.array([a.battery for a in raw.agents], dtype=np.float32)
         rel_tracker  = SymbiosisEmergenceTracker(window=max(1, args.log_interval))
-        mutualism_curve  = []
-        deliveries_curve = []
+        mutualism_curve    = []
+        commensalism_curve = []
+        competition_curve  = []
+        parasitism_curve   = []
+        neutral_curve      = []
+        deliveries_curve   = []
         energy_curve     = []
         role_counts      = np.zeros((n_agents, NUM_ROLE_BUCKETS), dtype=np.float32)
         ep_role_counts   = np.zeros((n_agents, NUM_ROLE_BUCKETS), dtype=np.float32)
@@ -500,6 +506,7 @@ def _train(seed: int, args, backend: str) -> dict:
                     "agv_entropy":    agv_stats["entropy"],      "agv_approx_kl":   agv_stats["approx_kl"],
                     "pick_actor_loss":pick_stats["actor_loss"],  "pick_value_loss": pick_stats["value_loss"],
                     "pick_entropy":   pick_stats["entropy"],     "pick_approx_kl":  pick_stats["approx_kl"],
+                    "agv_grad_norm":  agv_stats["grad_norm"],    "pick_grad_norm":  pick_stats["grad_norm"],
                 }
                 update_rows.append(row)
                 if tb_writer is not None:
@@ -514,7 +521,11 @@ def _train(seed: int, args, backend: str) -> dict:
                 rel_dist  = {REL_NAMES[k]: ep_rel_counts[k] / total_rel
                              for k in range(len(REL_NAMES))}
                 rel_tracker.log_episode(rel_dist)
-                mutualism_curve.append(rel_tracker.mutualism_fraction)
+                mutualism_curve.append(rel_dist.get("mutualism",    0.0))
+                commensalism_curve.append(rel_dist.get("commensalism", 0.0))
+                competition_curve.append(rel_dist.get("competition",  0.0))
+                parasitism_curve.append(rel_dist.get("parasitism",   0.0))
+                neutral_curve.append(rel_dist.get("neutral",      0.0))
                 dominant_role_history.append(np.argmax(ep_role_counts, axis=1).tolist())
 
                 battery_mean = (ep_battery_sum / max(1, ep_battery_count)).tolist()
@@ -527,8 +538,11 @@ def _train(seed: int, args, backend: str) -> dict:
                     "episode": episode_idx, "step": total_steps,
                     "deliveries":           ep_deliveries,
                     "energy_consumed":      energy_consumed,
-                    "mutualism_fraction":   float(rel_tracker.mutualism_fraction),
-                    "competition_fraction": float(rel_dist.get("competition", 0.0)),
+                    "mutualism_fraction":    float(rel_dist.get("mutualism",    0.0)),
+                    "commensalism_fraction": float(rel_dist.get("commensalism", 0.0)),
+                    "competition_fraction":  float(rel_dist.get("competition",  0.0)),
+                    "parasitism_fraction":   float(rel_dist.get("parasitism",   0.0)),
+                    "neutral_fraction":      float(rel_dist.get("neutral",      0.0)),
                     "mean_raw_reward":      float(np.mean(raw_rewards)),
                     "mean_shaped_reward":   float(np.mean(shaped_rewards)),
                     "battery_mean_all_agents": float(np.mean(battery_mean)),
@@ -593,7 +607,12 @@ def _train(seed: int, args, backend: str) -> dict:
 
         return {
             "backend": backend, "deliveries_curve": deliveries_curve,
-            "mutualism_curve": mutualism_curve, "energy_curve": energy_curve,
+            "mutualism_curve":    mutualism_curve,
+            "commensalism_curve": commensalism_curve,
+            "competition_curve":  competition_curve,
+            "parasitism_curve":   parasitism_curve,
+            "neutral_curve":      neutral_curve,
+            "energy_curve": energy_curve,
             "tsi": float(tsi), "rsi": float(rsi),
             "checkpoint_dir": str(run_dir),
             "best_deliveries": best_deliveries if best_deliveries > float("-inf") else 0.0,
@@ -613,9 +632,13 @@ def aggregate_seeds(seed_results: list) -> dict:
         "backend":        seed_results[0].get("backend", "unknown") if seed_results else "unknown",
         "mean_completion":float(arr[:, -10:].mean()) if arr.shape[1] > 10 else float(arr.mean()),
         "std_completion": float(arr[:, -10:].std())  if arr.shape[1] > 10 else float(arr.std()),
-        "deliveries_curves": [r["deliveries_curve"] for r in seed_results],
-        "mutualism_curves":  [r["mutualism_curve"]  for r in seed_results],
-        "energy_curves":     [r["energy_curve"]     for r in seed_results],
+        "deliveries_curves":   [r["deliveries_curve"]    for r in seed_results],
+        "mutualism_curves":    [r["mutualism_curve"]     for r in seed_results],
+        "commensalism_curves": [r["commensalism_curve"]  for r in seed_results],
+        "competition_curves":  [r["competition_curve"]   for r in seed_results],
+        "parasitism_curves":   [r["parasitism_curve"]    for r in seed_results],
+        "neutral_curves":      [r["neutral_curve"]       for r in seed_results],
+        "energy_curves":       [r["energy_curve"]        for r in seed_results],
         "tsi": float(np.mean([r["tsi"] for r in seed_results])) if seed_results else 0.0,
         "rsi": float(np.mean([r["rsi"] for r in seed_results])) if seed_results else 0.0,
     }

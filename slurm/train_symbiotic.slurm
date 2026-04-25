@@ -27,7 +27,7 @@ RUN_ID="$(date +%y-%m-%d_%H-%M-%S-%6N)_symbiotic"
 
 # ── PRISM: Symbiotic reward condition ─────────────────────────────────────────
 echo "=== PRISM — Symbiotic condition ==="
-python experiments/run_symbiotic.py \
+python -u experiments/run_symbiotic.py \
     --config configs/prism_symbiotic.yaml \
     --timesteps 1000000 \
     --seeds ${SEEDS} \

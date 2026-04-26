@@ -505,22 +505,29 @@ def fig7_symbiotic_vs_flat_coop(
     flat_coop_results: dict,
     save_path: Path,
     heuristic_results: Optional[dict] = None,
+    eval_stats: Optional[dict] = None,
 ) -> None:
     """Bar chart: symbiotic vs flat-cooperative vs heuristic oracle.
 
     Core PRISM C3 result: symbiotic reward shaping outperforms both the
     flat-cooperative baseline and the handcrafted heuristic oracle.
+    If eval_stats is provided (from evaluate_all_seeds.py), those numbers
+    are used instead of training-time metrics for accuracy.
     """
-    # Extract canonical-backend summary from each condition JSON
-    sym_data  = _methods_from_json(symbiotic_results)
-    flat_data = _methods_from_json(flat_coop_results)
-    sym_val   = next(iter(sym_data.values()),  {})
-    flat_val  = next(iter(flat_data.values()), {})
-
-    sym_mean  = sym_val.get("mean_completion", 0)
-    sym_std   = sym_val.get("std_completion",  0)
-    flat_mean = flat_val.get("mean_completion", 0)
-    flat_std  = flat_val.get("std_completion",  0)
+    if eval_stats is not None:
+        sym_mean  = eval_stats["symbiotic"]["pooled_mean"]
+        sym_std   = eval_stats["symbiotic"]["pooled_std"]
+        flat_mean = eval_stats["flat_coop"]["pooled_mean"]
+        flat_std  = eval_stats["flat_coop"]["pooled_std"]
+    else:
+        sym_data  = _methods_from_json(symbiotic_results)
+        flat_data = _methods_from_json(flat_coop_results)
+        sym_val   = next(iter(sym_data.values()),  {})
+        flat_val  = next(iter(flat_data.values()), {})
+        sym_mean  = sym_val.get("mean_completion", 0)
+        sym_std   = sym_val.get("std_completion",  0)
+        flat_mean = flat_val.get("mean_completion", 0)
+        flat_std  = flat_val.get("std_completion",  0)
 
     labels = ["Flat-coop\n(baseline)", "Heuristic\noracle", "Symbiotic\n(PRISM)"]
     means  = [flat_mean, 0.0, sym_mean]
@@ -699,6 +706,8 @@ def main():
                         help="Path to flat-cooperative results JSON (for Fig 7, optional)")
     parser.add_argument("--heuristic", default=None,
                         help="Path to heuristic baseline JSON (for reference lines in Fig 1, 6, 7, 9)")
+    parser.add_argument("--eval_stats", default=None,
+                        help="Path to eval_stats_final.json from evaluate_all_seeds.py — overrides training metrics in Fig 7")
     parser.add_argument("--ckpt_dir",  required=True,
                         help="Checkpoint directory containing per-condition CSV files")
     parser.add_argument("--output",    default="local_runs/figures",
@@ -716,9 +725,12 @@ def main():
     symbiotic = load_json(args.symbiotic)
     symbiotic_path = args.symbiotic
 
-    heuristic = load_json(args.heuristic) if args.heuristic else None
+    heuristic  = load_json(args.heuristic)   if args.heuristic  else None
+    eval_stats = load_json(args.eval_stats) if args.eval_stats else None
     if heuristic:
         print(f"Loaded heuristic baseline: {args.heuristic}")
+    if eval_stats:
+        print(f"Loaded eval stats: {args.eval_stats}")
 
     print(f"Output directory: {out}/")
     print()
@@ -763,7 +775,8 @@ def main():
     if args.flat_coop:
         try:
             flat_coop = load_json(args.flat_coop)
-            fig7_symbiotic_vs_flat_coop(symbiotic, flat_coop, out, heuristic_results=heuristic)
+            fig7_symbiotic_vs_flat_coop(symbiotic, flat_coop, out,
+                                        heuristic_results=heuristic, eval_stats=eval_stats)
         except Exception as e:
             print(f"  [SKIP] {e}")
     else:

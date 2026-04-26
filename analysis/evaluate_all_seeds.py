@@ -109,8 +109,13 @@ def run_episodes(env, raw_env, agv_actor, pick_actor,
 def eval_condition(run_dir: str, env_id: str, n_episodes: int,
                    max_steps: int, base_seed: int) -> dict:
     """Evaluate all checkpoint_best.pt files under run_dir."""
+    import os as _os
     run_path = Path(run_dir)
-    ckpts = sorted(run_path.rglob("checkpoint_best.pt"))
+    ckpts = sorted(
+        Path(root) / fname
+        for root, dirs, files in _os.walk(run_path, followlinks=True)
+        for fname in files if fname == "checkpoint_best.pt"
+    )
     if not ckpts:
         raise FileNotFoundError(f"No checkpoint_best.pt found under {run_dir}")
 

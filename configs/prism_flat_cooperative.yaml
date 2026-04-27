@@ -37,12 +37,12 @@ training:                    # SAME as symbiotic
   rollout_steps: 1024
   epochs: 4
   lr: 3.0e-4
-  entropy_coef: 0.01
+  entropy_coef: 0.05
   mini_batches: 8
 
 safety:
-  low_battery_threshold: 10.0
-  depletion_penalty: 5.0
+  low_battery_threshold: 7.0
+  depletion_penalty: 1.5
 
 flat_cooperative:
   alpha_collab: 1.0           # scale on shared team mean bonus

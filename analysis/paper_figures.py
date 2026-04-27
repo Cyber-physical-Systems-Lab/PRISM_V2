@@ -763,7 +763,7 @@ def fig7_symbiotic_vs_flat_coop(
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.set_ylabel("Mean deliveries per episode")
-    ax.set_title("Fig 7 — Symbiotic vs Flat-Coop vs Heuristic (Same Team)")
+    ax.set_title("Fig 7 — Throughput Comparison: PRISM vs Baselines")
     ax.set_ylim(0, max(means) + max(stds) + 1.5)
     fig.tight_layout()
     _save(fig, save_path, "fig7_symbiotic_vs_flat_coop")

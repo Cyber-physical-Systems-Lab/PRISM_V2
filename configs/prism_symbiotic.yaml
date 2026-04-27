@@ -34,12 +34,12 @@ training:
   rollout_steps: 1024
   epochs: 4
   lr: 3.0e-4
-  entropy_coef: 0.01
+  entropy_coef: 0.05
   mini_batches: 8
 
 safety:
-  low_battery_threshold: 10.0   # force charging below this level
-  depletion_penalty: 5.0        # penalty if battery hits 0
+  low_battery_threshold: 7.0    # force charging below this level (was 10.0)
+  depletion_penalty: 2.5        # penalty if battery hits 0 (balanced: 2.5x delivery reward)
 
 symbiotic:
   w_mutualism:    8.0           # φ(+/+) — reward joint delivery

@@ -73,10 +73,10 @@ REL_COLORS       = {
 REL_LABELS = {
     REL_MUTUALISM:    "Mutualism    (+/+)",
     REL_COMMENSALISM: "Commensalism (+/0)",
-    REL_COMPETITION:  "Competition  (-/-)",
-    REL_PARASITISM:   "Parasitism   (+/-)",
     REL_NEUTRAL:      "Neutral       (0/0)",
 }
+# Only show observed relationship types in the GIF sidebar
+REL_DISPLAY = [REL_MUTUALISM, REL_COMMENSALISM, REL_NEUTRAL]
 
 
 # ── MLP (identical to training) ───────────────────────────────────────────────
@@ -159,16 +159,29 @@ def render_frame(raw_env, step: int, deliveries: Dict[str, int],
     ax.set_xlim(0, grid_w); ax.set_ylim(0, grid_h)
     ax.set_aspect("equal"); ax.axis("off")
 
-    # Shelves
+    # Shelves — colour by package type if in request queue
+    pkg_type_map = {}
+    for shelf in raw_env.request_queue:
+        pkg_type = getattr(shelf, "package_type", None)
+        if pkg_type is not None:
+            pkg_name = pkg_type.name if hasattr(pkg_type, "name") else str(pkg_type)
+            pkg_type_map[shelf.id] = pkg_name
+
     requested_ids = {s.id for s in raw_env.request_queue}
     for shelf in raw_env.shelfs:
         r, c = shelf.y, shelf.x
-        color = "#2d5a27" if shelf.id in requested_ids else "#1e3d1a"
-        rect = plt.Rectangle((c, grid_h - r - 1), 1, 1, color=color, linewidth=0.3,
-                              edgecolor="#3a7a32")
+        if shelf.id in requested_ids:
+            pkg_name = pkg_type_map.get(shelf.id, "STANDARD")
+            color = PKG_COLORS.get(pkg_name, "#2d5a27")
+            edge  = "#ffffff"
+            label = pkg_name[0]  # first letter: S, L, H, P
+        else:
+            color, edge, label = "#1e3d1a", "#3a7a32", "·"
+        rect = plt.Rectangle((c, grid_h - r - 1), 1, 1, color=color, linewidth=0.4,
+                              edgecolor=edge, alpha=0.85)
         ax.add_patch(rect)
-        ax.text(c + 0.5, grid_h - r - 0.5, "s", ha="center", va="center",
-                color="#5a9e52", fontsize=5)
+        ax.text(c + 0.5, grid_h - r - 0.5, label, ha="center", va="center",
+                color="white", fontsize=5, fontweight="bold")
 
     # Charging stations
     for cs in getattr(raw_env, "charging_stations", []):
@@ -205,37 +218,60 @@ def render_frame(raw_env, step: int, deliveries: Dict[str, int],
     ax2 = fig.add_axes([grid_w * cell / fig_w, 0, sidebar / fig_w, 1.0])
     ax2.set_facecolor("#0f0f23"); ax2.axis("off")
     y = 0.97
-    ax2.text(0.1, y, f"Step {step}", color="white", fontsize=10,
-             fontweight="bold", transform=ax2.transAxes); y -= 0.06
 
-    ax2.text(0.1, y, "Deliveries", color="#aaaaaa", fontsize=8,
+    # Step counter
+    ax2.text(0.1, y, f"Step {step}", color="#aaaaaa", fontsize=8,
+             transform=ax2.transAxes); y -= 0.06
+
+    # Total deliveries — prominent
+    total_del = sum(deliveries.values())
+    ax2.text(0.5, y, f"{total_del}", color="#27AE60", fontsize=26,
+             fontweight="bold", ha="center", transform=ax2.transAxes); y -= 0.07
+    ax2.text(0.5, y, "deliveries", color="#aaaaaa", fontsize=8,
+             ha="center", transform=ax2.transAxes); y -= 0.07
+
+    # Per-package breakdown (only non-zero or requested types)
+    ax2.text(0.1, y, "By package type", color="#aaaaaa", fontsize=7,
              transform=ax2.transAxes); y -= 0.05
     for pkg, cnt in deliveries.items():
-        c = PKG_COLORS.get(pkg, "gray")
-        ax2.plot([0.08], [y], "o", color=c, markersize=6, transform=ax2.transAxes)
-        ax2.text(0.18, y, f"{pkg[:4]}  {cnt}", color="white", fontsize=7,
+        color = PKG_COLORS.get(pkg, "gray")
+        ax2.plot([0.08], [y], "s", color=color, markersize=7, transform=ax2.transAxes)
+        ax2.text(0.20, y, f"{pkg[:4]}", color="#cccccc", fontsize=7,
                  transform=ax2.transAxes, va="center")
-        y -= 0.045
+        ax2.text(0.72, y, str(cnt), color="white", fontsize=8,
+                 fontweight="bold", transform=ax2.transAxes, va="center")
+        y -= 0.048
 
-    y -= 0.03
-    ax2.text(0.1, y, "Relationships", color="#aaaaaa", fontsize=8,
-             transform=ax2.transAxes); y -= 0.05
-    for rel_id, rel_name in enumerate(REL_NAMES):
+    # Package type legend
+    y -= 0.01
+    ax2.text(0.1, y, "Queue legend", color="#aaaaaa", fontsize=7,
+             transform=ax2.transAxes); y -= 0.045
+    for pkg_name, pkg_color in PKG_COLORS.items():
+        ax2.plot([0.08], [y], "s", color=pkg_color, markersize=6, transform=ax2.transAxes)
+        ax2.text(0.20, y, pkg_name, color="#bbbbbb", fontsize=6,
+                 transform=ax2.transAxes, va="center")
+        y -= 0.040
+
+    # Relationship types (observed only)
+    y -= 0.01
+    ax2.text(0.1, y, "Relationships", color="#aaaaaa", fontsize=7,
+             transform=ax2.transAxes); y -= 0.045
+    for rel_id in REL_DISPLAY:
         c = REL_COLORS[rel_id]
         ax2.plot([0.08], [y], "s", color=c, markersize=6, transform=ax2.transAxes)
-        ax2.text(0.18, y, rel_name.capitalize(), color="white", fontsize=7,
+        ax2.text(0.20, y, REL_LABELS[rel_id], color="white", fontsize=6,
                  transform=ax2.transAxes, va="center")
-        y -= 0.04
+        y -= 0.040
 
-    # Relationship matrix
+    # Current pair states
     if rel_matrix:
-        y -= 0.03
-        ax2.text(0.1, y, "Current pairs", color="#aaaaaa", fontsize=7,
+        y -= 0.01
+        ax2.text(0.1, y, "Active pairs", color="#aaaaaa", fontsize=7,
                  transform=ax2.transAxes); y -= 0.04
         for (ai, pi), rel in sorted(rel_matrix.items()):
             c = REL_COLORS[rel]
             label = f"A{ai}↔P{pi}: {REL_NAMES[rel][:3].upper()}"
-            ax2.text(0.1, y, label, color=c, fontsize=6,
+            ax2.text(0.10, y, label, color=c, fontsize=6,
                      transform=ax2.transAxes); y -= 0.035
 
     fig.canvas.draw()
@@ -363,7 +399,7 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
 
     print(f"Building env: {args.env}")
-    env     = gym.make(args.env, max_inactivity_steps=None, max_steps=args.steps)
+    env     = gym.make(args.env, max_inactivity_steps=None, max_steps=args.steps, package_distribution={"SOLO":0.20,"STANDARD":0.30,"LARGE":0.10,"HEAVY":0.25,"PICKER_SOLO":0.15})
     raw_env = env.unwrapped
     obs0, _ = env.reset(seed=args.seed)
 
@@ -436,7 +472,7 @@ def main():
     # ── Comparison GIF ────────────────────────────────────────────────────────
     if args.checkpoint_baseline and all_frames:
         print(f"\nLoading baseline: {args.checkpoint_baseline}")
-        env2     = gym.make(args.env, max_inactivity_steps=None, max_steps=args.steps)
+        env2     = gym.make(args.env, max_inactivity_steps=None, max_steps=args.steps, package_distribution={"SOLO":0.20,"STANDARD":0.30,"LARGE":0.10,"HEAVY":0.25,"PICKER_SOLO":0.15})
         raw_env2 = env2.unwrapped
         obs2, _  = env2.reset(seed=args.seed)
         agv_obs2  = int(np.asarray(obs2[agv_idx[0]]).shape[0])

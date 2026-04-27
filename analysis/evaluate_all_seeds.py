@@ -119,7 +119,7 @@ def eval_condition(run_dir: str, env_id: str, n_episodes: int,
     if not ckpts:
         raise FileNotFoundError(f"No checkpoint_best.pt found under {run_dir}")
 
-    env     = gym.make(env_id, max_inactivity_steps=None, max_steps=max_steps)
+    env     = gym.make(env_id, max_inactivity_steps=None, max_steps=max_steps, package_distribution={"SOLO":0.20,"STANDARD":0.30,"LARGE":0.10,"HEAVY":0.25,"PICKER_SOLO":0.15})
     raw_env = env.unwrapped
     obs0, _ = env.reset(seed=base_seed)
     agents   = raw_env.agents

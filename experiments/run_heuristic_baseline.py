@@ -92,7 +92,9 @@ def run_single_env(env_id: str, num_episodes: int, seed: int) -> dict:
     t0 = time.time()
 
     try:
-        env = gym.make(env_id, max_inactivity_steps=None)
+        env = gym.make(env_id, max_inactivity_steps=None,
+                       package_distribution={"SOLO":0.20,"STANDARD":0.30,
+                                             "LARGE":0.10,"HEAVY":0.25,"PICKER_SOLO":0.15})
     except Exception as e:
         print(f"SKIP ({e})")
         return {"error": str(e)}

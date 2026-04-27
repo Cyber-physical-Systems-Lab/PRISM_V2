@@ -1,0 +1,35 @@
+{
+  "symbiotic": {
+    "pkg_means": {
+      "SOLO": 0.0,
+      "STANDARD": 2.6666666666666665,
+      "LARGE": 0.0,
+      "HEAVY": 0.0,
+      "PICKER_SOLO": 0.0
+    },
+    "mean_deliveries": 2.6666666666666665,
+    "std_deliveries": 1.2410599844719317
+  },
+  "flat_coop": {
+    "pkg_means": {
+      "SOLO": 0.0,
+      "STANDARD": 2.966666666666667,
+      "LARGE": 0.0,
+      "HEAVY": 0.0,
+      "PICKER_SOLO": 0.0
+    },
+    "mean_deliveries": 2.966666666666667,
+    "std_deliveries": 1.1591713250937241
+  },
+  "task_only": {
+    "pkg_means": {
+      "SOLO": 0.0,
+      "STANDARD": 2.6,
+      "LARGE": 0.0,
+      "HEAVY": 0.0,
+      "PICKER_SOLO": 0.0
+    },
+    "mean_deliveries": 2.6,
+    "std_deliveries": 0.9684683962230046
+  }
+}

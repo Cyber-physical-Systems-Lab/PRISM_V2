@@ -36,6 +36,7 @@ safety:
 
 flat_cooperative:
   alpha_collab: 0.0   # no collab bonus → pure task reward
+  w_coverage:   0.5   # shared bonus per delivery of ANY package type
 
 logging:
   checkpoint_dir: "runs/prism_task_only"

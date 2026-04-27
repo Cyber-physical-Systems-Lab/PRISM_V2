@@ -46,6 +46,7 @@ symbiotic:
   w_commensalism: 1.5           # φ(+/0) — reward unilateral help
   w_competition: -1.5           # φ(-/-) — penalise mutual blocking
   w_parasitism:  -0.5           # φ(+/-) — penalise exploitation
+  w_coverage:     0.5           # shared bonus per delivery of ANY package type
 
 logging:
   checkpoint_dir: "runs/prism_symbiotic"

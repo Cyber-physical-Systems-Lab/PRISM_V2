@@ -103,6 +103,9 @@ parser.add_argument("--w_mutualism",    default=2.0,  type=float)
 parser.add_argument("--w_commensalism", default=1.5,  type=float)
 parser.add_argument("--w_competition",  default=-1.5, type=float)
 parser.add_argument("--w_parasitism",   default=-0.5, type=float)
+parser.add_argument("--w_coverage",     default=0.5,  type=float,
+                    help="Shared bonus to ALL agents per delivery of ANY package type. "
+                         "Breaks STANDARD-only preference in heterogeneous teams.")
 parser.add_argument("--low_battery_threshold", default=10.0, type=float)
 parser.add_argument("--depletion_penalty",      default=5.0,  type=float)
 
@@ -138,7 +141,8 @@ def _load_config_defaults(config_path: str) -> dict:
     defaults.update({k: safety[k] for k in
                      ("low_battery_threshold", "depletion_penalty") if k in safety})
     defaults.update({k: symbiotic[k] for k in
-                     ("w_mutualism", "w_commensalism", "w_competition", "w_parasitism")
+                     ("w_mutualism", "w_commensalism", "w_competition", "w_parasitism",
+                      "w_coverage")
                      if k in symbiotic})
     defaults.update({k: logging[k] for k in
                      ("output", "checkpoint_dir", "tb_logdir",
@@ -470,6 +474,15 @@ def _train(seed: int, args, backend: str) -> dict:
             prev_bat = curr_bat
             ep_battery_sum += curr_bat
             ep_battery_count += 1
+
+            # ── Coverage bonus: incentivise all package types ─────────────────
+            # Any delivery (SOLO, STANDARD, LARGE, HEAVY, PICKER_SOLO) gives
+            # all agents a shared bonus, breaking the STANDARD-only preference.
+            if args.w_coverage > 0:
+                n_delivered = sum(info.get("deliveries_by_pkg_type", {}).values())
+                if n_delivered > 0:
+                    raw_rewards = [r + args.w_coverage * n_delivered
+                                   for r in raw_rewards]
 
             # ── Symbiotic reward shaping ──────────────────────────────────────
             shaped_rewards, rels = shape_rewards_symbiotic(

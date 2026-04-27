@@ -108,6 +108,8 @@ parser.add_argument("--package_distribution", default=None, type=str,
 # Flat-cooperative shaping weight
 parser.add_argument("--alpha_collab", default=1.0, type=float,
                     help="Scale on the shared team mean bonus. Set 0.0 for task-only.")
+parser.add_argument("--w_coverage",   default=0.5, type=float,
+                    help="Shared bonus to ALL agents per delivery of ANY package type.")
 parser.add_argument("--condition", default=None,
                     help="Override condition name in output JSON (e.g. 'task_only').")
 parser.add_argument("--low_battery_threshold", default=10.0, type=float)
@@ -146,6 +148,8 @@ def _load_config_defaults(config_path: str) -> dict:
                      ("low_battery_threshold", "depletion_penalty") if k in safety})
     if "alpha_collab" in flat_coop:
         defaults["alpha_collab"] = flat_coop["alpha_collab"]
+    if "w_coverage" in flat_coop:
+        defaults["w_coverage"] = flat_coop["w_coverage"]
     defaults.update({k: logging[k] for k in
                      ("output", "checkpoint_dir", "tb_logdir",
                       "checkpoint_every_episodes", "log_interval")
@@ -462,6 +466,13 @@ def _train(seed: int, args, backend: str) -> dict:
             prev_bat = curr_bat
             ep_battery_sum  += curr_bat
             ep_battery_count += 1
+
+            # ── Coverage bonus: incentivise all package types ─────────────────
+            if args.w_coverage > 0:
+                n_delivered = sum(info.get("deliveries_by_pkg_type", {}).values())
+                if n_delivered > 0:
+                    raw_rewards = [r + args.w_coverage * n_delivered
+                                   for r in raw_rewards]
 
             # ── Flat-cooperative shaping; relationships measured but NOT used ──
             shaped_rewards, rels = shape_rewards_flat(

@@ -46,6 +46,7 @@ safety:
 
 flat_cooperative:
   alpha_collab: 1.0           # scale on shared team mean bonus
+  w_coverage:   0.5           # shared bonus per delivery of ANY package type
 
 logging:
   checkpoint_dir: "runs/prism_flat_cooperative"

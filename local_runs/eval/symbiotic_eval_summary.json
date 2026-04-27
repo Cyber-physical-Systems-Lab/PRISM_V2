@@ -1,51 +1,51 @@
 {
   "condition": "symbiotic",
-  "checkpoint": "local_runs/checkpoints/prism_symbiotic_extra/26-04-26_00-48-19-951354_symbiotic_extra/mappo_seed705063/checkpoint_best.pt",
+  "checkpoint": "local_runs/checkpoints/prism_symbiotic_v3/26-04-26_18-03-19-642625_symbiotic/mappo_seed413287/checkpoint_best.pt",
   "env": "tarware-small-4agvs-2pickers-partialobs-chg-v1",
   "n_episodes": 5,
   "mean_deliveries": 3.6,
   "deliveries_by_episode": [
     {
       "SOLO": 0,
-      "STANDARD": 3,
+      "STANDARD": 1,
       "LARGE": 0,
-      "HEAVY": 0,
+      "HEAVY": 1,
+      "PICKER_SOLO": 0
+    },
+    {
+      "SOLO": 3,
+      "STANDARD": 1,
+      "LARGE": 0,
+      "HEAVY": 3,
+      "PICKER_SOLO": 0
+    },
+    {
+      "SOLO": 1,
+      "STANDARD": 2,
+      "LARGE": 0,
+      "HEAVY": 2,
       "PICKER_SOLO": 0
     },
     {
       "SOLO": 0,
-      "STANDARD": 3,
+      "STANDARD": 2,
       "LARGE": 0,
-      "HEAVY": 0,
+      "HEAVY": 2,
       "PICKER_SOLO": 0
     },
     {
       "SOLO": 0,
-      "STANDARD": 4,
-      "LARGE": 0,
-      "HEAVY": 0,
-      "PICKER_SOLO": 0
-    },
-    {
-      "SOLO": 0,
-      "STANDARD": 4,
-      "LARGE": 0,
-      "HEAVY": 0,
-      "PICKER_SOLO": 0
-    },
-    {
-      "SOLO": 0,
-      "STANDARD": 4,
+      "STANDARD": 0,
       "LARGE": 0,
       "HEAVY": 0,
       "PICKER_SOLO": 0
     }
   ],
   "mean_rel_dist": {
-    "mutualism": 0.0025000000000000005,
-    "commensalism": 0.021675,
+    "mutualism": 0.0012000000000000001,
+    "commensalism": 0.007149999999999999,
     "competition": 0.0,
     "parasitism": 0.0,
-    "neutral": 0.975825
+    "neutral": 0.9916499999999999
   }
 }

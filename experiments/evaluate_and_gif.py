@@ -289,6 +289,11 @@ def run_episode(env, raw_env, agv_actor, pick_actor,
     obs_list, _ = env.reset(seed=seed)
     obs_list = list(obs_list)
 
+    # Start all agents at full battery for GIF clarity.
+    # Trained policies handle full-battery starts (within training distribution).
+    for agent in raw_env.agents:
+        agent.battery = 100.0
+
     prev_bat = np.array([a.battery for a in raw_env.agents], dtype=np.float32)
     deliveries = {p.name: 0 for p in PackageType}
     ep_rel_counts = defaultdict(int)

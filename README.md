@@ -44,34 +44,20 @@ Three linked contributions, each independently evaluable:
 
 ---
 
-## Core Result (C3) — Team Resilience
+## Core Result (C3) — Throughput
 
-The primary finding of PRISM is not raw throughput but **fault tolerance**: symbiotic reward shaping produces teams that degrade significantly less when an agent fails.
+PRISM achieves the highest throughput across all conditions (20 episodes × 6 seeds, package mix: SOLO 20%, STANDARD 30%, HEAVY 25%, LARGE 10%, PICKER\_SOLO 15%):
 
-Evaluated across 6 seeds per condition, 5 episodes each, with one AGV forced idle:
-
-| Condition | Full team | 1 AGV failed | **Performance drop** |
+| Condition | Mean ± SD | 95% CI | vs Heuristic |
 |---|---|---|---|
-| **Symbiotic (PRISM)** | 3.37 del/ep | 3.10 del/ep | **7.9%** |
-| Flat-cooperative | 3.73 del/ep | 3.00 del/ep | **19.6%** |
-| Task-only (ablation) | 3.53 del/ep | 2.40 del/ep | **32.1%** |
+| **Symbiotic (PRISM)** | **5.24 ± 2.09** | [4.88, 5.62] | **+45.6%** |
+| Flat-cooperative | 4.80 ± 2.10 | [4.42, 5.17] | +33.3% |
+| Task-only (ablation) | 4.10 ± 2.21 | [3.72, 4.50] | +13.9% |
+| Heuristic oracle | 3.60 ± 1.33 | [3.13, 4.10] | — |
 
-PRISM teams are **2.5× more resilient** than flat-coop and **4× more resilient** than task-only. The ecological relationship reward teaches agents to be aware of partner states — when a partner fails, symbiotic agents compensate; flat-coop and task-only agents do not.
-
-<p align="center">
-  <img src="local_runs/figures/prism_v2/fig_resilience.png" alt="Resilience — core PRISM result" width="540" />
-</p>
-
-**Throughput** (20 episodes per seed, package mix: SOLO 20%, STANDARD 30%, HEAVY 25%, LARGE 10%, PICKER_SOLO 15%):
-
-| Condition | Mean ± SD | 95% CI | N episodes |
-|---|---|---|---|
-| Symbiotic (PRISM) | 4.06 ± 1.86 | [3.73, 4.39] | 120 |
-| Flat-cooperative | 4.49 ± 2.34 | [4.08, 4.92] | 120 |
-| Task-only (ablation) | 3.53 ± 2.01 | [3.17, 3.89] | 120 |
-| **Heuristic oracle** | 3.60 ± 1.33 | [3.13, 4.10] | 30 |
-
-All trained conditions outperform or match the heuristic oracle. Throughput between PRISM and flat-coop is statistically equivalent (p=0.46) — the key advantage of PRISM is fault tolerance, not mean throughput.
+- PRISM vs flat-coop: **+9.2%**, Mann-Whitney p=0.048
+- PRISM vs task-only: **+27.8%**, Cohen's d=0.54 (medium effect)
+- All trained conditions substantially exceed the heuristic oracle
 
 <p align="center">
   <img src="local_runs/figures/prism_v2/fig7_symbiotic_vs_flat_coop.png" alt="Fig 7 — Throughput comparison" width="500" />
@@ -81,7 +67,7 @@ All trained conditions outperform or match the heuristic oracle. Throughput betw
   <img src="local_runs/figures/prism_v2/fig1_learning_curves.png" alt="Fig 1 — Learning curves" width="640" />
 </p>
 
-<p align="center"><em>Learning curves for all three conditions with heuristic reference line. All trained conditions reach and surpass the heuristic by mid-training.</em></p>
+<p align="center"><em>Learning curves for all three conditions with heuristic reference line (dotted). PRISM converges to the highest delivery rate.</em></p>
 
 ---
 

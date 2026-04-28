@@ -1,0 +1,158 @@
+{
+  "symbiotic": {
+    "metric1_depletion": {
+      "depletion_rate": 0.9991666666666666,
+      "depletion_rate_std": 0.0009831920802501758,
+      "mean_min_battery": 0.00321638759970665,
+      "n_seeds": 6,
+      "per_seed": [
+        0.999,
+        1.0,
+        1.0,
+        1.0,
+        0.998,
+        0.998
+      ]
+    },
+    "metric2_convergence": {
+      "convergence_episode": 0.0,
+      "convergence_episode_std": 0.0,
+      "threshold_frac": 0.75,
+      "n_seeds": 6,
+      "per_seed": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "metric3_resilience": {
+      "full_team_mean": 4.566666666666667,
+      "failed_agv_mean": 3.6999999999999997,
+      "performance_drop_pct": 18.97810218978104,
+      "n_seeds": 6,
+      "per_seed_full": [
+        3.4,
+        3.8,
+        5.4,
+        4.6,
+        5.4,
+        4.8
+      ],
+      "per_seed_failed": [
+        3.2,
+        2.6,
+        4.8,
+        3.4,
+        4.8,
+        3.4
+      ]
+    }
+  },
+  "flat_coop": {
+    "metric1_depletion": {
+      "depletion_rate": 0.9996666666666667,
+      "depletion_rate_std": 0.0008164965809277268,
+      "mean_min_battery": 0.0027600000699361167,
+      "n_seeds": 6,
+      "per_seed": [
+        1.0,
+        1.0,
+        0.998,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "metric2_convergence": {
+      "convergence_episode": 1.8333333333333333,
+      "convergence_episode_std": 3.6009258068817065,
+      "threshold_frac": 0.75,
+      "n_seeds": 6,
+      "per_seed": [
+        9,
+        0,
+        0,
+        2,
+        0,
+        0
+      ]
+    },
+    "metric3_resilience": {
+      "full_team_mean": 4.466666666666667,
+      "failed_agv_mean": 3.6,
+      "performance_drop_pct": 19.402985074626866,
+      "n_seeds": 6,
+      "per_seed_full": [
+        4.2,
+        4.4,
+        3.2,
+        4.8,
+        5.2,
+        5.0
+      ],
+      "per_seed_failed": [
+        2.8,
+        4.0,
+        3.2,
+        4.4,
+        3.4,
+        3.8
+      ]
+    }
+  },
+  "task_only": {
+    "metric1_depletion": {
+      "depletion_rate": 0.9998333333333335,
+      "depletion_rate_std": 0.0004082482904638634,
+      "mean_min_battery": 0.00043689084053039556,
+      "n_seeds": 6,
+      "per_seed": [
+        1.0,
+        0.999,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "metric2_convergence": {
+      "convergence_episode": 0.5,
+      "convergence_episode_std": 1.224744871391589,
+      "threshold_frac": 0.75,
+      "n_seeds": 6,
+      "per_seed": [
+        0,
+        0,
+        0,
+        0,
+        3,
+        0
+      ]
+    },
+    "metric3_resilience": {
+      "full_team_mean": 4.1000000000000005,
+      "failed_agv_mean": 3.4666666666666663,
+      "performance_drop_pct": 15.447154471544735,
+      "n_seeds": 6,
+      "per_seed_full": [
+        3.2,
+        3.4,
+        4.2,
+        4.8,
+        6.2,
+        2.8
+      ],
+      "per_seed_failed": [
+        2.0,
+        2.6,
+        3.6,
+        3.6,
+        5.0,
+        4.0
+      ]
+    }
+  }
+}

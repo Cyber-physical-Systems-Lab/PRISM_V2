@@ -3,38 +3,38 @@
   "checkpoint": "local_runs/checkpoints/prism_symbiotic_v4/26-04-27_14-43-41-080875_symbiotic/mappo_seed797417/checkpoint_best.pt",
   "env": "tarware-small-4agvs-2pickers-partialobs-chg-v1",
   "n_episodes": 5,
-  "mean_deliveries": 5.6,
+  "mean_deliveries": 5.4,
   "deliveries_by_episode": [
     {
-      "SOLO": 2,
-      "STANDARD": 2,
+      "SOLO": 1,
+      "STANDARD": 3,
       "LARGE": 0,
-      "HEAVY": 0,
+      "HEAVY": 1,
       "PICKER_SOLO": 0
     },
     {
-      "SOLO": 5,
-      "STANDARD": 1,
+      "SOLO": 6,
+      "STANDARD": 2,
       "LARGE": 0,
-      "HEAVY": 4,
+      "HEAVY": 1,
+      "PICKER_SOLO": 0
+    },
+    {
+      "SOLO": 2,
+      "STANDARD": 4,
+      "LARGE": 0,
+      "HEAVY": 1,
       "PICKER_SOLO": 0
     },
     {
       "SOLO": 0,
-      "STANDARD": 4,
-      "LARGE": 0,
-      "HEAVY": 0,
-      "PICKER_SOLO": 0
-    },
-    {
-      "SOLO": 1,
       "STANDARD": 3,
       "LARGE": 0,
       "HEAVY": 0,
       "PICKER_SOLO": 0
     },
     {
-      "SOLO": 3,
+      "SOLO": 0,
       "STANDARD": 2,
       "LARGE": 0,
       "HEAVY": 1,
@@ -42,10 +42,10 @@
     }
   ],
   "mean_rel_dist": {
-    "mutualism": 0.002325,
-    "commensalism": 0.00805,
+    "mutualism": 0.002175,
+    "commensalism": 0.007424999999999999,
     "competition": 0.0,
     "parasitism": 0.0,
-    "neutral": 0.989625
+    "neutral": 0.9903999999999998
   }
 }

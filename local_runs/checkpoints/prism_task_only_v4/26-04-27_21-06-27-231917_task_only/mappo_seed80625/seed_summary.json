@@ -1,0 +1,11 @@
+{
+  "condition": "task_only",
+  "seed": 80625,
+  "backend": "mappo",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-v1",
+  "best_deliveries": 12.0,
+  "best_episode": 384,
+  "n_episodes": 1000,
+  "tsi": 0.9223061203956604,
+  "rsi": 0.9819819819819819
+}

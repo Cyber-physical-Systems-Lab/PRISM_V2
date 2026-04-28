@@ -28,7 +28,7 @@ The central claim is narrow and testable: symbiotic reward decomposition (`r_i =
   <img src="local_runs/eval/comparison_flat_vs_symbiotic.gif" alt="Flat-coop (left) vs Symbiotic (right)" width="760" />
 </p>
 
-<p align="center"><em>Side-by-side: flat-cooperative baseline (left) vs PRISM symbiotic policy (right). Same team, same environment, same episode seed. Both conditions deliver a diverse package mix (SOLO + STANDARD + HEAVY). PRISM achieves higher mean throughput (5.24 vs 4.80 del/ep, +9.2%).</em></p>
+<p align="center"><em>Side-by-side: flat-cooperative baseline (left) vs PRISM symbiotic policy (right). Same team, same environment, same episode seed. Both conditions deliver a diverse package mix (SOLO + STANDARD + HEAVY). PRISM achieves higher mean throughput (5.40 vs 4.88 del/ep, +10.6%, p=0.013).</em></p>
 
 ---
 
@@ -50,20 +50,20 @@ PRISM achieves the highest throughput across all conditions (20 episodes × 6 se
 
 | Condition | Mean ± SD | 95% CI | vs Heuristic |
 |---|---|---|---|
-| **Symbiotic (PRISM)** | **5.24 ± 2.09** | [4.88, 5.62] | **+45.6%** |
-| Flat-cooperative | 4.80 ± 2.10 | [4.42, 5.17] | +33.3% |
-| Task-only (ablation) | 4.10 ± 2.21 | [3.72, 4.50] | +13.9% |
-| Heuristic oracle | 3.60 ± 1.33 | [3.13, 4.10] | — |
+| **Symbiotic (PRISM)** | **5.40 ± 1.98** | [5.05, 5.77] | **+40.9%** |
+| Task-only (ablation) | 5.06 ± 1.90 | [4.72, 5.40] | +32.0% |
+| Flat-cooperative | 4.88 ± 2.00 | [4.53, 5.25] | +27.4% |
+| Heuristic oracle | 3.83 ± 1.27 | [3.40, 4.30] | — |
 
-- PRISM vs flat-coop: **+9.2%**, Mann-Whitney p=0.048
-- PRISM vs task-only: **+27.8%**, Cohen's d=0.54 (medium effect)
+- PRISM vs flat-coop: **+10.6%**, Mann-Whitney **p=0.013**
+- Task-only **beats** flat-coop (5.06 vs 4.88) — the cooperative bonus alone doesn't help; only typed shaping does
 - All trained conditions substantially exceed the heuristic oracle
 
 <p align="center">
-  <img src="local_runs/figures/prism_v2/fig7_symbiotic_vs_flat_coop.png" alt="Fig. 3 — Throughput comparison" width="500" />
+  <img src="local_runs/figures/prism_v2/fig7_symbiotic_vs_flat_coop.png" alt="Fig. 3 — Throughput comparison" width="600" />
 </p>
 
-<p align="center"><em>Fig. 3 — Throughput comparison. PRISM achieves 5.24 del/ep vs 4.80 (flat-coop) and 3.60 (heuristic).</em></p>
+<p align="center"><em>Fig. 3 — Throughput comparison across all four conditions. PRISM achieves 5.40 del/ep. Notably task-only (5.06) beats flat-cooperative (4.88), showing that undifferentiated team bonuses provide no coordination benefit.</em></p>
 
 <p align="center">
   <img src="local_runs/figures/prism_v2/fig1_learning_curves.png" alt="Fig. 2 — Learning curves" width="640" />

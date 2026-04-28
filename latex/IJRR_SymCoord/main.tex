@@ -495,8 +495,15 @@ PRISM achieves the highest mean throughput (5.24~del/ep), outperforming flat-coo
 
 \begin{figure}[htbp]
   \centering
+  \includegraphics[width=\linewidth]{figure/fig7_symbiotic_vs_flat_coop.pdf}
+  \caption{Throughput comparison (deliveries per episode, mean $\pm$ SD, 120 episodes per condition). PRISM achieves the highest mean throughput, outperforming flat-cooperative by 9.2\% (Mann-Whitney $p{=}0.048$) and task-only by 27.8\%. All trained conditions substantially exceed the heuristic oracle.}
+  \label{fig:throughput}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
   \includegraphics[width=\linewidth]{figure/fig1_learning_curves.pdf}
-  \caption{Learning curves (deliveries per episode, smoothed, $\pm$\,1\,SD across seeds) for all three conditions and heuristic reference line (dotted). All trained conditions reach the heuristic level and exceed it by mid-training.}
+  \caption{Learning curves (deliveries per episode, smoothed, $\pm$\,1\,SD across seeds) for all three conditions and heuristic reference line (dotted). PRISM converges to the highest delivery rate.}
   \label{fig:learning_curves}
 \end{figure}
 

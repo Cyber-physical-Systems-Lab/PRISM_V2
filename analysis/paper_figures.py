@@ -260,7 +260,7 @@ def fig1_learning_curves(
 
     ax.set_xlabel("Training episode")
     ax.set_ylabel("Deliveries per episode")
-    ax.set_title("Fig 1 — Task Completion over Training")
+    ax.set_title("Fig. 2 — Task Completion over Training")
     ax.legend(loc="upper left")
     fig.tight_layout()
     _save(fig, save_path, "fig1_learning_curves")
@@ -340,7 +340,7 @@ def fig_relationship_emergence(
 
     ax.set_xlabel("Training episode")
     ax.set_ylabel("Fraction of AGV–picker pair interactions")
-    ax.set_title("Fig — Ecological Relationship Emergence over Training\n"
+    ax.set_title("Fig. 4 — Ecological Relationship Emergence over Training\n"
                  "(mutualism = joint delivery; commensalism = one-sided charging)")
     ax.set_ylim(bottom=0)
     ax.legend()
@@ -420,7 +420,7 @@ def fig_package_distribution(
     ax.set_xticks(x)
     ax.set_xticklabels(conditions)
     ax.set_ylabel("Mean deliveries per episode")
-    ax.set_title("Fig — Package Type Distribution by Condition\n"
+    ax.set_title("Package Type Distribution by Condition\n"
                  "(symbiotic reward shifts team toward cooperative STANDARD tasks)")
     ax.legend(title="Package type", fontsize=8, loc="upper left")
     fig.tight_layout()
@@ -627,7 +627,7 @@ def fig6_specialisation_index(
     ax.set_xticklabels([METHOD_LABEL.get(m, m) for m in names], rotation=15, ha="right")
     ax.set_ylabel("Index value [0 – 1]")
     ax.set_ylim(0, 1.1)
-    ax.set_title("Fig 6 — Team Specialisation (TSI) and Role Stability (RSI)")
+    ax.set_title("Fig. 5 — Team Specialisation Index (TSI) and Role Stability (RSI)")
 
     # Value labels on bars
     for bar in list(bars1) + list(bars2):
@@ -686,8 +686,8 @@ def fig_resilience(alt_metrics: dict, save_path: Path) -> None:
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.set_ylabel("Mean deliveries per episode")
-    ax.set_title("Fig — Team Resilience Under Agent Failure\n"
-                 "(lower drop % = more resilient; PRISM teams adapt best to failure)")
+    ax.set_title("Fig. — Team Resilience Under Agent Failure\n"
+                 "(lower drop % = more resilient)")
     ax.legend(fontsize=9)
     ax.set_ylim(0, max(full_vals) + 1.2)
     fig.tight_layout()
@@ -763,7 +763,7 @@ def fig7_symbiotic_vs_flat_coop(
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.set_ylabel("Mean deliveries per episode")
-    ax.set_title("Fig 7 — Throughput Comparison: PRISM vs Baselines")
+    ax.set_title("Fig. 3 — Throughput Comparison: PRISM vs Baselines")
     ax.set_ylim(0, max(means) + max(stds) + 1.5)
     fig.tight_layout()
     _save(fig, save_path, "fig7_symbiotic_vs_flat_coop")

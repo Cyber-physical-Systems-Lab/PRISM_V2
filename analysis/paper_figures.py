@@ -586,21 +586,28 @@ def fig6_specialisation_index(
     results: dict,
     save_path: Path,
     heuristic_results: Optional[dict] = None,
+    flat_coop_results: Optional[dict] = None,
+    task_only_results: Optional[dict] = None,
 ) -> None:
     """TSI and RSI per method — measures degree of role specialisation."""
-    methods = _methods_from_json(results)
-    names, tsi_vals, rsi_vals = [], [], []
+    # Collect (label, color, tsi, rsi) for each condition
+    entries = []
 
-    for method, data in methods.items():
-        tsi = data.get("tsi")
-        rsi = data.get("rsi")
-        if tsi is None:
-            continue
-        names.append(method)
-        tsi_vals.append(tsi)
-        rsi_vals.append(rsi if rsi is not None else 0.0)
+    def _extract_tsi_rsi(data: dict, label: str, color: str):
+        m = _methods_from_json(data)
+        val = next(iter(m.values()), {})
+        tsi = val.get("tsi")
+        rsi = val.get("rsi", 0.0)
+        if tsi is not None:
+            entries.append((label, color, float(tsi), float(rsi) if rsi else 0.0))
 
-    if not names:
+    _extract_tsi_rsi(results, "symbiotic", METHOD_COLOR["symbiotic"])
+    if flat_coop_results is not None:
+        _extract_tsi_rsi(flat_coop_results, "flat_cooperative", METHOD_COLOR["flat_cooperative"])
+    if task_only_results is not None:
+        _extract_tsi_rsi(task_only_results, "task_only", "#E67E22")
+
+    if not entries:
         print("  [SKIP] fig6: no TSI/RSI data in results JSON")
         return
 
@@ -608,23 +615,25 @@ def fig6_specialisation_index(
     h = _load_heuristic_data(heuristic_results)
     h_tsi = h.get("tsi") if h is not None else None
     if h_tsi is not None:
-        names.append("heuristic")
-        tsi_vals.append(h_tsi)
-        rsi_vals.append(0.0)  # heuristic has no trained RSI
+        entries.append(("heuristic", METHOD_COLOR["heuristic"], float(h_tsi), 0.0))
 
-    fig, ax = plt.subplots(figsize=(6, 4))
+    names    = [e[0] for e in entries]
+    colors   = [e[1] for e in entries]
+    tsi_vals = [e[2] for e in entries]
+    rsi_vals = [e[3] for e in entries]
+    labels   = [METHOD_LABEL.get(n, n.replace("_", "-").title()) for n in names]
+
+    fig, ax = plt.subplots(figsize=(7, 4))
     x = np.arange(len(names))
     w = 0.35
 
     bars1 = ax.bar(x - w / 2, tsi_vals, width=w, alpha=0.85,
-                   color=[METHOD_COLOR.get(m, "gray") for m in names],
-                   label="TSI", edgecolor="white", linewidth=0.5)
+                   color=colors, label="TSI", edgecolor="white", linewidth=0.5)
     bars2 = ax.bar(x + w / 2, rsi_vals, width=w, alpha=0.5,
-                   color=[METHOD_COLOR.get(m, "gray") for m in names],
-                   label="RSI", edgecolor="white", linewidth=0.5, hatch="//")
+                   color=colors, label="RSI", edgecolor="white", linewidth=0.5, hatch="//")
 
     ax.set_xticks(x)
-    ax.set_xticklabels([METHOD_LABEL.get(m, m) for m in names], rotation=15, ha="right")
+    ax.set_xticklabels(labels, rotation=15, ha="right")
     ax.set_ylabel("Index value [0 – 1]")
     ax.set_ylim(0, 1.1)
     ax.set_title("Fig. 5 — Team Specialisation Index (TSI) and Role Stability (RSI)")
@@ -715,6 +724,8 @@ def fig7_symbiotic_vs_flat_coop(
         sym_std   = eval_stats["symbiotic"]["pooled_std"]
         flat_mean = eval_stats["flat_coop"]["pooled_mean"]
         flat_std  = eval_stats["flat_coop"]["pooled_std"]
+        task_mean = eval_stats.get("task_only", {}).get("pooled_mean", 0)
+        task_std  = eval_stats.get("task_only", {}).get("pooled_std",  0)
     else:
         sym_data  = _methods_from_json(symbiotic_results)
         flat_data = _methods_from_json(flat_coop_results)
@@ -724,47 +735,45 @@ def fig7_symbiotic_vs_flat_coop(
         sym_std   = sym_val.get("std_completion",  0)
         flat_mean = flat_val.get("mean_completion", 0)
         flat_std  = flat_val.get("std_completion",  0)
-
-    labels = ["Flat-coop\n(baseline)", "Heuristic\noracle", "Symbiotic\n(PRISM)"]
-    means  = [flat_mean, 0.0, sym_mean]
-    stds   = [flat_std,  0.0, sym_std]
-    colors = [METHOD_COLOR["flat_cooperative"], METHOD_COLOR["heuristic"], METHOD_COLOR["symbiotic"]]
-    hatches = ["//", "..", ""]
+        task_mean, task_std = 0, 0
 
     h = _load_heuristic_data(heuristic_results)
-    if h is not None:
-        means[1] = h.get("mean_deliveries", 0)
-        stds[1]  = h.get("std_deliveries",  0)
+    h_mean = h.get("mean_deliveries", 0) if h else 0
+    h_std  = h.get("std_deliveries",  0) if h else 0
 
-    fig, ax = plt.subplots(figsize=(6, 5))
+    # All four conditions in ascending order so PRISM is rightmost
+    labels  = ["Flat-coop\n(baseline)", "Task-only\n(ablation)", "Heuristic\noracle", "Symbiotic\n(PRISM)"]
+    means   = [flat_mean, task_mean, h_mean, sym_mean]
+    stds    = [flat_std,  task_std,  h_std,  sym_std]
+    colors  = [METHOD_COLOR["flat_cooperative"], "#E67E22", METHOD_COLOR["heuristic"], METHOD_COLOR["symbiotic"]]
+    hatches = ["//", "xx", "..", ""]
+
+    fig, ax = plt.subplots(figsize=(7, 5))
     x = np.arange(len(labels))
     w = 0.55
 
-    bars = []
     for i, (m, s, c, ht) in enumerate(zip(means, stds, colors, hatches)):
-        b = ax.bar(i, m, w, yerr=s if s > 0 else None, color=c, alpha=0.85,
-                   capsize=5, edgecolor="black", linewidth=0.5, hatch=ht,
-                   label=labels[i])
-        bars.append(b)
-        ax.text(i, m + (s if s > 0 else 0) + 0.15, f"{m:.2f}",
+        ax.bar(i, m, w, yerr=s if s > 0 else None, color=c, alpha=0.85,
+               capsize=5, edgecolor="black", linewidth=0.5, hatch=ht)
+        ax.text(i, m + (s if s > 0 else 0) + 0.12, f"{m:.2f}",
                 ha="center", va="bottom", fontsize=9, fontweight="bold")
 
     # Annotate PRISM advantage over flat-coop
-    if means[2] > means[0]:
-        diff = means[2] - means[0]
-        ymax = max(means) + max(stds) + 0.8
-        ax.annotate("", xy=(2, means[2] + stds[2] + 0.05),
-                    xytext=(0, means[0] + stds[0] + 0.05),
+    diff = sym_mean - flat_mean
+    if diff > 0:
+        ymax = max(means) + max(stds) + 0.9
+        ax.annotate("", xy=(3, sym_mean + sym_std + 0.05),
+                    xytext=(0, flat_mean + flat_std + 0.05),
                     arrowprops=dict(arrowstyle="<->", color="black", lw=1.0))
-        ax.text(1, ymax, f"PRISM +{diff:.1f} del/ep\nvs flat-coop",
+        ax.text(1.5, ymax, f"PRISM +{diff:.1f} del/ep vs flat-coop\n(Mann-Whitney p=0.013)",
                 ha="center", fontsize=8, color="black",
                 bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="gray", alpha=0.8))
 
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.set_ylabel("Mean deliveries per episode")
-    ax.set_title("Fig. 3 — Throughput Comparison: PRISM vs Baselines")
-    ax.set_ylim(0, max(means) + max(stds) + 1.5)
+    ax.set_title("Fig. 3 — Throughput Comparison: PRISM vs All Baselines")
+    ax.set_ylim(0, max(means) + max(stds) + 2.0)
     fig.tight_layout()
     _save(fig, save_path, "fig7_symbiotic_vs_flat_coop")
 
@@ -899,7 +908,9 @@ def main():
     parser.add_argument("--symbiotic", required=True,
                         help="Path to symbiotic condition results JSON (from run_symbiotic.py)")
     parser.add_argument("--flat_coop", default=None,
-                        help="Path to flat-cooperative results JSON (for Fig 7, optional)")
+                        help="Path to flat-cooperative results JSON (for Fig 3, 5, optional)")
+    parser.add_argument("--task_only", default=None,
+                        help="Path to task-only results JSON (for Fig 3, 5, optional)")
     parser.add_argument("--heuristic", default=None,
                         help="Path to heuristic baseline JSON (for reference lines in Fig 1, 6, 7, 9)")
     parser.add_argument("--eval_stats", default=None,
@@ -990,7 +1001,11 @@ def main():
 
     print("Generating Fig 6 — Specialisation index …")
     try:
-        fig6_specialisation_index(symbiotic, out, heuristic_results=heuristic)
+        flat_coop_data = load_json(args.flat_coop) if args.flat_coop else None
+        task_only_data = load_json(args.task_only) if args.task_only else None
+        fig6_specialisation_index(symbiotic, out, heuristic_results=heuristic,
+                                  flat_coop_results=flat_coop_data,
+                                  task_only_results=task_only_data)
     except Exception as e:
         print(f"  [SKIP] {e}")
 

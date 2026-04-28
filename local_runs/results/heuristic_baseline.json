@@ -1,20 +1,20 @@
 {
   "tarware-small-4agvs-2pickers-partialobs-chg-v1": {
     "env": "tarware-small-4agvs-2pickers-partialobs-chg-v1",
-    "mean_deliveries": 3.6,
-    "std_deliveries": 1.3316656236958786,
+    "mean_deliveries": 3.8333333333333335,
+    "std_deliveries": 1.2671051872498809,
     "deliveries_curve": [
+      5.0,
+      4.0,
+      3.0,
+      2.0,
+      5.0,
       4.0,
       4.0,
-      2.0,
-      2.0,
       5.0,
       4.0,
       3.0,
       5.0,
-      4.0,
-      3.0,
-      4.0,
       2.0,
       2.0,
       3.0,
@@ -24,11 +24,11 @@
       3.0,
       3.0,
       5.0,
-      2.0,
+      3.0,
       5.0,
-      2.0,
       3.0,
       3.0,
+      4.0,
       4.0,
       3.0,
       2.0,
@@ -537,6 +537,6 @@
     ],
     "tsi": 0.9999999996666666,
     "n_episodes": 30,
-    "elapsed_sec": 390.2
+    "elapsed_sec": 367.0
   }
 }

@@ -928,7 +928,8 @@ class Warehouse(gym.Env):
     def process_shelf_deliveries(self, rewards: np.ndarray[Any, np.dtype[np.float64]]) -> Tuple[np.ndarray[Any, np.dtype[np.float64]], int]:
         shelf_deliveries = 0
         deliveries_by_type = {t: 0 for t in PackageType}
-        self._picker_solo_deliveries = 0  # reset; incremented in _execute_load for PICKER_SOLO
+        # Note: do NOT reset _picker_solo_deliveries here — it was already
+        # incremented by _execute_load (called before this function). Reset after reading.
         self._delivered_this_step: List[List[Agent]] = []  # carrier groups for this step only
         for y, x in self.goals:
             shelf_id = self.grid[CollisionLayers.CARRIED_SHELVES, x, y]
@@ -959,6 +960,7 @@ class Warehouse(gym.Env):
         # PICKER_SOLO deliveries happen in _execute_load; count them here.
         deliveries_by_type[PackageType.PICKER_SOLO] = self._picker_solo_deliveries
         shelf_deliveries += self._picker_solo_deliveries
+        self._picker_solo_deliveries = 0  # reset after reading, not before
         self._last_deliveries_by_type = deliveries_by_type
 
         if shelf_deliveries:

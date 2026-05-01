@@ -3,13 +3,13 @@
 #SBATCH --output=/proj/prism_v2/runs/prism_symbiotic_%j.out
 #SBATCH --error=/proj/prism_v2/runs/prism_symbiotic_%j.err
 #SBATCH --partition=gpu
-#SBATCH --account=UPPMAX2025-2-381
+#SBATCH --account=uppmax2026-1-141
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=8
 #SBATCH --gpus-per-node=1
-#SBATCH --time=24:00:00
-#SBATCH --mem=64GB
+#SBATCH --time=12:00:00
+#SBATCH --mem=32GB
 
 # ── Environment setup ─────────────────────────────────────────────────────────
 module load CUDA/12.9.0

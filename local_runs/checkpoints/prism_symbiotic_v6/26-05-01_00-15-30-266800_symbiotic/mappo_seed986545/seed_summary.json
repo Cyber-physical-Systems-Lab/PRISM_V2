@@ -1,0 +1,11 @@
+{
+  "condition": "symbiotic",
+  "seed": 986545,
+  "backend": "mappo",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-v1",
+  "best_deliveries": 14.0,
+  "best_episode": 360,
+  "n_episodes": 1000,
+  "tsi": 0.9263959527015686,
+  "rsi": 0.983983983983984
+}

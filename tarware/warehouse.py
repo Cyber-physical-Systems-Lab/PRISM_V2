@@ -1149,7 +1149,7 @@ class Warehouse(gym.Env):
                 continue
             shelf = self.shelfs[shelf_id - 1]
             i = s_action_id - len(self.goals) - 1
-            agv_capacity[i] = max(1, shelf.required_agvs)
+            agv_capacity[i] = shelf.required_agvs
             picker_capacity[i] = shelf.required_pickers
 
         # Count agents currently targeting each slot.

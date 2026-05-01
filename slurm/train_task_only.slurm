@@ -3,7 +3,7 @@
 #SBATCH --output=/proj/prism_v2/runs/prism_task_only_%j.out
 #SBATCH --error=/proj/prism_v2/runs/prism_task_only_%j.err
 #SBATCH --partition=gpu
-#SBATCH --account=UPPMAX2025-2-381
+#SBATCH --account=uppmax2026-1-141
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=16

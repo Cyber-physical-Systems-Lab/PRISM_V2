@@ -1,0 +1,11 @@
+{
+  "condition": "task_only",
+  "seed": 439464,
+  "backend": "ippo",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-v1",
+  "best_deliveries": 10.0,
+  "best_episode": 496,
+  "n_episodes": 1000,
+  "tsi": 0.8881669044494629,
+  "rsi": 0.958958958958959
+}

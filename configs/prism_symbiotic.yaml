@@ -34,15 +34,15 @@ training:
   rollout_steps: 1024
   epochs: 4
   lr: 3.0e-4
-  entropy_coef: 0.05
+  entropy_coef: 0.08
   mini_batches: 8
 
 safety:
   low_battery_threshold: 7.0    # force charging below this level (was 10.0)
-  depletion_penalty: 2.5        # penalty if battery hits 0 (balanced: 2.5x delivery reward)
+  depletion_penalty: 1.5        # match flat-coop so only reward structure differs
 
 symbiotic:
-  w_mutualism:    8.0           # φ(+/+) — reward joint delivery
+  w_mutualism:    2.0           # φ(+/+) — 0.25/pair with 8 pairs; calibrated to task reward
   w_commensalism: 1.5           # φ(+/0) — reward unilateral help
   w_competition: -1.5           # φ(-/-) — penalise mutual blocking
   w_parasitism:  -0.5           # φ(+/-) — penalise exploitation

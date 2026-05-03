@@ -65,6 +65,7 @@ class Agent(Entity):
         self.battery = float(random.randint(20, _BATTERY_FULL))  # New: Battery level
         self.charging = False
         self.total_lifts = 0       # Cumulative lift assists (for picker energy tracking)
+        self.load_wait_steps = 0   # Steps spent waiting for helpers at a multi-agent shelf
 
     def req_location(self, grid_size) -> Tuple[int, int]:
         if self.req_action != Action.FORWARD:
@@ -515,8 +516,15 @@ class Warehouse(gym.Env):
                         agent.busy = False
                     # Logic for Pickers to load shelves if AGV is present at location or wait otherwise
                     if agent.type == AgentType.PICKER:
+                        target_shelf_id = self.grid[CollisionLayers.SHELVES, agent.path[-1][1], agent.path[-1][0]]
+                        target_is_picker_solo = (
+                            target_shelf_id
+                            and self.shelfs[target_shelf_id - 1].package_type == PackageType.PICKER_SOLO
+                        )
                         agv_at_target_id = self.grid[CollisionLayers.AGVS, agent.path[-1][1], agent.path[-1][0]]
-                        if (
+                        if target_is_picker_solo:
+                            pass  # picker moves freely to PICKER_SOLO shelf — no AGV needed
+                        elif (
                             agv_at_target_id == 0
                             or self.agents[agv_at_target_id - 1].req_action != Action.TOGGLE_LOAD
                         ):
@@ -766,8 +774,14 @@ class Warehouse(gym.Env):
         agvs, pickers = self._collect_toggle_helpers(agent.x, agent.y, radius)
 
         if len(agvs) < shelf.required_agvs or len(pickers) < shelf.required_pickers:
-            # Not enough helpers yet — AGV stays busy and will retry next step.
-            # This allows the picker time to navigate to the shelf for STANDARD tasks.
+            agent.load_wait_steps += 1
+            # LARGE packages require 4-agent coordination that may never arrive.
+            # After 30 steps of waiting, release the AGV so it doesn't deadlock.
+            # STANDARD timeout is longer (helpers are usually en-route).
+            timeout = 30 if shelf.required_agvs > 1 else 60
+            if agent.load_wait_steps >= timeout:
+                agent.load_wait_steps = 0
+                agent.busy = False
             return rewards
 
         # Prefer the on-cell AGV as lead so carrier_group[0] is the shelf occupant.
@@ -806,6 +820,7 @@ class Warehouse(gym.Env):
         for a in participating_agvs:
             a.battery = max(0, a.battery - _BATTERY_CONSUMPTION_LOAD)
             a.busy = False
+            a.load_wait_steps = 0
         for p in participating_pickers:
             if p is lead:
                 continue

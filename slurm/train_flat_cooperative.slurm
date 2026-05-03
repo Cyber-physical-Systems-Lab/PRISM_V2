@@ -6,10 +6,10 @@
 #SBATCH --account=uppmax2026-1-141
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=8
 #SBATCH --gpus-per-node=1
 #SBATCH --time=24:00:00
-#SBATCH --mem=64GB
+#SBATCH --mem=32GB
 
 # ── Environment setup ─────────────────────────────────────────────────────────
 module load CUDA/12.9.0
@@ -31,7 +31,7 @@ RUN_ID="$(date +%y-%m-%d_%H-%M-%S-%6N)_flat_coop"
 echo "=== PRISM — Flat-cooperative condition ==="
 python -u experiments/run_flat_cooperative.py \
     --config configs/prism_flat_cooperative.yaml \
-    --timesteps 1000000 \
+    --timesteps 2000000 \
     --seeds ${SEEDS} \
     --checkpoint_dir /proj/prism_v2/runs/${RUN_ID} \
     --tb_logdir /proj/prism_v2/runs/tensorboard/${RUN_ID} \

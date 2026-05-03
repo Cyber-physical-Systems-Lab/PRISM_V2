@@ -158,12 +158,14 @@ def classify_rel(agv_reward: float, picker_reward: float,
     """Classify the (AGV, Picker) relationship for one timestep."""
     agv_charging    = agv_bat_delta    > 0.5
     picker_charging = picker_bat_delta > 0.5
-    delivered           = agv_reward    > 0.5
+    delivered           = agv_reward    >= 0.5
     # >= 0.05: STANDARD load signal is exactly 0.05 * reward_scale (= 0.05 for STANDARD)
     picker_just_lifted  = picker_reward >= 0.05
 
-    if delivered or picker_just_lifted:
-        return REL_MUTUALISM
+    if delivered and picker_just_lifted:
+        return REL_MUTUALISM       # both benefit: joint AGV+picker delivery
+    if picker_just_lifted and not delivered:
+        return REL_COMMENSALISM    # picker benefits alone (PICKER_SOLO); AGV neutral
     if agv_charging and picker_charging:
         return REL_NEUTRAL
     if agv_charging or picker_charging:

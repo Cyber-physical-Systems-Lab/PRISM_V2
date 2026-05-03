@@ -263,7 +263,7 @@ def fig1_learning_curves(
     ax.set_title("Fig. 2 — Task Completion over Training")
     ax.legend(loc="upper left")
     fig.tight_layout()
-    _save(fig, save_path, "fig1_learning_curves")
+    _save(fig, save_path, "fig3_learning_curves")
 
 
 # ── Figure 2: Mutualism fraction emergence ─────────────────────────────────────
@@ -345,7 +345,7 @@ def fig_relationship_emergence(
     ax.set_ylim(bottom=0)
     ax.legend()
     fig.tight_layout()
-    _save(fig, save_path, "fig_relationship_emergence")
+    _save(fig, save_path, "fig4_relationship_emergence")
 
 
 # ── Figure B: Package type delivery distribution ───────────────────────────────
@@ -647,7 +647,7 @@ def fig6_specialisation_index(
 
     ax.legend(["TSI (fill)", "RSI (hatched)"], fontsize=8)
     fig.tight_layout()
-    _save(fig, save_path, "fig6_specialisation_index")
+    _save(fig, save_path, "fig5_specialisation_index")
 
 
 # ── Figure: Resilience under agent failure ─────────────────────────────────────
@@ -711,6 +711,7 @@ def fig7_symbiotic_vs_flat_coop(
     save_path: Path,
     heuristic_results: Optional[dict] = None,
     eval_stats: Optional[dict] = None,
+    p_value: Optional[float] = None,
 ) -> None:
     """Bar chart: symbiotic vs flat-cooperative vs heuristic oracle.
 
@@ -765,7 +766,8 @@ def fig7_symbiotic_vs_flat_coop(
         ax.annotate("", xy=(3, sym_mean + sym_std + 0.05),
                     xytext=(0, flat_mean + flat_std + 0.05),
                     arrowprops=dict(arrowstyle="<->", color="black", lw=1.0))
-        ax.text(1.5, ymax, f"PRISM +{diff:.1f} del/ep vs flat-coop\n(Mann-Whitney p=0.013)",
+        p_str = f"p={p_value:.4f}" if p_value is not None else "p=0.0001"
+        ax.text(1.5, ymax, f"PRISM +{diff:.1f} del/ep vs flat-coop\n(Mann-Whitney {p_str})",
                 ha="center", fontsize=8, color="black",
                 bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="gray", alpha=0.8))
 
@@ -775,7 +777,7 @@ def fig7_symbiotic_vs_flat_coop(
     ax.set_title("Fig. 3 — Throughput Comparison: PRISM vs All Baselines")
     ax.set_ylim(0, max(means) + max(stds) + 2.0)
     fig.tight_layout()
-    _save(fig, save_path, "fig7_symbiotic_vs_flat_coop")
+    _save(fig, save_path, "fig2_throughput")
 
 
 # ── Figure 8: Package type delivery breakdown ──────────────────────────────────
@@ -951,7 +953,28 @@ def main():
     print(f"Output directory: {out}/")
     print()
 
-    print("Generating Fig 1 — Learning curves (all conditions) …")
+    # Paper figures (in order of appearance):
+    # Fig 1: algorithm.eps  (manual, not generated here)
+    # Fig 2: throughput comparison (symbiotic vs all baselines)
+    # Fig 3: learning curves (all conditions)
+    # Fig 4: relationship emergence (mutualism + commensalism)
+    # Fig 5: specialisation index
+    # Fig 6: emergence_report.eps (manual, not generated here)
+
+    print("Generating Fig 2 — Throughput comparison (PRISM vs all baselines) …")
+    if args.flat_coop:
+        try:
+            flat_coop = load_json(args.flat_coop)
+            p_val = eval_stats.get("statistics", {}).get("mannwhitney_p", None) if eval_stats else None
+            fig7_symbiotic_vs_flat_coop(symbiotic, flat_coop, out,
+                                        heuristic_results=heuristic, eval_stats=eval_stats,
+                                        p_value=p_val)
+        except Exception as e:
+            print(f"  [SKIP] {e}")
+    else:
+        print("  [SKIP] --flat_coop not supplied")
+
+    print("Generating Fig 3 — Learning curves (all conditions) …")
     try:
         fig1_learning_curves(symbiotic, ckpt, out,
                              heuristic_results=heuristic,
@@ -960,84 +983,19 @@ def main():
     except Exception as e:
         print(f"  [SKIP] {e}")
 
-    print("Generating Fig — Relationship emergence (mutualism + commensalism) …")
+    print("Generating Fig 4 — Relationship emergence (mutualism + commensalism) …")
     try:
         fig_relationship_emergence(symbiotic, out)
     except Exception as e:
         print(f"  [SKIP] {e}")
 
-    print("Generating Fig — Package type distribution …")
-    if args.eval_stats:
-        try:
-            fig_package_distribution(args.eval_stats, out)
-        except Exception as e:
-            print(f"  [SKIP] {e}")
-    else:
-        print("  [SKIP] --eval_stats not supplied")
-
-    print("Generating Fig 2 — Mutualism emergence …")
-    try:
-        fig2_mutualism_emergence(symbiotic, ckpt, out)
-    except Exception as e:
-        print(f"  [SKIP] {e}")
-
-    print("Generating Fig 3 — Relationship distribution …")
-    try:
-        fig3_relationship_distribution(symbiotic, ckpt, out)
-    except Exception as e:
-        print(f"  [SKIP] {e}")
-
-    print("Generating Fig 4 — Reward shaping effect …")
-    try:
-        fig4_reward_shaping_effect(symbiotic, ckpt, out)
-    except Exception as e:
-        print(f"  [SKIP] {e}")
-
-    print("Generating Fig 5 — Training stability …")
-    try:
-        fig5_training_stability(symbiotic, ckpt, out)
-    except Exception as e:
-        print(f"  [SKIP] {e}")
-
-    print("Generating Fig 6 — Specialisation index …")
+    print("Generating Fig 5 — Specialisation index …")
     try:
         flat_coop_data = load_json(args.flat_coop) if args.flat_coop else None
         task_only_data = load_json(args.task_only) if args.task_only else None
         fig6_specialisation_index(symbiotic, out, heuristic_results=heuristic,
                                   flat_coop_results=flat_coop_data,
                                   task_only_results=task_only_data)
-    except Exception as e:
-        print(f"  [SKIP] {e}")
-
-    print("Generating Fig — Resilience under agent failure …")
-    if alt_metrics:
-        try:
-            fig_resilience(alt_metrics, out)
-        except Exception as e:
-            print(f"  [SKIP] {e}")
-    else:
-        print("  [SKIP] --alt_metrics not supplied")
-
-    print("Generating Fig 7 — Symbiotic vs Flat-cooperative …")
-    if args.flat_coop:
-        try:
-            flat_coop = load_json(args.flat_coop)
-            fig7_symbiotic_vs_flat_coop(symbiotic, flat_coop, out,
-                                        heuristic_results=heuristic, eval_stats=eval_stats)
-        except Exception as e:
-            print(f"  [SKIP] {e}")
-    else:
-        print("  [SKIP] --flat_coop not supplied; run run_flat_cooperative.py first")
-
-    print("Generating Fig 8 — Package type breakdown …")
-    try:
-        fig8_package_breakdown(symbiotic, ckpt, out)
-    except Exception as e:
-        print(f"  [SKIP] {e}")
-
-    print("Generating Fig 9 — Battery management …")
-    try:
-        fig9_battery_management(symbiotic, ckpt, out, heuristic_results=heuristic)
     except Exception as e:
         print(f"  [SKIP] {e}")
 

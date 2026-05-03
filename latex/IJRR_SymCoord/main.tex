@@ -481,28 +481,28 @@ small (4 AGV + 2 pick) & 3.60 & 1.33 \\
 \toprule
 \textbf{Condition} & \textbf{Mean $\pm$ SD} & \textbf{95\% CI} & \textbf{vs.\ Heuristic} \\
 \midrule
-\textbf{PRISM (symbiotic)} & $\mathbf{5.40 \pm 1.98}$ & [5.05, 5.77] & $\mathbf{+40.9\%}$ \\
-Task-only                   & $5.06 \pm 1.90$          & [4.72, 5.40] & $+32.0\%$ \\
-Flat-cooperative            & $4.88 \pm 2.00$          & [4.53, 5.25] & $+27.4\%$ \\
-Heuristic oracle            & $3.83 \pm 1.27$          & [3.40, 4.30] & --- \\
+\textbf{PRISM (symbiotic)} & $\mathbf{11.37 \pm 2.17}$ & [10.97, 11.76] & $\mathbf{+196.5\%}$ \\
+Task-only                   & $10.57 \pm 2.12$           & [10.20, 10.96] & $+175.9\%$ \\
+Flat-cooperative            & $10.24 \pm 2.09$           & [9.87, 10.61]  & $+167.4\%$ \\
+Heuristic oracle            & $3.83 \pm 1.27$            & [3.40, 4.30]   & --- \\
 \bottomrule
-\multicolumn{4}{l}{\small PRISM vs.\ flat-coop: Mann-Whitney $U$, $p{=}0.013$; Welch $t$, $p{=}0.27$ (n.s.)} \\
-\multicolumn{4}{l}{\small Task-only vs.\ flat-coop: $p{=}0.57$ (n.s.) — cooperative bonus provides no benefit} \\
+\multicolumn{4}{l}{\small PRISM vs.\ flat-coop: Mann-Whitney $U{=}9147$, $p{=}0.0001$; Welch $t{=}2.99$, $p{=}0.015$; Cohen's $d{=}0.53$} \\
+\multicolumn{4}{l}{\small Task-only vs.\ flat-coop: $p{=}0.47$ (n.s.) — cooperative bonus provides no benefit} \\
 \end{tabular}
 \end{table}
 
-PRISM achieves the highest mean throughput (5.40~del/ep), outperforming both flat-cooperative ($+10.6\%$, Mann-Whitney $p{=}0.013$) and task-only ($+6.7\%$). A key finding is that task-only (5.06~del/ep) outperforms flat-cooperative (4.88~del/ep, $p{=}0.57$, n.s.), indicating that the undifferentiated team bonus in flat-cooperative provides no benefit over pure task reward. Only PRISM's structured relationship typing produces a statistically detectable throughput gain. All trained conditions substantially exceed the heuristic oracle ($+27.4\%$ to $+40.9\%$).
+PRISM achieves the highest mean throughput (11.37~del/ep), outperforming flat-cooperative by $+11.0\%$ (Mann-Whitney $p{=}0.0001$, Welch $p{=}0.015$, Cohen's $d{=}0.53$, medium effect) and task-only by $+7.6\%$. A key finding is that task-only (10.57~del/ep) and flat-cooperative (10.24~del/ep) do not differ significantly ($p{=}0.47$, n.s.), indicating that an undifferentiated team bonus provides no benefit over pure task reward. Only PRISM's structured relationship typing produces a statistically detectable throughput gain. All trained conditions substantially exceed the heuristic oracle.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figure/fig7_symbiotic_vs_flat_coop.pdf}
-  \caption{Throughput comparison (deliveries per episode, mean $\pm$ SD, 120 episodes per condition). PRISM achieves the highest mean throughput, outperforming flat-cooperative by 9.2\% (Mann-Whitney $p{=}0.048$) and task-only by 27.8\%. All trained conditions substantially exceed the heuristic oracle.}
+  \includegraphics[width=\linewidth]{figure/fig2_throughput.pdf}
+  \caption{Throughput comparison (deliveries per episode, mean $\pm$ SD, 120 episodes per condition). PRISM achieves the highest mean throughput (11.37~del/ep), outperforming flat-cooperative by 11.0\% (Mann-Whitney $p{=}0.0001$) and task-only by 7.6\%. All trained conditions substantially exceed the heuristic oracle (3.83~del/ep).}
   \label{fig:throughput}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figure/fig1_learning_curves.pdf}
+  \includegraphics[width=\linewidth]{figure/fig3_learning_curves.pdf}
   \caption{Learning curves (deliveries per episode, smoothed, $\pm$\,1\,SD across seeds) for all three conditions and heuristic reference line (dotted). PRISM converges to the highest delivery rate.}
   \label{fig:learning_curves}
 \end{figure}
@@ -550,7 +550,7 @@ Mutualism and commensalism are the empirically dominant non-neutral relationship
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figure/fig_relationship_emergence.pdf}
+  \includegraphics[width=\linewidth]{figure/fig4_relationship_emergence.pdf}
   \caption{Mutualism and commensalism fractions over training episodes (PRISM condition, $\pm$\,1\,SD across seeds). Commensalism rises steadily, confirming agents learn battery-coordinated behavior; mutualism tracks delivery frequency.}
   \label{fig:emergence}
 \end{figure}
@@ -559,7 +559,7 @@ Mutualism and commensalism are the empirically dominant non-neutral relationship
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.9\linewidth]{figure/fig6_specialisation_index.pdf}
+  \includegraphics[width=0.9\linewidth]{figure/fig5_specialisation_index.pdf}
   \caption{Team Specialisation Index (TSI) and RSI for PRISM and heuristic reference. PRISM achieves TSI~$= 0.70$, indicating strong but not perfect role specialisation; the heuristic oracle reaches TSI~$= 1.00$ by construction (fully deterministic roles).}
   \label{fig:tsi}
 \end{figure}

@@ -37,7 +37,7 @@ training:                    # SAME as symbiotic
   rollout_steps: 1024
   epochs: 4
   lr: 3.0e-4
-  entropy_coef: 0.05
+  entropy_coef: 0.08
   mini_batches: 8
 
 safety:

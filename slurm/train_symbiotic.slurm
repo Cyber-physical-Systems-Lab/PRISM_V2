@@ -8,7 +8,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
 #SBATCH --gpus-per-node=1
-#SBATCH --time=12:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=32GB
 
 # ── Environment setup ─────────────────────────────────────────────────────────
@@ -29,7 +29,7 @@ RUN_ID="$(date +%y-%m-%d_%H-%M-%S-%6N)_symbiotic"
 echo "=== PRISM — Symbiotic condition ==="
 python -u experiments/run_symbiotic.py \
     --config configs/prism_symbiotic.yaml \
-    --timesteps 1000000 \
+    --timesteps 2000000 \
     --seeds ${SEEDS} \
     --checkpoint_dir /proj/prism_v2/runs/${RUN_ID} \
     --tb_logdir /proj/prism_v2/runs/tensorboard/${RUN_ID} \

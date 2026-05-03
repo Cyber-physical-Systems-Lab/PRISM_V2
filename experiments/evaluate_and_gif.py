@@ -114,12 +114,14 @@ def load_actors(ckpt_path: str, agv_obs_dim: int, pick_obs_dim: int,
 # ── Relationship classifier ───────────────────────────────────────────────────
 
 def classify_rel(agv_r: float, pick_r: float, agv_bd: float, pick_bd: float) -> int:
-    delivered       = agv_r    > 0.5
+    delivered       = agv_r    >= 0.5   # inclusive: STANDARD gives exactly 0.5
     picker_lifted   = pick_r   >= 0.05
     agv_charging    = agv_bd   > 0.5
     pick_charging   = pick_bd  > 0.5
-    if delivered or picker_lifted:
+    if delivered and picker_lifted:     # joint AGV+picker delivery → mutualism
         return REL_MUTUALISM
+    if picker_lifted and not delivered: # picker-only delivery → commensalism
+        return REL_COMMENSALISM
     if agv_charging and pick_charging:
         return REL_NEUTRAL
     if agv_charging or pick_charging:
@@ -494,13 +496,39 @@ def main():
         env2.close()
 
         n = min(len(all_frames), len(frames_base))
+        bar_h = 36  # header bar height in pixels
+        flat_del  = sum(deliveries_base.values())
+        sym_del   = int(np.mean([sum(d.values()) for d in all_deliveries]))
         comparison = []
-        for f_sym, f_flat in zip(all_frames[:n], frames_base[:n]):
+        for step_i, (f_sym, f_flat) in enumerate(zip(all_frames[:n], frames_base[:n])):
             h = max(f_sym.shape[0], f_flat.shape[0])
             left  = np.pad(f_flat, ((0, h-f_flat.shape[0]), (0,0), (0,0)))
             right = np.pad(f_sym,  ((0, h-f_sym.shape[0]),  (0,0), (0,0)))
-            row   = np.concatenate([left, right], axis=1)
-            comparison.append(row.astype(np.uint8))
+            w_each = left.shape[1]
+            # Build labelled header bar
+            fig_bar, ax_bar = plt.subplots(figsize=(w_each * 2 / 100, bar_h / 100), dpi=100)
+            fig_bar.patch.set_facecolor("#1a1a2e")
+            ax_bar.set_facecolor("#1a1a2e")
+            ax_bar.axis("off")
+            ax_bar.text(0.25, 0.5, "Flat-cooperative", color="#95A5A6",
+                        ha="center", va="center", fontsize=9, fontweight="bold",
+                        transform=ax_bar.transAxes)
+            ax_bar.text(0.75, 0.5, "PRISM (Symbiotic)", color="#27AE60",
+                        ha="center", va="center", fontsize=9, fontweight="bold",
+                        transform=ax_bar.transAxes)
+            fig_bar.canvas.draw()
+            bar_buf = np.frombuffer(fig_bar.canvas.buffer_rgba(), dtype=np.uint8)
+            bw, bh = fig_bar.canvas.get_width_height()
+            bar_rgba = bar_buf.reshape(bh, bw, 4)[:, :, :3]
+            plt.close(fig_bar)
+            # Resize bar to match frame width exactly
+            if bar_rgba.shape[1] != w_each * 2:
+                from PIL import Image as _PIL
+                bar_rgba = np.array(_PIL.fromarray(bar_rgba).resize(
+                    (w_each * 2, bar_h), _PIL.LANCZOS))
+            row = np.concatenate([left, right], axis=1)
+            row_labelled = np.concatenate([bar_rgba, row], axis=0)
+            comparison.append(row_labelled.astype(np.uint8))
 
         comp_path = out / "comparison_flat_vs_symbiotic.gif"
         imageio.mimsave(str(comp_path), comparison, fps=args.fps, loop=0)

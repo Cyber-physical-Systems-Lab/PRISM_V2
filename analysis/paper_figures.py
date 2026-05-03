@@ -345,7 +345,71 @@ def fig_relationship_emergence(
     ax.set_ylim(bottom=0)
     ax.legend()
     fig.tight_layout()
-    _save(fig, save_path, "fig4_relationship_emergence")
+    _save(fig, save_path, "fig5_relationship_emergence")
+
+
+# ── Figure 4: Package type delivery breakdown ──────────────────────────────────
+
+def fig4_package_breakdown(
+    pkg_breakdown: dict,
+    save_path: Path,
+) -> None:
+    """Grouped bar chart: mean deliveries per episode by package type.
+
+    Excludes LARGE (never delivered in any condition). Highlights that PRISM's
+    throughput advantage is concentrated in STANDARD packages (joint AGV+picker
+    delivery = mutualistic interaction), while single-role tasks (HEAVY,
+    PICKER_SOLO) are equivalent across all conditions.
+
+    pkg_breakdown format: {"symbiotic": {"SOLO": float, ...}, "flat_coop": ..., "task_only": ...}
+    """
+    pkg_types = ["SOLO", "STANDARD", "HEAVY", "PICKER_SOLO"]
+    pkg_labels = ["SOLO\n(AGV only)", "STANDARD\n(AGV + picker)", "HEAVY\n(AGV only)", "PICKER_SOLO\n(picker only)"]
+
+    conditions = [
+        ("symbiotic",  "Symbiotic\n(PRISM)",       METHOD_COLOR["symbiotic"],        ""),
+        ("flat_coop",  "Flat-coop\n(baseline)",     METHOD_COLOR["flat_cooperative"], "//"),
+        ("task_only",  "Task-only\n(ablation)",     "#E67E22",                        "xx"),
+    ]
+
+    n_pkg = len(pkg_types)
+    n_cond = len(conditions)
+    w = 0.22
+    x = np.arange(n_pkg)
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    for ci, (cond_key, cond_label, color, hatch) in enumerate(conditions):
+        cond_data = pkg_breakdown.get(cond_key, {})
+        vals = [cond_data.get(p, 0) for p in pkg_types]
+        offset = (ci - (n_cond - 1) / 2) * w
+        bars = ax.bar(x + offset, vals, w, label=cond_label, color=color,
+                      alpha=0.85, edgecolor="black", linewidth=0.5, hatch=hatch)
+        for bar, v in zip(bars, vals):
+            if v > 0:
+                ax.text(bar.get_x() + bar.get_width() / 2, v + 0.05,
+                        f"{v:.2f}", ha="center", va="bottom", fontsize=7)
+
+    # Annotate the STANDARD group with PRISM's advantage
+    sym_std  = pkg_breakdown.get("symbiotic", {}).get("STANDARD", 0)
+    flat_std = pkg_breakdown.get("flat_coop", {}).get("STANDARD", 0)
+    diff = sym_std - flat_std
+    if diff > 0:
+        std_idx = pkg_types.index("STANDARD")
+        ymax = max(pkg_breakdown.get("symbiotic", {}).get(p, 0) for p in pkg_types) + 0.7
+        ax.annotate(f"+{diff:.2f}/ep\n(+{100*diff/max(flat_std,0.01):.0f}%)",
+                    xy=(std_idx, sym_std + 0.1), ha="center", va="bottom",
+                    fontsize=8, color=METHOD_COLOR["symbiotic"],
+                    fontweight="bold")
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(pkg_labels, fontsize=9)
+    ax.set_ylabel("Mean deliveries per episode")
+    ax.set_title("Fig. 4 — Package Type Delivery Breakdown by Condition")
+    ax.set_ylim(bottom=0)
+    ax.legend(fontsize=9)
+    fig.tight_layout()
+    _save(fig, save_path, "fig4_package_breakdown")
 
 
 # ── Figure B: Package type delivery distribution ───────────────────────────────
@@ -647,7 +711,7 @@ def fig6_specialisation_index(
 
     ax.legend(["TSI (fill)", "RSI (hatched)"], fontsize=8)
     fig.tight_layout()
-    _save(fig, save_path, "fig5_specialisation_index")
+    _save(fig, save_path, "fig6_specialisation_index")
 
 
 # ── Figure: Resilience under agent failure ─────────────────────────────────────
@@ -919,6 +983,8 @@ def main():
                         help="Path to eval_stats_final.json from evaluate_all_seeds.py — overrides training metrics in Fig 7")
     parser.add_argument("--alt_metrics", default=None,
                         help="Path to alternative_metrics.json from extract_metrics.py — for resilience figure")
+    parser.add_argument("--pkg_breakdown", default=None,
+                        help="Path to pkg_breakdown_v9.json — per-type delivery means for Fig 4")
     parser.add_argument("--ckpt_dir",       required=True,
                         help="Symbiotic checkpoint directory")
     parser.add_argument("--flat_ckpt_dir",  default=None,
@@ -954,12 +1020,13 @@ def main():
     print()
 
     # Paper figures (in order of appearance):
-    # Fig 1: algorithm.eps  (manual, not generated here)
-    # Fig 2: throughput comparison (symbiotic vs all baselines)
-    # Fig 3: learning curves (all conditions)
-    # Fig 4: relationship emergence (mutualism + commensalism)
-    # Fig 5: specialisation index
-    # Fig 6: emergence_report.eps (manual, not generated here)
+    # Fig 1: algorithm.eps          (manual, not generated here)
+    # Fig 2: throughput comparison  (symbiotic vs all baselines)
+    # Fig 3: learning curves        (all conditions)
+    # Fig 4: package breakdown      (per-type deliveries by condition)
+    # Fig 5: relationship emergence (mutualism + commensalism)
+    # Fig 6: specialisation index
+    # Fig 7: emergence_report.eps   (manual, not generated here)
 
     print("Generating Fig 2 — Throughput comparison (PRISM vs all baselines) …")
     if args.flat_coop:
@@ -983,13 +1050,23 @@ def main():
     except Exception as e:
         print(f"  [SKIP] {e}")
 
-    print("Generating Fig 4 — Relationship emergence (mutualism + commensalism) …")
+    print("Generating Fig 4 — Package type delivery breakdown …")
+    if args.pkg_breakdown:
+        try:
+            pkg_breakdown = load_json(args.pkg_breakdown)
+            fig4_package_breakdown(pkg_breakdown, out)
+        except Exception as e:
+            print(f"  [SKIP] {e}")
+    else:
+        print("  [SKIP] --pkg_breakdown not supplied")
+
+    print("Generating Fig 5 — Relationship emergence (mutualism + commensalism) …")
     try:
         fig_relationship_emergence(symbiotic, out)
     except Exception as e:
         print(f"  [SKIP] {e}")
 
-    print("Generating Fig 5 — Specialisation index …")
+    print("Generating Fig 6 — Specialisation index …")
     try:
         flat_coop_data = load_json(args.flat_coop) if args.flat_coop else None
         task_only_data = load_json(args.task_only) if args.task_only else None

@@ -1,0 +1,5 @@
+{
+  "symbiotic":  {"SOLO": 2.40, "STANDARD": 2.38, "HEAVY": 3.67, "PICKER_SOLO": 3.88},
+  "flat_coop":  {"SOLO": 2.15, "STANDARD": 1.69, "HEAVY": 3.73, "PICKER_SOLO": 3.88},
+  "task_only":  {"SOLO": 1.94, "STANDARD": 1.92, "HEAVY": 3.62, "PICKER_SOLO": 3.88}
+}

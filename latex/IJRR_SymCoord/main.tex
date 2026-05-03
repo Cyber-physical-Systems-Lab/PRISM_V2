@@ -422,7 +422,7 @@ We validate C1, C2, and C3 through a controlled reward-structure comparison in a
 
 \subsubsection{Heuristic Oracle Reference}
 
-A hand-crafted BFS scheduler with greedy task assignment serves as a practical upper bound, evaluated for 30 episodes (seed 42) on the full package mix (20\% SOLO, 30\% STANDARD, 10\% LARGE, 25\% HEAVY, 15\% PICKER\_SOLO). This oracle uses no learning and represents the best achievable under rule-based routing with full state knowledge.
+A hand-crafted BFS scheduler with greedy task assignment serves as a practical upper bound, evaluated for 30 episodes (seed 42) on the full package mix (20\% SOLO, 30\% STANDARD, 25\% HEAVY, 15\% PICKER\_SOLO, 10\% LARGE). LARGE packages require simultaneous 2-AGV + 2-picker coordination and are not delivered by any learned policy in this study; they are included in the request queue to test robustness but excluded from the delivery count discussion. This oracle uses no learning and represents the best achievable under rule-based routing with full state knowledge.
 
 \subsubsection{Experiment 1: Throughput Comparison (Three Reward Conditions)}
 
@@ -433,7 +433,7 @@ A hand-crafted BFS scheduler with greedy task assignment serves as a practical u
     \item \textbf{Task-only (ablation):} $r_i = r_i^{\mathrm{task}}$, no shaping. Isolates the contribution of any reward shaping (symbiotic or flat) over the raw task signal.
 \end{itemize}
 
-\textbf{Coverage bonus.} All three conditions include a small shared bonus $w_{\mathrm{cov}} \cdot N_{\mathrm{del}}$ per delivery of any package type, added to all agents. This prevents degenerate specialisation on a single package type (STANDARD) at the expense of ignoring SOLO, HEAVY, and LARGE requests, which would otherwise dominate due to asymmetric per-type reward allocation. With the coverage bonus, agents deliver a realistic mix of all five package types.
+\textbf{Coverage bonus.} All three conditions include a small shared bonus $w_{\mathrm{cov}} \cdot N_{\mathrm{del}}$ per delivery of any package type, added to all agents. This prevents degenerate specialisation on a single package type (STANDARD) at the expense of ignoring SOLO, HEAVY, and PICKER\_SOLO requests, which would otherwise dominate due to asymmetric per-type reward allocation. With the coverage bonus, agents deliver a realistic mix of the four deliverable package types.
 
 \textbf{Primary metric.} Mean deliveries per episode, evaluated over 20 evaluation episodes per seed (120 total per condition), with 95\% bootstrap confidence intervals and Welch's $t$-test on per-seed means.
 
@@ -507,6 +507,17 @@ PRISM achieves the highest mean throughput (11.37~del/ep), outperforming flat-co
   \label{fig:learning_curves}
 \end{figure}
 
+\subsection{Package Type Delivery Breakdown}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{figure/fig4_package_breakdown.pdf}
+  \caption{Mean deliveries per episode by package type and condition (20 episodes $\times$ 6 seeds). PRISM's advantage is concentrated in STANDARD packages (AGV + picker joint delivery, i.e.\ mutualistic interactions), with a $+0.69$\,del/ep gain over flat-cooperative ($+41\%$). Single-role tasks (HEAVY and PICKER\_SOLO) are delivered at equivalent rates across all conditions, confirming that symbiotic shaping promotes inter-role coordination without disrupting single-agent tasks.}
+  \label{fig:pkg_breakdown}
+\end{figure}
+
+PRISM's throughput advantage is not uniform across package types. As shown in Fig.~\ref{fig:pkg_breakdown}, the gains are concentrated in STANDARD packages, which require simultaneous AGV delivery and picker unloading — the canonical mutualistic interaction in this environment. PRISM delivers $2.38$ STANDARD packages per episode compared to $1.69$ for flat-cooperative ($+41\%$) and $1.92$ for task-only. In contrast, HEAVY packages (AGV-only) and PICKER\_SOLO packages (picker-only) are delivered at statistically equivalent rates across all conditions (${\leq}0.11$ del/ep difference). This pattern is the empirical signature of PRISM's design: the symbiotic reward directly incentivises the AGV-picker coordination required for STANDARD tasks, and this benefit does not come at the cost of single-role task performance.
+
 \subsection{Experiment 2: Resilience Under Agent Failure (C3)}
 
 \begin{table}[htbp]
@@ -550,7 +561,7 @@ Mutualism and commensalism are the empirically dominant non-neutral relationship
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figure/fig4_relationship_emergence.pdf}
+  \includegraphics[width=\linewidth]{figure/fig5_relationship_emergence.pdf}
   \caption{Mutualism and commensalism fractions over training episodes (PRISM condition, $\pm$\,1\,SD across seeds). Commensalism rises steadily, confirming agents learn battery-coordinated behavior; mutualism tracks delivery frequency.}
   \label{fig:emergence}
 \end{figure}
@@ -559,7 +570,7 @@ Mutualism and commensalism are the empirically dominant non-neutral relationship
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.9\linewidth]{figure/fig5_specialisation_index.pdf}
+  \includegraphics[width=0.9\linewidth]{figure/fig6_specialisation_index.pdf}
   \caption{Team Specialisation Index (TSI) and RSI for PRISM and heuristic reference. PRISM achieves TSI~$= 0.70$, indicating strong but not perfect role specialisation; the heuristic oracle reaches TSI~$= 1.00$ by construction (fully deterministic roles).}
   \label{fig:tsi}
 \end{figure}

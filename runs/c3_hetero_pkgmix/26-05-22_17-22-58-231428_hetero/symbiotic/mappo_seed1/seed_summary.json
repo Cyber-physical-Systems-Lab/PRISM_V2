@@ -1,0 +1,16 @@
+{
+  "method": "symbiotic",
+  "seed": 1,
+  "backend": "mappo",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1",
+  "status": "completed",
+  "total_steps": 1000000,
+  "completed_episodes": 200,
+  "best_deliveries": 66.0,
+  "best_returns": 0.0,
+  "best_cycle_total": 66.0,
+  "best_episode": 50,
+  "n_episodes": 200,
+  "tsi": 0.8444554209709167,
+  "rsi": 0.9346733668341709
+}

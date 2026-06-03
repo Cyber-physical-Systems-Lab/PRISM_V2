@@ -1,0 +1,17 @@
+{
+  "method": "heuristic",
+  "seed": 7,
+  "backend": "rule",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1",
+  "status": "completed",
+  "total_steps": 5000,
+  "completed_episodes": 1,
+  "best_deliveries": 9.0,
+  "best_returns": 7.0,
+  "best_cycle_total": 16.0,
+  "best_episode": 1,
+  "n_episodes": 1,
+  "behavior_events": 5033,
+  "tsi": 0.7953333854675293,
+  "rsi": 1.0
+}

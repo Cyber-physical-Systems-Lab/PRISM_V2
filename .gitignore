@@ -1,0 +1,40 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+
+# Build outputs
+build/
+dist/
+*.egg-info/
+
+# LaTeX temporaries
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+
+# Excluded artifact classes
+# *.pt
+*.pth
+# *.ckpt
+*.err
+*.slurm.out
+proxy_validation*
+fig_proxy_validation*
+MANIFEST.md
+
+# Jekyll build artifacts (project page)
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+vendor/
+.claude/*

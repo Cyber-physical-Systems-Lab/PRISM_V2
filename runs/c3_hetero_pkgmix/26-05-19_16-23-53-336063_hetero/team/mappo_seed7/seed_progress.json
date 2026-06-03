@@ -1,0 +1,238 @@
+{
+  "method": "team",
+  "seed": 7,
+  "backend": "mappo",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1",
+  "status": "completed",
+  "reason": null,
+  "total_steps": 1000000,
+  "completed_episodes": 200,
+  "best_deliveries": 68.0,
+  "best_returns": 0.0,
+  "best_cycle_total": 68.0,
+  "best_episode": 129,
+  "tsi": 0.8670492768287659,
+  "rsi": 0.9095477386934674,
+  "role_counts": [
+    [
+      69279.0,
+      0.0,
+      929417.0,
+      1304.0
+    ],
+    [
+      70702.0,
+      0.0,
+      927991.0,
+      1307.0
+    ],
+    [
+      72388.0,
+      0.0,
+      926255.0,
+      1357.0
+    ],
+    [
+      74907.0,
+      0.0,
+      923731.0,
+      1362.0
+    ],
+    [
+      736695.0,
+      0.0,
+      259889.0,
+      3416.0
+    ],
+    [
+      758207.0,
+      0.0,
+      239642.0,
+      2151.0
+    ]
+  ],
+  "episode_role_counts": [
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  ],
+  "episode_rows_written": 200,
+  "update_rows_written": 977,
+  "checkpoint_dir": "runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/mappo_seed7",
+  "current_episode": {
+    "episode_steps": 0,
+    "episode_start_step": 1000000,
+    "total_steps": 1000000,
+    "deliveries": 0,
+    "deliveries_by_pkg_type": {
+      "SOLO": 0,
+      "STANDARD": 0,
+      "HEAVY": 0,
+      "PICKER_SOLO": 0,
+      "LARGE": 0
+    },
+    "returns_by_pkg_type": {
+      "SOLO": 0,
+      "STANDARD": 0,
+      "HEAVY": 0,
+      "PICKER_SOLO": 0,
+      "LARGE": 0
+    },
+    "battery_mean_all_agents": 0.0,
+    "battery_mean_per_agent": [],
+    "battery_end_per_agent": [
+      28.0,
+      87.0,
+      83.0,
+      69.0,
+      56.0,
+      60.0
+    ],
+    "relation_counts": {
+      "mutualism": 0,
+      "commensalism": 0,
+      "competition": 0,
+      "parasitism": 0,
+      "neutral": 0
+    },
+    "role_counts": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ]
+  },
+  "last_episode": {
+    "episode": 200,
+    "step": 1000000,
+    "total_steps": 1000000,
+    "episode_steps": 5000,
+    "episode_start_step": 995000,
+    "deliveries": 22,
+    "returns": 0,
+    "cycle_total": 22,
+    "deliveries_by_pkg_type": {
+      "SOLO": 5,
+      "STANDARD": 8,
+      "HEAVY": 5,
+      "PICKER_SOLO": 4,
+      "LARGE": 0
+    },
+    "returns_by_pkg_type": {
+      "SOLO": 0,
+      "STANDARD": 0,
+      "HEAVY": 0,
+      "PICKER_SOLO": 0,
+      "LARGE": 0
+    },
+    "mutualism_fraction": 0.0091825,
+    "competition_fraction": 0.0,
+    "mutualism_event_steps": 22,
+    "delivery_steps": 18,
+    "lift_steps": 17,
+    "mutualism_fraction_event": 1.1931818181818181,
+    "mutualism_events_per_step": 0.0044,
+    "mutualism_events_per_delivery": 1.0,
+    "mean_raw_reward": 0.02071601025427958,
+    "mean_shaped_reward": 0.02071601025427958,
+    "battery_mean_all_agents": 75.73517136904398,
+    "battery_min_all_agents": 26.982406616210938,
+    "battery_max_all_agents": 100.0,
+    "battery_mean_agent_0": 95.97325178985595,
+    "battery_end_agent_0": 99.97685241699219,
+    "W_agent_0": 0.670413673646794,
+    "battery_mean_agent_1": 72.24656284179687,
+    "battery_end_agent_1": 99.93055725097656,
+    "W_agent_1": 0.670413673646794,
+    "battery_mean_agent_2": 97.73585035552979,
+    "battery_end_agent_2": 99.97685241699219,
+    "W_agent_2": 0.670413673646794,
+    "battery_mean_agent_3": 81.3654513671875,
+    "battery_end_agent_3": 100.0,
+    "W_agent_3": 0.670413673646794,
+    "battery_mean_agent_4": 30.133207781219483,
+    "battery_end_agent_4": 26.982406616210938,
+    "W_agent_4": 0.670413673646794,
+    "battery_mean_agent_5": 76.95670407867432,
+    "battery_end_agent_5": 75.0851821899414,
+    "W_agent_5": 0.670413673646794,
+    "deliveries_pkg_SOLO": 5,
+    "returns_pkg_SOLO": 0,
+    "deliveries_pkg_STANDARD": 8,
+    "returns_pkg_STANDARD": 0,
+    "deliveries_pkg_HEAVY": 5,
+    "returns_pkg_HEAVY": 0,
+    "deliveries_pkg_PICKER_SOLO": 4,
+    "returns_pkg_PICKER_SOLO": 0,
+    "deliveries_pkg_LARGE": 0,
+    "returns_pkg_LARGE": 0
+  },
+  "eval_csv_path": "runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/mappo_seed7/eval_metrics.csv",
+  "eval_jsonl_path": "runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/mappo_seed7/eval_metrics.jsonl",
+  "update_csv_path": "runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/mappo_seed7/update_metrics.csv"
+}

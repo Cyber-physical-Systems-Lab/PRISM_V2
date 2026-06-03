@@ -1,0 +1,16 @@
+{
+  "method": "team",
+  "seed": 42,
+  "backend": "mappo",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1",
+  "status": "completed",
+  "total_steps": 1000000,
+  "completed_episodes": 200,
+  "best_deliveries": 62.0,
+  "best_returns": 0.0,
+  "best_cycle_total": 62.0,
+  "best_episode": 121,
+  "n_episodes": 200,
+  "tsi": 0.8778745532035828,
+  "rsi": 0.9346733668341709
+}

@@ -1,0 +1,15 @@
+experiment:
+  name: "heuristic_baseline_c3"
+  num_episodes: 1
+  seed: [7, 42, 123, 2021, 2022, 2023]
+env:
+  envs:
+    # - tarware-tiny-2agvs-1pickers-partialobs-chg-v1
+    # - tarware-small-4agvs-2pickers-partialobs-chg-v1
+    - tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1
+    # - tarware-medium-6agvs-3pickers-partialobs-chg-v1
+logging:
+  output: "runs/c3_heuristic"
+heuristic:
+  max_steps: 5000
+  max_inactivity_steps: 0

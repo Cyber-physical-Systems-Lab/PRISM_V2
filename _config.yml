@@ -1,0 +1,50 @@
+# Jekyll configuration for the PRISM project page.
+#
+# The website source lives in docs/, but Jekyll is configured to build from the
+# repository root so the deploy action can run a plain `bundle exec jekyll build`
+# (mirroring the al-folio GitHub Pages workflow). The docs/ pages are promoted to
+# the site root via per-file `permalink` front matter, and everything that is not
+# part of the website is excluded below.
+
+title: "PRISM"
+description: >-
+  PRISM: Policy-shaping via Reward Decomposition for Inter-agent Symbiosis in
+  Multi-Robot Cooperation.
+lang: en
+
+# Build settings
+source: .
+destination: _site
+incremental: false
+
+# Use kramdown/rouge defaults; no theme gem (al-folio-style plugin build).
+markdown: kramdown
+highlighter: rouge
+
+# Keep the build limited to the website. Everything below is repository code,
+# data, or manuscript material that must not be copied into the published site.
+exclude:
+  - tarware/
+  - experiments/
+  - runs/
+  - configs/
+  - slurm/
+  - scripts/
+  - tools/
+  - docs/PRISM.pdf                # unused duplicate; the page links IJRR_PRISM.pdf at root
+  - assets/figures/symbiosis.pdf  # large source PDFs not linked from the site stay out
+  - pyproject.toml
+  - CITATION.cff
+  - MANIFEST.md
+  - LICENSE
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - .github/
+
+# Files Jekyll should never clean from the destination on rebuild.
+keep_files:
+  - .git
+
+plugins: []

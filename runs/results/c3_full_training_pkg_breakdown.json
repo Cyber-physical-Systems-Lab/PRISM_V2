@@ -1,0 +1,1906 @@
+{
+  "source_eval_metrics_dirs": [
+    "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+    "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+    "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+    "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero"
+  ],
+  "source_result_json": null,
+  "aggregation_unit": "run_dir/backend/method/seed_dir",
+  "definition": "Full-training package breakdown. For each method/backend/seed, average deliveries_pkg_* over every episode in eval_metrics.csv; then average pooled run/backend/method/seed replicate means with equal replicate weight. Error bars are 95% CI across replicates.",
+  "skipped": [
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "symbiotic",
+      "backend": "ippo",
+      "seed_dir": "ippo_seed0",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/ippo_seed0",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/ippo_seed0/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "symbiotic",
+      "backend": "ippo",
+      "seed_dir": "ippo_seed1",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/ippo_seed1",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/ippo_seed1/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "symbiotic",
+      "backend": "ippo",
+      "seed_dir": "ippo_seed2",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/ippo_seed2",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/ippo_seed2/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "team",
+      "backend": "ippo",
+      "seed_dir": "ippo_seed0",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/ippo_seed0",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/ippo_seed0/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "team",
+      "backend": "ippo",
+      "seed_dir": "ippo_seed1",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/ippo_seed1",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/ippo_seed1/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "team",
+      "backend": "ippo",
+      "seed_dir": "ippo_seed2",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/ippo_seed2",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/ippo_seed2/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "individual",
+      "backend": "ippo",
+      "seed_dir": "ippo_seed0",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/ippo_seed0",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/ippo_seed0/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "individual",
+      "backend": "ippo",
+      "seed_dir": "ippo_seed1",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/ippo_seed1",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/ippo_seed1/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "individual",
+      "backend": "ippo",
+      "seed_dir": "ippo_seed2",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/ippo_seed2",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/ippo_seed2/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "symbiotic",
+      "backend": "mappo",
+      "seed_dir": "mappo_seed0",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/mappo_seed0",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/mappo_seed0/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "symbiotic",
+      "backend": "mappo",
+      "seed_dir": "mappo_seed1",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/mappo_seed1",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/mappo_seed1/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "symbiotic",
+      "backend": "mappo",
+      "seed_dir": "mappo_seed2",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/mappo_seed2",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/symbiotic/mappo_seed2/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "team",
+      "backend": "mappo",
+      "seed_dir": "mappo_seed0",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/mappo_seed0",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/mappo_seed0/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "team",
+      "backend": "mappo",
+      "seed_dir": "mappo_seed1",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/mappo_seed1",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/mappo_seed1/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "team",
+      "backend": "mappo",
+      "seed_dir": "mappo_seed2",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/mappo_seed2",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/team/mappo_seed2/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "individual",
+      "backend": "mappo",
+      "seed_dir": "mappo_seed0",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/mappo_seed0",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/mappo_seed0/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "individual",
+      "backend": "mappo",
+      "seed_dir": "mappo_seed1",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/mappo_seed1",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/mappo_seed1/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    },
+    {
+      "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero",
+      "run_name": "26-05-17_17-38-36-063516_hetero",
+      "method": "individual",
+      "backend": "mappo",
+      "seed_dir": "mappo_seed2",
+      "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/mappo_seed2",
+      "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-17_17-38-36-063516_hetero/individual/mappo_seed2/eval_metrics.csv",
+      "reason": "missing_columns",
+      "missing_columns": [
+        "deliveries_pkg_PICKER_SOLO",
+        "deliveries_pkg_HEAVY"
+      ],
+      "missing_prefixes": []
+    }
+  ],
+  "backends": {
+    "ippo": {
+      "symbiotic": {
+        "label": "PRISM",
+        "n_seeds": 9,
+        "n_replicates": 9,
+        "n_episodes_per_seed": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ],
+        "total_mean_deliveries": 44.22888888888889,
+        "total_ci95": 2.49690609564994,
+        "total_per_seed_means": [
+          42.98500000000001,
+          47.595000000000006,
+          42.005,
+          47.975,
+          36.150000000000006,
+          42.175,
+          47.35000000000001,
+          46.13,
+          45.695
+        ],
+        "packages": {
+          "SOLO": {
+            "mean": 14.434999999999999,
+            "ci95": 0.7572186885056534,
+            "per_seed_means": [
+              14.205,
+              15.33,
+              13.595,
+              15.645,
+              11.925,
+              14.155,
+              15.26,
+              15.24,
+              14.56
+            ]
+          },
+          "PICKER_SOLO": {
+            "mean": 6.381111111111112,
+            "ci95": 0.24584666053015058,
+            "per_seed_means": [
+              6.325,
+              6.605,
+              6.255,
+              6.725,
+              5.605,
+              6.115,
+              6.84,
+              6.335,
+              6.625
+            ]
+          },
+          "STANDARD": {
+            "mean": 12.55222222222222,
+            "ci95": 0.8335588466714259,
+            "per_seed_means": [
+              11.84,
+              13.95,
+              11.78,
+              13.675,
+              10.155,
+              11.61,
+              13.645,
+              12.89,
+              13.425
+            ]
+          },
+          "HEAVY": {
+            "mean": 10.860555555555557,
+            "ci95": 0.7108874720384617,
+            "per_seed_means": [
+              10.615,
+              11.71,
+              10.375,
+              11.93,
+              8.465,
+              10.295,
+              11.605,
+              11.665,
+              11.085
+            ]
+          }
+        },
+        "seeds": [
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "symbiotic",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/ippo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/ippo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 14.205,
+              "PICKER_SOLO": 6.325,
+              "STANDARD": 11.84,
+              "HEAVY": 10.615
+            },
+            "total_from_package_means": 42.98500000000001
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "symbiotic",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/ippo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/ippo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 15.33,
+              "PICKER_SOLO": 6.605,
+              "STANDARD": 13.95,
+              "HEAVY": 11.71
+            },
+            "total_from_package_means": 47.595000000000006
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "symbiotic",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/ippo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/ippo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 13.595,
+              "PICKER_SOLO": 6.255,
+              "STANDARD": 11.78,
+              "HEAVY": 10.375
+            },
+            "total_from_package_means": 42.005
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "symbiotic",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/ippo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/ippo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 15.645,
+              "PICKER_SOLO": 6.725,
+              "STANDARD": 13.675,
+              "HEAVY": 11.93
+            },
+            "total_from_package_means": 47.975
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "symbiotic",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/ippo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/ippo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 11.925,
+              "PICKER_SOLO": 5.605,
+              "STANDARD": 10.155,
+              "HEAVY": 8.465
+            },
+            "total_from_package_means": 36.150000000000006
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "symbiotic",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/ippo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/ippo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 14.155,
+              "PICKER_SOLO": 6.115,
+              "STANDARD": 11.61,
+              "HEAVY": 10.295
+            },
+            "total_from_package_means": 42.175
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "symbiotic",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/ippo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/ippo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 15.26,
+              "PICKER_SOLO": 6.84,
+              "STANDARD": 13.645,
+              "HEAVY": 11.605
+            },
+            "total_from_package_means": 47.35000000000001
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "symbiotic",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/ippo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/ippo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 15.24,
+              "PICKER_SOLO": 6.335,
+              "STANDARD": 12.89,
+              "HEAVY": 11.665
+            },
+            "total_from_package_means": 46.13
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "symbiotic",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/ippo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/ippo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 14.56,
+              "PICKER_SOLO": 6.625,
+              "STANDARD": 13.425,
+              "HEAVY": 11.085
+            },
+            "total_from_package_means": 45.695
+          }
+        ]
+      },
+      "team": {
+        "label": "Flat-coop.",
+        "n_seeds": 9,
+        "n_replicates": 9,
+        "n_episodes_per_seed": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ],
+        "total_mean_deliveries": 26.95833333333333,
+        "total_ci95": 2.820032658794339,
+        "total_per_seed_means": [
+          26.91,
+          22.97,
+          29.365000000000002,
+          25.415,
+          32.32,
+          31.04,
+          19.925,
+          31.2,
+          23.48
+        ],
+        "packages": {
+          "SOLO": {
+            "mean": 8.774999999999999,
+            "ci95": 0.8748935935300932,
+            "per_seed_means": [
+              8.68,
+              7.415,
+              9.83,
+              8.78,
+              10.18,
+              10.025,
+              6.425,
+              9.895,
+              7.745
+            ]
+          },
+          "PICKER_SOLO": {
+            "mean": 4.605555555555556,
+            "ci95": 0.2767931138977893,
+            "per_seed_means": [
+              4.615,
+              4.2,
+              4.82,
+              4.58,
+              5.15,
+              4.925,
+              3.86,
+              5.015,
+              4.285
+            ]
+          },
+          "STANDARD": {
+            "mean": 7.245555555555557,
+            "ci95": 0.8875411365183846,
+            "per_seed_means": [
+              7.305,
+              5.845,
+              8.045,
+              6.5,
+              8.925,
+              8.56,
+              5.275,
+              8.63,
+              6.125
+            ]
+          },
+          "HEAVY": {
+            "mean": 6.332222222222223,
+            "ci95": 0.8159920028051593,
+            "per_seed_means": [
+              6.31,
+              5.51,
+              6.67,
+              5.555,
+              8.065,
+              7.53,
+              4.365,
+              7.66,
+              5.325
+            ]
+          }
+        },
+        "seeds": [
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "team",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/ippo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/ippo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 8.68,
+              "PICKER_SOLO": 4.615,
+              "STANDARD": 7.305,
+              "HEAVY": 6.31
+            },
+            "total_from_package_means": 26.91
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "team",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/ippo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/ippo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 7.415,
+              "PICKER_SOLO": 4.2,
+              "STANDARD": 5.845,
+              "HEAVY": 5.51
+            },
+            "total_from_package_means": 22.97
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "team",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/ippo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/ippo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 9.83,
+              "PICKER_SOLO": 4.82,
+              "STANDARD": 8.045,
+              "HEAVY": 6.67
+            },
+            "total_from_package_means": 29.365000000000002
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "team",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/ippo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/ippo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 8.78,
+              "PICKER_SOLO": 4.58,
+              "STANDARD": 6.5,
+              "HEAVY": 5.555
+            },
+            "total_from_package_means": 25.415
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "team",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/ippo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/ippo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 10.18,
+              "PICKER_SOLO": 5.15,
+              "STANDARD": 8.925,
+              "HEAVY": 8.065
+            },
+            "total_from_package_means": 32.32
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "team",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/ippo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/ippo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 10.025,
+              "PICKER_SOLO": 4.925,
+              "STANDARD": 8.56,
+              "HEAVY": 7.53
+            },
+            "total_from_package_means": 31.04
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "team",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/ippo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/ippo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 6.425,
+              "PICKER_SOLO": 3.86,
+              "STANDARD": 5.275,
+              "HEAVY": 4.365
+            },
+            "total_from_package_means": 19.925
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "team",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/ippo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/ippo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 9.895,
+              "PICKER_SOLO": 5.015,
+              "STANDARD": 8.63,
+              "HEAVY": 7.66
+            },
+            "total_from_package_means": 31.2
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "team",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/ippo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/ippo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 7.745,
+              "PICKER_SOLO": 4.285,
+              "STANDARD": 6.125,
+              "HEAVY": 5.325
+            },
+            "total_from_package_means": 23.48
+          }
+        ]
+      },
+      "individual": {
+        "label": "Task-only",
+        "n_seeds": 9,
+        "n_replicates": 9,
+        "n_episodes_per_seed": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ],
+        "total_mean_deliveries": 19.721666666666668,
+        "total_ci95": 4.4157933181806515,
+        "total_per_seed_means": [
+          16.36,
+          29.229999999999997,
+          16.275,
+          16.335,
+          11.245,
+          28.115,
+          22.96,
+          11.985,
+          24.990000000000002
+        ],
+        "packages": {
+          "SOLO": {
+            "mean": 6.461666666666667,
+            "ci95": 1.4724506794230265,
+            "per_seed_means": [
+              5.22,
+              9.68,
+              5.325,
+              5.435,
+              3.465,
+              9.325,
+              7.825,
+              4.095,
+              7.785
+            ]
+          },
+          "PICKER_SOLO": {
+            "mean": 3.8872222222222224,
+            "ci95": 0.4435939419205835,
+            "per_seed_means": [
+              3.545,
+              4.67,
+              3.445,
+              3.5,
+              3.205,
+              4.825,
+              4.105,
+              3.065,
+              4.625
+            ]
+          },
+          "STANDARD": {
+            "mean": 5.1305555555555555,
+            "ci95": 1.378239577267203,
+            "per_seed_means": [
+              4.2,
+              8.28,
+              4.05,
+              4.065,
+              2.485,
+              7.48,
+              6.145,
+              2.655,
+              6.815
+            ]
+          },
+          "HEAVY": {
+            "mean": 4.242222222222222,
+            "ci95": 1.1411824397808605,
+            "per_seed_means": [
+              3.395,
+              6.6,
+              3.455,
+              3.335,
+              2.09,
+              6.485,
+              4.885,
+              2.17,
+              5.765
+            ]
+          }
+        },
+        "seeds": [
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "individual",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/ippo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/ippo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 5.22,
+              "PICKER_SOLO": 3.545,
+              "STANDARD": 4.2,
+              "HEAVY": 3.395
+            },
+            "total_from_package_means": 16.36
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "individual",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/ippo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/ippo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 9.68,
+              "PICKER_SOLO": 4.67,
+              "STANDARD": 8.28,
+              "HEAVY": 6.6
+            },
+            "total_from_package_means": 29.229999999999997
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "individual",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/ippo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/ippo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 5.325,
+              "PICKER_SOLO": 3.445,
+              "STANDARD": 4.05,
+              "HEAVY": 3.455
+            },
+            "total_from_package_means": 16.275
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "individual",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/ippo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/ippo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 5.435,
+              "PICKER_SOLO": 3.5,
+              "STANDARD": 4.065,
+              "HEAVY": 3.335
+            },
+            "total_from_package_means": 16.335
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "individual",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/ippo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/ippo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 3.465,
+              "PICKER_SOLO": 3.205,
+              "STANDARD": 2.485,
+              "HEAVY": 2.09
+            },
+            "total_from_package_means": 11.245
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "individual",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/ippo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/ippo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 9.325,
+              "PICKER_SOLO": 4.825,
+              "STANDARD": 7.48,
+              "HEAVY": 6.485
+            },
+            "total_from_package_means": 28.115
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "individual",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/ippo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/ippo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 7.825,
+              "PICKER_SOLO": 4.105,
+              "STANDARD": 6.145,
+              "HEAVY": 4.885
+            },
+            "total_from_package_means": 22.96
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "individual",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/ippo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/ippo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 4.095,
+              "PICKER_SOLO": 3.065,
+              "STANDARD": 2.655,
+              "HEAVY": 2.17
+            },
+            "total_from_package_means": 11.985
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "individual",
+            "backend": "ippo",
+            "seed_dir": "ippo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/ippo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/ippo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 7.785,
+              "PICKER_SOLO": 4.625,
+              "STANDARD": 6.815,
+              "HEAVY": 5.765
+            },
+            "total_from_package_means": 24.990000000000002
+          }
+        ]
+      }
+    },
+    "mappo": {
+      "symbiotic": {
+        "label": "PRISM",
+        "n_seeds": 9,
+        "n_replicates": 9,
+        "n_episodes_per_seed": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ],
+        "total_mean_deliveries": 36.236111111111114,
+        "total_ci95": 3.2927618310545,
+        "total_per_seed_means": [
+          43.39,
+          35.095,
+          37.230000000000004,
+          34.105000000000004,
+          33.565,
+          36.485,
+          44.94,
+          30.689999999999998,
+          30.625
+        ],
+        "packages": {
+          "SOLO": {
+            "mean": 11.832777777777777,
+            "ci95": 1.078399735089904,
+            "per_seed_means": [
+              13.775,
+              11.735,
+              12.0,
+              11.14,
+              10.935,
+              12.02,
+              14.95,
+              9.905,
+              10.035
+            ]
+          },
+          "PICKER_SOLO": {
+            "mean": 5.612777777777778,
+            "ci95": 0.2867098412793321,
+            "per_seed_means": [
+              6.325,
+              5.305,
+              6.045,
+              5.425,
+              5.46,
+              5.55,
+              6.11,
+              5.08,
+              5.215
+            ]
+          },
+          "STANDARD": {
+            "mean": 10.158333333333331,
+            "ci95": 1.104081384379491,
+            "per_seed_means": [
+              12.87,
+              9.945,
+              10.405,
+              9.45,
+              9.15,
+              10.2,
+              12.8,
+              8.315,
+              8.29
+            ]
+          },
+          "HEAVY": {
+            "mean": 8.63222222222222,
+            "ci95": 0.8672063491322631,
+            "per_seed_means": [
+              10.42,
+              8.11,
+              8.78,
+              8.09,
+              8.02,
+              8.715,
+              11.08,
+              7.39,
+              7.085
+            ]
+          }
+        },
+        "seeds": [
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "symbiotic",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/mappo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/mappo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 13.775,
+              "PICKER_SOLO": 6.325,
+              "STANDARD": 12.87,
+              "HEAVY": 10.42
+            },
+            "total_from_package_means": 43.39
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "symbiotic",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/mappo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/mappo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 11.735,
+              "PICKER_SOLO": 5.305,
+              "STANDARD": 9.945,
+              "HEAVY": 8.11
+            },
+            "total_from_package_means": 35.095
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "symbiotic",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/mappo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/symbiotic/mappo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 12.0,
+              "PICKER_SOLO": 6.045,
+              "STANDARD": 10.405,
+              "HEAVY": 8.78
+            },
+            "total_from_package_means": 37.230000000000004
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "symbiotic",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/mappo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/mappo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 11.14,
+              "PICKER_SOLO": 5.425,
+              "STANDARD": 9.45,
+              "HEAVY": 8.09
+            },
+            "total_from_package_means": 34.105000000000004
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "symbiotic",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/mappo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/mappo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 10.935,
+              "PICKER_SOLO": 5.46,
+              "STANDARD": 9.15,
+              "HEAVY": 8.02
+            },
+            "total_from_package_means": 33.565
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "symbiotic",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/mappo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/symbiotic/mappo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 12.02,
+              "PICKER_SOLO": 5.55,
+              "STANDARD": 10.2,
+              "HEAVY": 8.715
+            },
+            "total_from_package_means": 36.485
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "symbiotic",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/mappo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/mappo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 14.95,
+              "PICKER_SOLO": 6.11,
+              "STANDARD": 12.8,
+              "HEAVY": 11.08
+            },
+            "total_from_package_means": 44.94
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "symbiotic",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/mappo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/mappo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 9.905,
+              "PICKER_SOLO": 5.08,
+              "STANDARD": 8.315,
+              "HEAVY": 7.39
+            },
+            "total_from_package_means": 30.689999999999998
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "symbiotic",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/mappo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/symbiotic/mappo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 10.035,
+              "PICKER_SOLO": 5.215,
+              "STANDARD": 8.29,
+              "HEAVY": 7.085
+            },
+            "total_from_package_means": 30.625
+          }
+        ]
+      },
+      "team": {
+        "label": "Flat-coop.",
+        "n_seeds": 9,
+        "n_replicates": 9,
+        "n_episodes_per_seed": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ],
+        "total_mean_deliveries": 27.28222222222222,
+        "total_ci95": 2.265079501861488,
+        "total_per_seed_means": [
+          31.3,
+          27.660000000000004,
+          27.875,
+          24.205,
+          27.634999999999998,
+          31.435,
+          29.61,
+          20.785,
+          25.034999999999997
+        ],
+        "packages": {
+          "SOLO": {
+            "mean": 8.915,
+            "ci95": 0.7831863138629416,
+            "per_seed_means": [
+              10.075,
+              9.125,
+              8.92,
+              8.015,
+              8.685,
+              10.655,
+              9.89,
+              6.77,
+              8.1
+            ]
+          },
+          "PICKER_SOLO": {
+            "mean": 4.658333333333334,
+            "ci95": 0.2729133338218889,
+            "per_seed_means": [
+              5.41,
+              4.585,
+              4.705,
+              4.29,
+              4.875,
+              4.785,
+              4.915,
+              3.955,
+              4.405
+            ]
+          },
+          "STANDARD": {
+            "mean": 7.477222222222222,
+            "ci95": 0.6972078263232705,
+            "per_seed_means": [
+              8.6,
+              7.71,
+              7.86,
+              6.56,
+              7.64,
+              8.935,
+              7.75,
+              5.45,
+              6.79
+            ]
+          },
+          "HEAVY": {
+            "mean": 6.2316666666666665,
+            "ci95": 0.5688152219013364,
+            "per_seed_means": [
+              7.215,
+              6.24,
+              6.39,
+              5.34,
+              6.435,
+              7.06,
+              7.055,
+              4.61,
+              5.74
+            ]
+          }
+        },
+        "seeds": [
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "team",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/mappo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/mappo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 10.075,
+              "PICKER_SOLO": 5.41,
+              "STANDARD": 8.6,
+              "HEAVY": 7.215
+            },
+            "total_from_package_means": 31.3
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "team",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/mappo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/mappo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 9.125,
+              "PICKER_SOLO": 4.585,
+              "STANDARD": 7.71,
+              "HEAVY": 6.24
+            },
+            "total_from_package_means": 27.660000000000004
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "team",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/mappo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/team/mappo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 8.92,
+              "PICKER_SOLO": 4.705,
+              "STANDARD": 7.86,
+              "HEAVY": 6.39
+            },
+            "total_from_package_means": 27.875
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "team",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/mappo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/mappo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 8.015,
+              "PICKER_SOLO": 4.29,
+              "STANDARD": 6.56,
+              "HEAVY": 5.34
+            },
+            "total_from_package_means": 24.205
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "team",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/mappo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/mappo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 8.685,
+              "PICKER_SOLO": 4.875,
+              "STANDARD": 7.64,
+              "HEAVY": 6.435
+            },
+            "total_from_package_means": 27.634999999999998
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "team",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/mappo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/team/mappo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 10.655,
+              "PICKER_SOLO": 4.785,
+              "STANDARD": 8.935,
+              "HEAVY": 7.06
+            },
+            "total_from_package_means": 31.435
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "team",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/mappo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/mappo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 9.89,
+              "PICKER_SOLO": 4.915,
+              "STANDARD": 7.75,
+              "HEAVY": 7.055
+            },
+            "total_from_package_means": 29.61
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "team",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/mappo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/mappo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 6.77,
+              "PICKER_SOLO": 3.955,
+              "STANDARD": 5.45,
+              "HEAVY": 4.61
+            },
+            "total_from_package_means": 20.785
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "team",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/mappo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/team/mappo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 8.1,
+              "PICKER_SOLO": 4.405,
+              "STANDARD": 6.79,
+              "HEAVY": 5.74
+            },
+            "total_from_package_means": 25.034999999999997
+          }
+        ]
+      },
+      "individual": {
+        "label": "Task-only",
+        "n_seeds": 9,
+        "n_replicates": 9,
+        "n_episodes_per_seed": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ],
+        "total_mean_deliveries": 21.13888888888889,
+        "total_ci95": 3.0010693402416195,
+        "total_per_seed_means": [
+          29.029999999999998,
+          23.695,
+          16.015,
+          23.25,
+          19.145,
+          23.81,
+          23.345000000000002,
+          15.78,
+          16.18
+        ],
+        "packages": {
+          "SOLO": {
+            "mean": 7.000555555555555,
+            "ci95": 1.076947030633412,
+            "per_seed_means": [
+              9.825,
+              7.855,
+              5.225,
+              7.71,
+              6.19,
+              8.02,
+              7.89,
+              5.13,
+              5.16
+            ]
+          },
+          "PICKER_SOLO": {
+            "mean": 4.010555555555555,
+            "ci95": 0.30075270777595314,
+            "per_seed_means": [
+              4.72,
+              4.415,
+              3.355,
+              4.11,
+              3.96,
+              4.265,
+              4.22,
+              3.47,
+              3.58
+            ]
+          },
+          "STANDARD": {
+            "mean": 5.525555555555555,
+            "ci95": 0.9296184421047351,
+            "per_seed_means": [
+              7.875,
+              6.425,
+              4.145,
+              6.285,
+              4.805,
+              6.47,
+              6.045,
+              3.735,
+              3.945
+            ]
+          },
+          "HEAVY": {
+            "mean": 4.602222222222221,
+            "ci95": 0.7116332511887924,
+            "per_seed_means": [
+              6.61,
+              5.0,
+              3.29,
+              5.145,
+              4.19,
+              5.055,
+              5.19,
+              3.445,
+              3.495
+            ]
+          }
+        },
+        "seeds": [
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "individual",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/mappo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/mappo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 9.825,
+              "PICKER_SOLO": 4.72,
+              "STANDARD": 7.875,
+              "HEAVY": 6.61
+            },
+            "total_from_package_means": 29.029999999999998
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "individual",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/mappo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/mappo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 7.855,
+              "PICKER_SOLO": 4.415,
+              "STANDARD": 6.425,
+              "HEAVY": 5.0
+            },
+            "total_from_package_means": 23.695
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero",
+            "run_name": "26-05-19_11-13-14-994381_hetero",
+            "method": "individual",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/mappo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/mappo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 5.225,
+              "PICKER_SOLO": 3.355,
+              "STANDARD": 4.145,
+              "HEAVY": 3.29
+            },
+            "total_from_package_means": 16.015
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "individual",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/mappo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/mappo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 7.71,
+              "PICKER_SOLO": 4.11,
+              "STANDARD": 6.285,
+              "HEAVY": 5.145
+            },
+            "total_from_package_means": 23.25
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "individual",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/mappo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/mappo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 6.19,
+              "PICKER_SOLO": 3.96,
+              "STANDARD": 4.805,
+              "HEAVY": 4.19
+            },
+            "total_from_package_means": 19.145
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero",
+            "run_name": "26-05-19_16-23-53-336063_hetero",
+            "method": "individual",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/mappo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-19_16-23-53-336063_hetero/individual/mappo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 8.02,
+              "PICKER_SOLO": 4.265,
+              "STANDARD": 6.47,
+              "HEAVY": 5.055
+            },
+            "total_from_package_means": 23.81
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "individual",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed1",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/mappo_seed1",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/mappo_seed1/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 7.89,
+              "PICKER_SOLO": 4.22,
+              "STANDARD": 6.045,
+              "HEAVY": 5.19
+            },
+            "total_from_package_means": 23.345000000000002
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "individual",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed42",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/mappo_seed42",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/mappo_seed42/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 5.13,
+              "PICKER_SOLO": 3.47,
+              "STANDARD": 3.735,
+              "HEAVY": 3.445
+            },
+            "total_from_package_means": 15.78
+          },
+          {
+            "run_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero",
+            "run_name": "26-05-21_11-26-16-187478_hetero",
+            "method": "individual",
+            "backend": "mappo",
+            "seed_dir": "mappo_seed7",
+            "seed_path": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/mappo_seed7",
+            "eval_metrics": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_pkgmix/26-05-21_11-26-16-187478_hetero/individual/mappo_seed7/eval_metrics.csv",
+            "n_episodes": 200,
+            "package_mean_deliveries": {
+              "SOLO": 5.16,
+              "PICKER_SOLO": 3.58,
+              "STANDARD": 3.945,
+              "HEAVY": 3.495
+            },
+            "total_from_package_means": 16.18
+          }
+        ]
+      }
+    }
+  },
+  "heuristic": {
+    "label": "Heuristic",
+    "source_eval_metrics_dir": "/gorilla/home/xuezhi/robotic-symbiosis/runs/c3_hetero_heuristic-ok",
+    "n_seeds": 6,
+    "n_episodes_per_seed": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "total_mean_deliveries": 12.166666666666666,
+    "total_ci95": 4.124287952011972,
+    "total_per_seed_means": [
+      5.0,
+      11.0,
+      15.0,
+      13.0,
+      20.0,
+      9.0
+    ],
+    "packages": {
+      "SOLO": {
+        "mean": 7.833333333333333,
+        "ci95": 3.3345611072190264,
+        "per_seed_means": [
+          2.0,
+          5.0,
+          9.0,
+          10.0,
+          14.0,
+          7.0
+        ]
+      },
+      "PICKER_SOLO": {
+        "mean": 2.8333333333333335,
+        "ci95": 1.6333333333333335,
+        "per_seed_means": [
+          2.0,
+          4.0,
+          6.0,
+          0.0,
+          3.0,
+          2.0
+        ]
+      },
+      "STANDARD": {
+        "mean": 1.5,
+        "ci95": 1.10295361038743,
+        "per_seed_means": [
+          1.0,
+          2.0,
+          0.0,
+          3.0,
+          3.0,
+          0.0
+        ]
+      },
+      "HEAVY": {
+        "mean": 0.0,
+        "ci95": 0.0,
+        "per_seed_means": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "seeds": [
+      {
+        "seed_dir": "rule_seed123",
+        "n_episodes": 1,
+        "package_mean_deliveries": {
+          "SOLO": 2.0,
+          "PICKER_SOLO": 2.0,
+          "STANDARD": 1.0,
+          "HEAVY": 0.0
+        },
+        "total_from_package_means": 5.0
+      },
+      {
+        "seed_dir": "rule_seed2021",
+        "n_episodes": 1,
+        "package_mean_deliveries": {
+          "SOLO": 5.0,
+          "PICKER_SOLO": 4.0,
+          "STANDARD": 2.0,
+          "HEAVY": 0.0
+        },
+        "total_from_package_means": 11.0
+      },
+      {
+        "seed_dir": "rule_seed2022",
+        "n_episodes": 1,
+        "package_mean_deliveries": {
+          "SOLO": 9.0,
+          "PICKER_SOLO": 6.0,
+          "STANDARD": 0.0,
+          "HEAVY": 0.0
+        },
+        "total_from_package_means": 15.0
+      },
+      {
+        "seed_dir": "rule_seed2023",
+        "n_episodes": 1,
+        "package_mean_deliveries": {
+          "SOLO": 10.0,
+          "PICKER_SOLO": 0.0,
+          "STANDARD": 3.0,
+          "HEAVY": 0.0
+        },
+        "total_from_package_means": 13.0
+      },
+      {
+        "seed_dir": "rule_seed42",
+        "n_episodes": 1,
+        "package_mean_deliveries": {
+          "SOLO": 14.0,
+          "PICKER_SOLO": 3.0,
+          "STANDARD": 3.0,
+          "HEAVY": 0.0
+        },
+        "total_from_package_means": 20.0
+      },
+      {
+        "seed_dir": "rule_seed7",
+        "n_episodes": 1,
+        "package_mean_deliveries": {
+          "SOLO": 7.0,
+          "PICKER_SOLO": 2.0,
+          "STANDARD": 0.0,
+          "HEAVY": 0.0
+        },
+        "total_from_package_means": 9.0
+      }
+    ]
+  }
+}

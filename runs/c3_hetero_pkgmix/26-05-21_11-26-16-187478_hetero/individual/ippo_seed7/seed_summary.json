@@ -1,0 +1,16 @@
+{
+  "method": "individual",
+  "seed": 7,
+  "backend": "ippo",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1",
+  "status": "completed",
+  "total_steps": 1000000,
+  "completed_episodes": 200,
+  "best_deliveries": 64.0,
+  "best_returns": 0.0,
+  "best_cycle_total": 64.0,
+  "best_episode": 129,
+  "n_episodes": 200,
+  "tsi": 0.8736662864685059,
+  "rsi": 0.8994974874371859
+}

@@ -1,0 +1,56 @@
+{
+  "method": "individual",
+  "backend": "mappo",
+  "trained_seed": 1,
+  "trained_seed_dir": "/gorilla/home/xuezhi/robotic-symbiosis-tarware/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/mappo_seed1",
+  "checkpoint": "/gorilla/home/xuezhi/robotic-symbiosis-tarware/runs/c3_hetero_pkgmix/26-05-19_11-13-14-994381_hetero/individual/mappo_seed1/checkpoint_best.pt",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1",
+  "num_episodes": 3,
+  "eval_seed_base": 0,
+  "n_events_total": 65,
+  "episodes": [
+    {
+      "eval_seed": 0,
+      "episode_steps": 1000,
+      "deliveries_total": 20,
+      "deliveries_logged": 20,
+      "deliveries_by_pkg_type": {
+        "PICKER_SOLO": 4,
+        "STANDARD": 6,
+        "SOLO": 7,
+        "HEAVY": 3
+      },
+      "eval_episode": 0
+    },
+    {
+      "eval_seed": 1,
+      "episode_steps": 1000,
+      "deliveries_total": 27,
+      "deliveries_logged": 27,
+      "deliveries_by_pkg_type": {
+        "SOLO": 14,
+        "PICKER_SOLO": 11,
+        "STANDARD": 2
+      },
+      "eval_episode": 1
+    },
+    {
+      "eval_seed": 2,
+      "episode_steps": 1000,
+      "deliveries_total": 18,
+      "deliveries_logged": 18,
+      "deliveries_by_pkg_type": {
+        "PICKER_SOLO": 2,
+        "SOLO": 10,
+        "STANDARD": 4,
+        "HEAVY": 2
+      },
+      "eval_episode": 2
+    }
+  ],
+  "elapsed_sec": 6.9,
+  "selection": {
+    "best_cycle_total": 88.0,
+    "best_deliveries": 88.0
+  }
+}

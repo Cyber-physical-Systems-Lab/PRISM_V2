@@ -1,0 +1,16 @@
+{
+  "method": "symbiotic",
+  "seed": 7,
+  "backend": "ippo",
+  "env": "tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1",
+  "status": "completed",
+  "total_steps": 1000000,
+  "completed_episodes": 200,
+  "best_deliveries": 70.0,
+  "best_returns": 0.0,
+  "best_cycle_total": 70.0,
+  "best_episode": 80,
+  "n_episodes": 200,
+  "tsi": 0.824880838394165,
+  "rsi": 0.8090452261306532
+}

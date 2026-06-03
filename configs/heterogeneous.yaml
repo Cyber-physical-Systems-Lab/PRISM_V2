@@ -1,0 +1,69 @@
+# C3 Experiment 1 — Package-heterogeneous environment (replaces ENV TYPE A)
+# Agents: 4 AGVs + 2 pickers.  Tasks span four package classes with ratio
+# n_a : n_st : n_h : n_p = 3 : 3 : 3 : 1 (manuscript Table at main.tex:367):
+#   - SOLO        (1 AGV, 0 pickers)  → AGV alone → commensalism with pickers
+#   - STANDARD    (1 AGV, 1 picker)   → canonical mutualism
+#   - HEAVY       (1 AGV, 2 pickers)  → 1 AGV transports, 2 pickers assist
+#   - PICKER_SOLO (0 AGVs, 1 picker)  → picker retrieves and carries alone
+# LARGE (2 AGVs, 2 pickers) remains registered but is held at 0 for this run.
+
+experiment:
+  name: "hetero_c3"
+  type: "heterogeneous"
+  n_seeds: 3
+  methods:
+    - symbiotic    # PRISM
+    - team         # Flat-cooperative
+    - individual   # Task-only
+  backends:
+    - ippo
+    - mappo
+
+env:
+  id: "tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1"
+  max_inactivity_steps: null
+  max_steps: 1000
+  package_distribution:
+    SOLO:        0.3   # n_a
+    STANDARD:    0.3   # n_st
+    HEAVY:       0.3   # n_h
+    PICKER_SOLO: 0.1   # n_p
+    LARGE:       0.0   # kept registered; ablation-only
+
+training:
+  timesteps: 3_000_000
+  rollout_steps: 1024
+  epochs: 4
+  lr: 3.0e-4
+  entropy_coef: 0.01
+  mini_batches: 8
+
+safety:
+  # Calibrated to new battery model: 1 step = 5 s, 12 h unloaded runtime.
+  # Over 1000 steps (~1.4 h) expected mean drain ~12 % under heavy load,
+  # so a 20 % threshold actually discriminates risky agents.
+  low_battery_threshold: 20.0
+  depletion_penalty: 5.0
+
+symbiotic:
+  w_mutualism: 2.0                # φ(+/+) — reward joint delivery
+  w_commensalism: 1.5             # raised: SOLO tasks make commensalism reachable
+  w_competition: -1.5             # φ(-/-) — penalise mutual blocking
+  w_parasitism: -0.5              # φ(+/-) — penalise exploitation
+  sym_scale: 0.3
+  rel_alpha: 0.05
+  activity_bonus: 0.0
+  # Symbiotic shaping form. "raw" (default) is the legacy per-step typed
+  # bonus φ(rel)·δ/n_pairs. "pbrs" reformulates the same φ-table as
+  # potential-based shaping γΦ(s')-Φ(s); under Devlin & Kudenko (2011)
+  # this preserves the optimal joint-policy set exactly.
+  shaping_form: raw
+  shaping_gamma: null              # defaults to training.gamma when null
+
+logging:
+  checkpoint_dir: "runs/c3_hetero_pkgmix"
+  log_interval: 10
+  # Headline metric is `cycle_total = deliveries + returns` — both phases of
+  # the bidirectional package flow (outbound delivery + inbound restock).
+  checkpoint_every_episodes: 50
+  output: "runs/results/hetero_pkgmix_results.json"

@@ -1,0 +1,209 @@
+{
+  "tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1": {
+    "env": "tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1",
+    "mean_deliveries": 12.166666666666666,
+    "std_deliveries": 4.705198071164368,
+    "deliveries_curve": [
+      9.0,
+      20.0,
+      5.0,
+      11.0,
+      15.0,
+      13.0
+    ],
+    "deliveries_by_type_curve": [
+      {
+        "SOLO": 7,
+        "STANDARD": 0,
+        "HEAVY": 0,
+        "PICKER_SOLO": 2,
+        "LARGE": 0
+      },
+      {
+        "SOLO": 14,
+        "STANDARD": 3,
+        "HEAVY": 0,
+        "PICKER_SOLO": 3,
+        "LARGE": 0
+      },
+      {
+        "SOLO": 2,
+        "STANDARD": 1,
+        "HEAVY": 0,
+        "PICKER_SOLO": 2,
+        "LARGE": 0
+      },
+      {
+        "SOLO": 5,
+        "STANDARD": 2,
+        "HEAVY": 0,
+        "PICKER_SOLO": 4,
+        "LARGE": 0
+      },
+      {
+        "SOLO": 9,
+        "STANDARD": 0,
+        "HEAVY": 0,
+        "PICKER_SOLO": 6,
+        "LARGE": 0
+      },
+      {
+        "SOLO": 10,
+        "STANDARD": 3,
+        "HEAVY": 0,
+        "PICKER_SOLO": 0,
+        "LARGE": 0
+      }
+    ],
+    "mean_deliveries_by_type": {
+      "SOLO": 7.833333333333333,
+      "STANDARD": 1.5,
+      "HEAVY": 0.0,
+      "PICKER_SOLO": 2.8333333333333335,
+      "LARGE": 0.0
+    },
+    "std_deliveries_by_type": {
+      "SOLO": 3.8042374035044424,
+      "STANDARD": 1.2583057392117916,
+      "HEAVY": 0.0,
+      "PICKER_SOLO": 1.8633899812498247,
+      "LARGE": 0.0
+    },
+    "battery_mean_per_agent": [
+      56.23851331075033,
+      55.49811712900797,
+      62.34889793395996,
+      57.200408617655434,
+      55.644924799601235,
+      60.17731952667236
+    ],
+    "battery_end_mean_per_agent": [
+      56.20773696899414,
+      55.42351404825846,
+      62.285892168680824,
+      57.17437489827474,
+      55.63294760386149,
+      60.14961528778076
+    ],
+    "battery_mean_curve_per_episode": [
+      [
+        58.469451904296875,
+        35.94115447998047,
+        69.4925537109375,
+        24.628149032592773,
+        28.52914047241211,
+        87.6638412475586
+      ],
+      [
+        30.987224578857422,
+        16.29106330871582,
+        49.701961517333984,
+        49.63432312011719,
+        47.53018569946289,
+        35.032554626464844
+      ],
+      [
+        24.99835968017578,
+        53.60036087036133,
+        29.20635223388672,
+        71.52603912353516,
+        53.53654861450195,
+        32.02473831176758
+      ],
+      [
+        70.6151351928711,
+        98.52632141113281,
+        85.73078918457031,
+        52.935245513916016,
+        49.22769546508789,
+        22.160356521606445
+      ],
+      [
+        85.850830078125,
+        53.9650993347168,
+        74.15630340576172,
+        87.85399627685547,
+        57.77988052368164,
+        92.0945816040039
+      ],
+      [
+        66.51007843017578,
+        74.66470336914062,
+        65.80542755126953,
+        56.624698638916016,
+        97.26609802246094,
+        92.08784484863281
+      ]
+    ],
+    "battery_end_curve_per_episode": [
+      [
+        58.43408966064453,
+        35.87765884399414,
+        69.4907455444336,
+        24.617572784423828,
+        28.52592658996582,
+        87.6648178100586
+      ],
+      [
+        30.93593978881836,
+        16.005962371826172,
+        49.51264953613281,
+        49.61887741088867,
+        47.52592468261719,
+        34.94259262084961
+      ],
+      [
+        24.992481231689453,
+        53.598968505859375,
+        29.189207077026367,
+        71.51641845703125,
+        53.537498474121094,
+        32.01759338378906
+      ],
+      [
+        70.6128921508789,
+        98.4975357055664,
+        85.65927124023438,
+        52.87614822387695,
+        49.19629669189453,
+        22.12824058532715
+      ],
+      [
+        85.80944061279297,
+        53.94220733642578,
+        74.1255111694336,
+        87.85014343261719,
+        57.762962341308594,
+        92.06898498535156
+      ],
+      [
+        66.46157836914062,
+        74.6187515258789,
+        65.73796844482422,
+        56.56708908081055,
+        97.24907684326172,
+        92.0754623413086
+      ]
+    ],
+    "tsi": 0.8777055641015371,
+    "rsi": 1.0,
+    "n_episodes": 6,
+    "elapsed_sec": 30.2,
+    "per_seed_run_dirs": [
+      "runs/c3_hetero_heuristic-ok/tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1/heuristic/rule_seed7",
+      "runs/c3_hetero_heuristic-ok/tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1/heuristic/rule_seed42",
+      "runs/c3_hetero_heuristic-ok/tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1/heuristic/rule_seed123",
+      "runs/c3_hetero_heuristic-ok/tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1/heuristic/rule_seed2021",
+      "runs/c3_hetero_heuristic-ok/tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1/heuristic/rule_seed2022",
+      "runs/c3_hetero_heuristic-ok/tarware-small-4agvs-2pickers-partialobs-chg-pkgmix-v1/heuristic/rule_seed2023"
+    ],
+    "seeds": [
+      7,
+      42,
+      123,
+      2021,
+      2022,
+      2023
+    ]
+  }
+}

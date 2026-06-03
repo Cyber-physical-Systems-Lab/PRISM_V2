@@ -1,0 +1,690 @@
+{
+  "runs_dir": "runs/c3_hetero_pkgmix",
+  "output_dir": "runs/pubfigs/hetero_eval_figs",
+  "backend_filter": "all",
+  "throughput_source": "raw",
+  "resilience_source": "raw",
+  "resilience_results": "runs/results/hetero_resilience_eval.json",
+  "n_runs": 25,
+  "runs": [
+    {
+      "method": "symbiotic",
+      "backend": "hetppo",
+      "seed": "0",
+      "path": "runs/c3_hetero_pkgmix/symbiotic/hetppo_seed0",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "symbiotic",
+      "backend": "hetppo",
+      "seed": "1",
+      "path": "runs/c3_hetero_pkgmix/symbiotic/hetppo_seed1",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "symbiotic",
+      "backend": "hetppo",
+      "seed": "2",
+      "path": "runs/c3_hetero_pkgmix/symbiotic/hetppo_seed2",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "symbiotic",
+      "backend": "ippo",
+      "seed": "0",
+      "path": "runs/c3_hetero_pkgmix/symbiotic/ippo_seed0",
+      "n_eval_episodes": 3000
+    },
+    {
+      "method": "symbiotic",
+      "backend": "ippo",
+      "seed": "1",
+      "path": "runs/c3_hetero_pkgmix/symbiotic/ippo_seed1",
+      "n_eval_episodes": 3000
+    },
+    {
+      "method": "symbiotic",
+      "backend": "ippo",
+      "seed": "2",
+      "path": "runs/c3_hetero_pkgmix/symbiotic/ippo_seed2",
+      "n_eval_episodes": 3000
+    },
+    {
+      "method": "symbiotic",
+      "backend": "mappo",
+      "seed": "0",
+      "path": "runs/c3_hetero_pkgmix/symbiotic/mappo_seed0",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "team",
+      "backend": "hetppo",
+      "seed": "0",
+      "path": "runs/c3_hetero_pkgmix/team/hetppo_seed0",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "team",
+      "backend": "hetppo",
+      "seed": "1",
+      "path": "runs/c3_hetero_pkgmix/team/hetppo_seed1",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "team",
+      "backend": "hetppo",
+      "seed": "2",
+      "path": "runs/c3_hetero_pkgmix/team/hetppo_seed2",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "team",
+      "backend": "ippo",
+      "seed": "0",
+      "path": "runs/c3_hetero_pkgmix/team/ippo_seed0",
+      "n_eval_episodes": 2
+    },
+    {
+      "method": "team",
+      "backend": "ippo",
+      "seed": "1",
+      "path": "runs/c3_hetero_pkgmix/team/ippo_seed1",
+      "n_eval_episodes": 3000
+    },
+    {
+      "method": "team",
+      "backend": "ippo",
+      "seed": "2",
+      "path": "runs/c3_hetero_pkgmix/team/ippo_seed2",
+      "n_eval_episodes": 3000
+    },
+    {
+      "method": "team",
+      "backend": "mappo",
+      "seed": "0",
+      "path": "runs/c3_hetero_pkgmix/team/mappo_seed0",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "team",
+      "backend": "mappo",
+      "seed": "1",
+      "path": "runs/c3_hetero_pkgmix/team/mappo_seed1",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "team",
+      "backend": "mappo",
+      "seed": "2",
+      "path": "runs/c3_hetero_pkgmix/team/mappo_seed2",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "individual",
+      "backend": "hetppo",
+      "seed": "0",
+      "path": "runs/c3_hetero_pkgmix/individual/hetppo_seed0",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "individual",
+      "backend": "hetppo",
+      "seed": "1",
+      "path": "runs/c3_hetero_pkgmix/individual/hetppo_seed1",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "individual",
+      "backend": "hetppo",
+      "seed": "2",
+      "path": "runs/c3_hetero_pkgmix/individual/hetppo_seed2",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "individual",
+      "backend": "ippo",
+      "seed": "0",
+      "path": "runs/c3_hetero_pkgmix/individual/ippo_seed0",
+      "n_eval_episodes": 2
+    },
+    {
+      "method": "individual",
+      "backend": "ippo",
+      "seed": "1",
+      "path": "runs/c3_hetero_pkgmix/individual/ippo_seed1",
+      "n_eval_episodes": 3000
+    },
+    {
+      "method": "individual",
+      "backend": "ippo",
+      "seed": "2",
+      "path": "runs/c3_hetero_pkgmix/individual/ippo_seed2",
+      "n_eval_episodes": 3000
+    },
+    {
+      "method": "individual",
+      "backend": "mappo",
+      "seed": "0",
+      "path": "runs/c3_hetero_pkgmix/individual/mappo_seed0",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "individual",
+      "backend": "mappo",
+      "seed": "1",
+      "path": "runs/c3_hetero_pkgmix/individual/mappo_seed1",
+      "n_eval_episodes": 500
+    },
+    {
+      "method": "individual",
+      "backend": "mappo",
+      "seed": "2",
+      "path": "runs/c3_hetero_pkgmix/individual/mappo_seed2",
+      "n_eval_episodes": 500
+    }
+  ],
+  "throughput": {
+    "source": "raw eval_metrics.csv tail means (delivery rate)",
+    "raw": {
+      "symbiotic": {
+        "n_runs": 3,
+        "tail_episodes": 20,
+        "metric": "Deliveries per 1000 steps",
+        "mean_delivery_rate": 8.816666666666666,
+        "sd_delivery_rate": 3.0059662894539136,
+        "ci95_delivery_rate": 3.401571074926669,
+        "per_run_tail_means": [
+          8.15,
+          12.1,
+          6.2
+        ]
+      },
+      "team": {
+        "n_runs": 3,
+        "tail_episodes": 20,
+        "metric": "Deliveries per 1000 steps",
+        "mean_delivery_rate": 3.15,
+        "sd_delivery_rate": 2.177728174038257,
+        "ci95_delivery_rate": 2.464331417105527,
+        "per_run_tail_means": [
+          5.5,
+          2.75,
+          1.2
+        ]
+      },
+      "individual": {
+        "n_runs": 3,
+        "tail_episodes": 20,
+        "metric": "Deliveries per 1000 steps",
+        "mean_delivery_rate": 4.3,
+        "sd_delivery_rate": 1.502497920131672,
+        "ci95_delivery_rate": 1.7002364541439523,
+        "per_run_tail_means": [
+          6.0,
+          3.15,
+          3.75
+        ]
+      }
+    }
+  },
+  "relationships": {
+    "event_rate_note": "mutualism_events_per_step column absent; using deliveries/episode_steps as a delivery-event-rate proxy.",
+    "mutualism_events_per_step": {
+      "symbiotic": {
+        "n_runs": 3,
+        "n_episodes": 3000,
+        "tail100_mean": 0.008116666666666666,
+        "tail100_sd": 0.0026145235384928797
+      },
+      "team": {
+        "n_runs": 3,
+        "n_episodes": 3000,
+        "tail100_mean": 0.00191,
+        "tail100_sd": 0.0010889444430272832
+      },
+      "individual": {
+        "n_runs": 3,
+        "n_episodes": 3000,
+        "tail100_mean": 0.0028950000000000004,
+        "tail100_sd": 0.00036062445840513957
+      }
+    },
+    "mutualism_fraction_legacy": {
+      "symbiotic": {
+        "n_runs": 7,
+        "n_episodes": 3000,
+        "tail100_mean": 0.005230208333333319,
+        "tail100_sd": 0.0014212571038374196
+      },
+      "team": {
+        "n_runs": 9,
+        "n_episodes": 3000,
+        "tail100_mean": 0.000520249999999989,
+        "tail100_sd": 4.8436814511286924e-05
+      },
+      "individual": {
+        "n_runs": 9,
+        "n_episodes": 3000,
+        "tail100_mean": 0.00021724999999999598,
+        "tail100_sd": 0.00016935207409417532
+      }
+    }
+  },
+  "training_rewards": {
+    "symbiotic": {
+      "raw_reward": {
+        "n_runs": 7,
+        "n_episodes": 3000,
+        "tail_episodes": 20,
+        "tail_mean": 0.0029591908517962997,
+        "tail_sd": 0.005044265071322137,
+        "per_run_tail_means": [
+          0.00033947369198995077,
+          0.000562584697549515,
+          -0.0038463598172886007,
+          0.008142591048909808,
+          0.00811491809249092,
+          0.00812758750650945,
+          -0.0007264592575869451
+        ],
+        "global_min": -0.0079633781406761,
+        "global_max": 0.1839185855321048,
+        "nonzero_count": 11000,
+        "finite_count": 11000
+      },
+      "shaped_reward": {
+        "n_runs": 7,
+        "n_episodes": 3000,
+        "tail_episodes": 20,
+        "tail_mean": 0.0029591908517962997,
+        "tail_sd": 0.005044265071322137,
+        "per_run_tail_means": [
+          0.00033947369198995077,
+          0.000562584697549515,
+          -0.0038463598172886007,
+          0.008142591048909808,
+          0.00811491809249092,
+          0.00812758750650945,
+          -0.0007264592575869451
+        ],
+        "global_min": -0.0079633781406761,
+        "global_max": 0.5589185855321047,
+        "nonzero_count": 11000,
+        "finite_count": 11000
+      }
+    },
+    "team": {
+      "raw_reward": {
+        "n_runs": 9,
+        "n_episodes": 3000,
+        "tail_episodes": 20,
+        "tail_mean": -0.00141698087818478,
+        "tail_sd": 0.0018551820043039833,
+        "per_run_tail_means": [
+          -0.0026922077040032197,
+          -0.0029989453048762348,
+          -0.0013375213366758998,
+          0.0026899366569743,
+          -0.0026548843621929806,
+          -0.00151534736198477,
+          -0.003237796859972231,
+          -0.0005456952862459149,
+          -0.00046036634468606954
+        ],
+        "global_min": -0.0079633781406761,
+        "global_max": 0.3258564895630428,
+        "nonzero_count": 9002,
+        "finite_count": 9002
+      },
+      "shaped_reward": {
+        "n_runs": 9,
+        "n_episodes": 3000,
+        "tail_episodes": 20,
+        "tail_mean": -0.00141698087818478,
+        "tail_sd": 0.0018551820043039833,
+        "per_run_tail_means": [
+          -0.0026922077040032197,
+          -0.0029989453048762348,
+          -0.0013375213366758998,
+          0.0026899366569743,
+          -0.0026548843621929806,
+          -0.00151534736198477,
+          -0.003237796859972231,
+          -0.0005456952862459149,
+          -0.00046036634468606954
+        ],
+        "global_min": -0.0079633781406761,
+        "global_max": 0.3258564895630428,
+        "nonzero_count": 9002,
+        "finite_count": 9002
+      }
+    },
+    "individual": {
+      "raw_reward": {
+        "n_runs": 9,
+        "n_episodes": 3000,
+        "tail_episodes": 20,
+        "tail_mean": -0.001592859562733444,
+        "tail_sd": 0.002227626615205664,
+        "per_run_tail_means": [
+          -0.0028763443311891302,
+          -0.00256831604830489,
+          -0.0007642130974038401,
+          0.00380425730944815,
+          -0.00286408044363539,
+          -0.002836853610873865,
+          -0.0035847913068126846,
+          -0.0013814236145810346,
+          -0.0012639709212483093
+        ],
+        "global_min": -0.0079633781406761,
+        "global_max": 0.1605408530018974,
+        "nonzero_count": 9002,
+        "finite_count": 9002
+      },
+      "shaped_reward": {
+        "n_runs": 9,
+        "n_episodes": 3000,
+        "tail_episodes": 20,
+        "tail_mean": -0.001592859562733444,
+        "tail_sd": 0.002227626615205664,
+        "per_run_tail_means": [
+          -0.0028763443311891302,
+          -0.00256831604830489,
+          -0.0007642130974038401,
+          0.00380425730944815,
+          -0.00286408044363539,
+          -0.002836853610873865,
+          -0.0035847913068126846,
+          -0.0013814236145810346,
+          -0.0012639709212483093
+        ],
+        "global_min": -0.0079633781406761,
+        "global_max": 0.1605408530018974,
+        "nonzero_count": 9002,
+        "finite_count": 9002
+      }
+    }
+  },
+  "symbiotic_signal_proxy": {
+    "symbiotic": {
+      "effective_shaping_delta": {
+        "n_runs": 7,
+        "n_episodes": 3000,
+        "tail_episodes": 20,
+        "tail_mean": 0.0,
+        "tail_sd": 0.0,
+        "per_run_tail_means": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "global_min": 0.0,
+        "global_max": 0.3750000000000001,
+        "nonzero_count": 59,
+        "finite_count": 11000
+      },
+      "definition": "mean_shaped_reward - mean_raw_reward"
+    },
+    "team": {
+      "effective_shaping_delta": {
+        "n_runs": 9,
+        "n_episodes": 3000,
+        "tail_episodes": 20,
+        "tail_mean": 0.0,
+        "tail_sd": 0.0,
+        "per_run_tail_means": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "global_min": -1.0061396160665481e-16,
+        "global_max": 0.0,
+        "nonzero_count": 0,
+        "finite_count": 9002
+      },
+      "definition": "mean_shaped_reward - mean_raw_reward"
+    },
+    "individual": {
+      "effective_shaping_delta": {
+        "n_runs": 9,
+        "n_episodes": 3000,
+        "tail_episodes": 20,
+        "tail_mean": 0.0,
+        "tail_sd": 0.0,
+        "per_run_tail_means": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "global_min": 0.0,
+        "global_max": 0.0,
+        "nonzero_count": 0,
+        "finite_count": 9002
+      },
+      "definition": "mean_shaped_reward - mean_raw_reward"
+    },
+    "symbiotic_mutualism_overlay": {
+      "n_runs": 7,
+      "n_episodes": 3000,
+      "tail_episodes": 20,
+      "tail_mean": 0.002504107142857137,
+      "tail_sd": 0.003086089566024257,
+      "per_run_tail_means": [
+        6.375e-05,
+        8.500000000000003e-05,
+        0.00022062499999999998,
+        0.005024374999999985,
+        0.007386249999999994,
+        0.00459937499999999,
+        0.00014937499999999
+      ],
+      "global_min": 0.0,
+      "global_max": 0.01825,
+      "nonzero_count": 10881,
+      "finite_count": 11000
+    }
+  },
+  "cumulative_rewards": {
+    "symbiotic": {
+      "n_runs": 3,
+      "n_episodes": 3000,
+      "tail_episodes": 20,
+      "tail_mean": 8.128365549303394,
+      "tail_sd": 0.013852874870666726,
+      "per_run_tail_means": [
+        8.14259104890981,
+        8.114918092490921,
+        8.12758750650945
+      ],
+      "global_min": -3.7522160435877,
+      "global_max": 558.9185855321048,
+      "nonzero_count": 9000,
+      "finite_count": 9000
+    },
+    "team": {
+      "n_runs": 3,
+      "n_episodes": 3000,
+      "tail_episodes": 20,
+      "tail_mean": -0.49343168906781637,
+      "tail_sd": 2.815139723645715,
+      "per_run_tail_means": [
+        2.6899366569743,
+        -2.6548843621929796,
+        -1.5153473619847697
+      ],
+      "global_min": -7.9633781406761,
+      "global_max": 325.8564895630428,
+      "nonzero_count": 6002,
+      "finite_count": 6002
+    },
+    "individual": {
+      "n_runs": 3,
+      "n_episodes": 3000,
+      "tail_episodes": 20,
+      "tail_mean": -0.632225581687035,
+      "tail_sd": 3.842131004742936,
+      "per_run_tail_means": [
+        3.80425730944815,
+        -2.86408044363539,
+        -2.836853610873865
+      ],
+      "global_min": -7.9633781406761,
+      "global_max": 160.5408530018974,
+      "nonzero_count": 6002,
+      "finite_count": 6002
+    }
+  },
+  "specialisation": {
+    "symbiotic": {
+      "n_tsi": 7,
+      "n_rsi": 7,
+      "mean_tsi": 0.7574912139347622,
+      "mean_rsi": 0.4740934257406349,
+      "tsi_values": [
+        0.6748241782188416,
+        0.6895279884338379,
+        0.6916815638542175,
+        0.8531755805015564,
+        0.8109813332557678,
+        0.8489388823509216,
+        0.7333089709281921
+      ],
+      "rsi_values": [
+        0.35070140280561124,
+        0.2925851703406814,
+        0.23246492985971945,
+        0.7269089696565522,
+        0.5611870623541181,
+        0.7019006335445148,
+        0.4529058116232465
+      ]
+    },
+    "team": {
+      "n_tsi": 9,
+      "n_rsi": 9,
+      "mean_tsi": 0.8174544241693285,
+      "mean_rsi": 0.5219118909153195,
+      "tsi_values": [
+        0.827509343624115,
+        0.7845346927642822,
+        0.8293590545654297,
+        0.8349165916442871,
+        0.7976820468902588,
+        0.9377577304840088,
+        0.7783125042915344,
+        0.7707555294036865,
+        0.7962623238563538
+      ],
+      "rsi_values": [
+        0.533066132264529,
+        0.5410821643286573,
+        0.5811623246492986,
+        0.0,
+        0.46315438479493165,
+        0.8492830943647882,
+        0.5811623246492986,
+        0.5130260521042084,
+        0.6352705410821643
+      ]
+    },
+    "individual": {
+      "n_tsi": 9,
+      "n_rsi": 9,
+      "mean_tsi": 0.716391126314799,
+      "mean_rsi": 0.33468240619655826,
+      "tsi_values": [
+        0.683898389339447,
+        0.6895939707756042,
+        0.6734074950218201,
+        0.8438333868980408,
+        0.7052710056304932,
+        0.7582430839538574,
+        0.7141748070716858,
+        0.6985021233558655,
+        0.680595874786377
+      ],
+      "rsi_values": [
+        0.2985971943887776,
+        0.28857715430861725,
+        0.3687374749498998,
+        0.0,
+        0.3584528176058686,
+        0.3711237079026342,
+        0.49298597194388777,
+        0.4228456913827655,
+        0.41082164328657317
+      ]
+    }
+  },
+  "resilience": {
+    "source": "raw one-AGV-idle checkpoint evaluation: runs/results/hetero_resilience_eval.json",
+    "values": {
+      "symbiotic": {
+        "full": 0.6,
+        "full_ci95": 0.5987898908075632,
+        "failed": 0.06666666666666667,
+        "failed_ci95": 0.13066666666666668,
+        "drop_pct": 88.8888888888889,
+        "resilience_ratio": 0.11111111111111112,
+        "n_seeds": 3
+      },
+      "team": {
+        "full": 2.6,
+        "full_ci95": 1.8525197254910228,
+        "failed": 1.9333333333333333,
+        "failed_ci95": 1.8980429687209694,
+        "drop_pct": 25.641025641025642,
+        "resilience_ratio": 0.7435897435897436,
+        "n_seeds": 3
+      },
+      "individual": {
+        "full": 3.6666666666666665,
+        "full_ci95": 0.9146666666666663,
+        "failed": 3.6,
+        "failed_ci95": 0.5987898908075632,
+        "drop_pct": 1.818181818181812,
+        "resilience_ratio": 0.9818181818181819,
+        "n_seeds": 3
+      }
+    }
+  },
+  "package_breakdown": {
+    "status": "skipped",
+    "reason": "Not all discovered eval_metrics.csv files have deliveries_pkg_* columns; use a clean rerun directory or rerun training with the updated logger.",
+    "required_columns": [
+      "deliveries_pkg_SOLO",
+      "deliveries_pkg_STANDARD",
+      "deliveries_pkg_LARGE"
+    ],
+    "n_missing_runs": 25,
+    "missing_runs_sample": [
+      "runs/c3_hetero_pkgmix/symbiotic/hetppo_seed0",
+      "runs/c3_hetero_pkgmix/symbiotic/hetppo_seed1",
+      "runs/c3_hetero_pkgmix/symbiotic/hetppo_seed2",
+      "runs/c3_hetero_pkgmix/symbiotic/ippo_seed0",
+      "runs/c3_hetero_pkgmix/symbiotic/ippo_seed1",
+      "runs/c3_hetero_pkgmix/symbiotic/ippo_seed2",
+      "runs/c3_hetero_pkgmix/symbiotic/mappo_seed0",
+      "runs/c3_hetero_pkgmix/team/hetppo_seed0",
+      "runs/c3_hetero_pkgmix/team/hetppo_seed1",
+      "runs/c3_hetero_pkgmix/team/hetppo_seed2"
+    ]
+  }
+}

@@ -8,6 +8,22 @@ The project studies heterogeneous warehouse teams composed of AGV and picker
 agents, and evaluates whether reward decomposition can make cooperative
 multi-agent reinforcement learning produce stronger mutualistic behavior.
 
+## Abstract
+
+Heterogeneous multi-robot systems often require agents with different roles,
+capabilities, and resource constraints to coordinate around shared tasks. In
+warehouse automation, AGVs, pickers, package types, charging needs, and partial
+observability create coordination failures that are not captured by purely
+individual or purely team-level reward signals.
+
+PRISM introduces a symbiotic reward-shaping framework that decomposes task
+performance into relationship-aware components. The method measures and shapes
+inter-agent outcomes such as mutualism, commensalism, parasitism, and
+competition, then applies those signals inside IPPO and MAPPO training. In the
+packaged heterogeneous TA-RWARE experiments, PRISM improves delivery throughput,
+supports harder package types, and produces stronger mutualism proxies than
+flat-cooperative and task-only reward baselines.
+
 ## Key idea
 
 **We import *symbiosis* — the ecological theory of how unlike organisms live
@@ -63,24 +79,6 @@ gain.
 | **Deliveries / episode** (IPPO) | 19.7 ± 6.8 | 27.0 ± 4.3 | **44.2 ± 3.8** |
 | **Deliveries / episode** (MAPPO) | 21.1 ± 4.6 | 27.3 ± 3.5 | **36.2 ± 5.0** |
 | **Gain vs. rule-based heuristic** (avg.) | −25.8% (n.s.) | −1.5% (n.s.) | **+46.2%** |
-
-
-
-## Abstract
-
-Heterogeneous multi-robot systems often require agents with different roles,
-capabilities, and resource constraints to coordinate around shared tasks. In
-warehouse automation, AGVs, pickers, package types, charging needs, and partial
-observability create coordination failures that are not captured by purely
-individual or purely team-level reward signals.
-
-PRISM introduces a symbiotic reward-shaping framework that decomposes task
-performance into relationship-aware components. The method measures and shapes
-inter-agent outcomes such as mutualism, commensalism, parasitism, and
-competition, then applies those signals inside IPPO and MAPPO training. In the
-packaged heterogeneous TA-RWARE experiments, PRISM improves delivery throughput,
-supports harder package types, and produces stronger mutualism proxies than
-flat-cooperative and task-only reward baselines.
 
 ## Setup
 

@@ -1,8 +1,8 @@
-name: Build and Deploy Jekyll (al-folio)
+name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [ "gh-pages" ]
+    branches: [ "PRISM_V3", "main", "master" ]
   workflow_dispatch:
 
 permissions:
@@ -24,6 +24,9 @@ jobs:
         with:
           ruby-version: '3.2'
           bundler-cache: true
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
 
       # Ensure a clean, plugin-enabled install (no github-pages gem)
       - run: |

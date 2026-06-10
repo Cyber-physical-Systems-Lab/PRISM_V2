@@ -1,0 +1,475 @@
+---
+permalink: /
+title: PRISM
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PRISM</title>
+    <meta
+      name="description"
+      content="PRISM: Policy-shaping via Reward Decomposition for Inter-agent Symbiosis in Multi-Robot Cooperation."
+    >
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="container" id="main">
+      <section class="title-block" id="title">
+        <h1>PRISM: Policy-shaping via Reward Decomposition for Inter-agent Symbiosis</h1>
+
+        <ul class="author-list" aria-label="Authors">
+          <li>Xuezhi Niu<sup>1</sup></li>
+          <li>Didem Gurdur Broo<sup>1</sup></li>
+        </ul>
+
+        <p class="affiliation"><sup>1</sup>Cyber-physical Systems Lab, Department of Information Technology, Uppsala University</p>
+
+        <nav class="resource-nav two-links" aria-label="Project resources">
+          <a href="#" aria-label="Paper link placeholder">
+            <span class="paper-thumb" aria-hidden="true">
+              <span>PRISM</span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+            <strong>Paper</strong>
+          </a>
+          <a href="https://github.com/Cyber-physical-Systems-Lab/PRISM_V2">
+            <span class="github-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" role="img">
+                <path d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.63 5.47 7.7.4.08.55-.18.55-.39 0-.19-.01-.83-.01-1.51-2.01.38-2.53-.5-2.69-.96-.09-.24-.48-.96-.82-1.15-.28-.15-.68-.53-.01-.54.63-.01 1.08.59 1.23.83.72 1.23 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.2-3.64-.9-3.64-4.02 0-.89.31-1.62.82-2.19-.08-.2-.36-1.04.08-2.16 0 0 .67-.22 2.2.84A7.5 7.5 0 0 1 8 3.9c.68 0 1.36.09 2 .27 1.53-1.06 2.2-.84 2.2-.84.44 1.12.16 1.96.08 2.16.51.57.82 1.3.82 2.19 0 3.13-1.87 3.82-3.65 4.02.29.25.54.74.54 1.5 0 1.08-.01 1.95-.01 2.22 0 .21.15.47.55.39A8.02 8.02 0 0 0 16 8.13C16 3.64 12.42 0 8 0z"></path>
+              </svg>
+            </span>
+            <strong>Code</strong>
+          </a>
+        </nav>
+      </section>
+
+      <section class="paper-panel" id="abstract">
+        <h2>Abstract</h2>
+        <p>
+          Heterogeneous multi-robot warehouse systems require agents with
+          different roles, capabilities, and resource constraints to coordinate
+          around shared package-delivery tasks. PRISM introduces a symbiotic
+          reward-shaping framework that decomposes task performance into
+          relationship-aware components, measuring and shaping outcomes such as
+          mutualism, commensalism, parasitism, and competition. In battery-aware
+          TA-RWARE experiments with AGV and picker agents, PRISM improves
+          delivery throughput, supports harder package types, and produces
+          stronger mutualism proxies than flat-cooperative and task-only reward
+          baselines.
+        </p>
+        <figure class="figure-surface">
+          <img data-zoomable src="assets/figures/symbiosis.png" alt="PRISM symbiosis key idea">
+          <figcaption>
+            Ecological relationship types provide the organizing lens for
+            reward decomposition in heterogeneous warehouse cooperation.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="section key-idea" id="key-idea">
+        <h2>Key Idea</h2>
+        <p>
+          The central idea of introducing symbiosis into multi-robot cooperation
+          is to move beyond undifferentiated team rewards and explicitly model
+          how one robot changes another robot's task fitness. In heterogeneous
+          teams, cooperation is relational: an AGV and a Picker may depend on
+          each other because neither can complete a cross-role request alone.
+          PRISM captures these directed dependencies as symbiotic relationships
+          and converts them into policy-shaping signals, allowing agents to
+          learn when their actions enable or constrain complementary partners
+          without changing the original task objective.
+        </p>
+        <p>
+          Robots do not merely contribute separate pieces of work to a shared
+          score. Their actions can enable, delay, or constrain the progress of
+          specific teammates. An AGV can transport a package but may depend on
+          Picker support at the shelf, while a Picker can handle the item but
+          cannot complete a transport-dependent request alone.
+        </p>
+        <p class="key-sentence">
+          Complementary robots learn which interactions improve one another's
+          task progress, allowing the team to complete more cooperative requests
+          and achieve a higher overall outcome.
+        </p>
+        <div class="table-scroll">
+          <table class="key-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Task-only</th>
+                <th>Flat-cooperative</th>
+                <th>PRISM (symbiotic)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>What the reward is about</td>
+                <td>Each robot's own task output</td>
+                <td>One lumped team score</td>
+                <td>The relationship created by each action</td>
+              </tr>
+              <tr>
+                <td>View of cooperation</td>
+                <td>Robots contribute individually</td>
+                <td>Robots are rewarded when the team performs well</td>
+                <td>Robots learn how complementary actions enable one another</td>
+              </tr>
+              <tr>
+                <td>How higher outcomes emerge</td>
+                <td>Improve local task completion</td>
+                <td>Encourage broad team-level coordination</td>
+                <td>Reinforce the cross-role interactions needed to complete cooperative requests</td>
+              </tr>
+              <tr>
+                <td>Sees how an action affects teammates</td>
+                <td>No</td>
+                <td>No</td>
+                <td>Yes; per-pair and role-aware</td>
+              </tr>
+              <tr>
+                <td>Captures partner-specific dependencies</td>
+                <td>No</td>
+                <td>No</td>
+                <td>Yes; AGV-Picker and AGV-two-Picker coupling</td>
+              </tr>
+              <tr>
+                <td>Distinguishes relationship types</td>
+                <td>No</td>
+                <td>No</td>
+                <td>Yes; mutualism, commensalism, parasitism, antagonism, and neutrality</td>
+              </tr>
+              <tr>
+                <td>Relationship estimation</td>
+                <td>-</td>
+                <td>-</td>
+                <td>Estimated online from task and resource events</td>
+              </tr>
+              <tr>
+                <td>Deliveries / episode (IPPO)</td>
+                <td>19.7 +/- 6.8</td>
+                <td>27.0 +/- 4.3</td>
+                <td><strong>44.2 +/- 3.8</strong></td>
+              </tr>
+              <tr>
+                <td>Deliveries / episode (MAPPO)</td>
+                <td>21.1 +/- 4.6</td>
+                <td>27.3 +/- 3.5</td>
+                <td><strong>36.2 +/- 5.0</strong></td>
+              </tr>
+              <tr>
+                <td>Gain vs. rule-based heuristic (average)</td>
+                <td>-25.8% (n.s.)</td>
+                <td>-1.5% (n.s.)</td>
+                <td><strong>+46.2%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          PRISM improves cooperation by making hidden cross-role dependencies
+          explicit during learning. The benefit is strongest for requests that
+          require several complementary robots to coordinate, such as heavy
+          deliveries requiring one AGV and two Pickers.
+        </p>
+      </section>
+
+      <section class="section" id="method">
+        <h2>Method</h2>
+        <p>
+          The packaged experiments compare symbiotic shaping against
+          flat-cooperative and task-only reward conditions across IPPO and MAPPO.
+          Agents operate with partial observations, battery dynamics,
+          role-specific actions, charging behavior, and package-type
+          heterogeneity.
+        </p>
+
+        <figure>
+          <img data-zoomable src="assets/figures/web/methodology.webp?v=20260610" alt="PRISM methodology diagram">
+          <figcaption>
+            The methodology connects heterogeneous role dynamics, decomposed
+            reward terms, relationship classification, and policy optimization.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="section" id="results">
+        <h2>Results</h2>
+        <p>
+          These are the core quantitative and qualitative artifacts included in
+          this repository. The tables are derived from the compact summaries in
+          <code>runs/results/</code>.
+        </p>
+
+        <article class="result-block">
+          <h3>Delivery throughput</h3>
+          <p>
+            Following the paper's throughput comparison, values are deliveries
+            per episode, reported as mean and standard deviation over 18
+            learned-policy runs per reward condition and backbone. The
+            heuristic baseline uses six seeded no-restock episodes.
+          </p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Condition</th>
+                  <th>IPPO</th>
+                  <th>MAPPO</th>
+                  <th>vs. Heur.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>PRISM</td>
+                  <td><strong>44.2 &plusmn; 3.8</strong></td>
+                  <td><strong>36.2 &plusmn; 5.0</strong></td>
+                  <td><strong>+46.2%</strong></td>
+                </tr>
+                <tr>
+                  <td>Flat-coop.</td>
+                  <td>27.0 &plusmn; 4.3 **</td>
+                  <td>27.3 &plusmn; 3.5 **</td>
+                  <td>-1.5% ns</td>
+                </tr>
+                <tr>
+                  <td>Task-only</td>
+                  <td>19.7 &plusmn; 6.8 **</td>
+                  <td>21.1 &plusmn; 4.6 **</td>
+                  <td>-25.8% ns</td>
+                </tr>
+                <tr>
+                  <td>Heuristic</td>
+                  <td>27.5 &plusmn; 15.8</td>
+                  <td>27.5 &plusmn; 15.8</td>
+                  <td>&mdash;</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="result-note">
+            ** p &lt; 0.01 vs. PRISM within the same backbone; ns indicates not
+            significant. Averaged across backbones, PRISM reaches 40.2
+            deliveries per episode, improving over flat-cooperative reward by
+            48.3%, task-only reward by 97.1%, and the heuristic by 46.2%.
+          </p>
+          <figure>
+            <img data-zoomable src="assets/figures/web/fig2_throughput.webp" alt="Throughput comparison">
+            <figcaption>Throughput by backbone and package category.</figcaption>
+          </figure>
+        </article>
+
+        <article class="result-block">
+          <h3>Package-type delivery breakdown</h3>
+          <p>
+            PRISM improves total delivery counts and completes more standard and
+            heavy packages under both IPPO and MAPPO.
+          </p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Backend</th>
+                  <th>Reward condition</th>
+                  <th>Total</th>
+                  <th>SOLO</th>
+                  <th>PICKER_SOLO</th>
+                  <th>STANDARD</th>
+                  <th>HEAVY</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>IPPO</td>
+                  <td>PRISM</td>
+                  <td>44.23 +/- 2.50</td>
+                  <td>14.43</td>
+                  <td>6.38</td>
+                  <td>12.55</td>
+                  <td>10.86</td>
+                </tr>
+                <tr>
+                  <td>IPPO</td>
+                  <td>Flat-cooperative</td>
+                  <td>26.96 +/- 2.82</td>
+                  <td>8.77</td>
+                  <td>4.61</td>
+                  <td>7.25</td>
+                  <td>6.33</td>
+                </tr>
+                <tr>
+                  <td>IPPO</td>
+                  <td>Task-only</td>
+                  <td>19.72 +/- 4.42</td>
+                  <td>6.46</td>
+                  <td>3.89</td>
+                  <td>5.13</td>
+                  <td>4.24</td>
+                </tr>
+                <tr>
+                  <td>MAPPO</td>
+                  <td>PRISM</td>
+                  <td>36.24 +/- 3.29</td>
+                  <td>11.83</td>
+                  <td>5.61</td>
+                  <td>10.16</td>
+                  <td>8.63</td>
+                </tr>
+                <tr>
+                  <td>MAPPO</td>
+                  <td>Flat-cooperative</td>
+                  <td>27.28 +/- 2.27</td>
+                  <td>8.92</td>
+                  <td>4.66</td>
+                  <td>7.48</td>
+                  <td>6.23</td>
+                </tr>
+                <tr>
+                  <td>MAPPO</td>
+                  <td>Task-only</td>
+                  <td>21.14 +/- 3.00</td>
+                  <td>7.00</td>
+                  <td>4.01</td>
+                  <td>5.53</td>
+                  <td>4.60</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <figure>
+            <img data-zoomable src="assets/figures/web/fig5b_delivery_steps_energy_package_types.webp" alt="Delivery steps and package-type results">
+            <figcaption>Package-type and delivery-step analysis.</figcaption>
+          </figure>
+        </article>
+
+        <article class="result-block">
+          <h3>Cross-role coupling</h3>
+          <p>
+            PRISM produces clearer cross-role support patterns between AGVs
+            and pickers.
+          </p>
+          <figure>
+            <img data-zoomable src="assets/figures/web/fig7c_W_cross_role.webp" alt="Cross-role coupling">
+            <figcaption>Cross-role coupling between heterogeneous agents.</figcaption>
+          </figure>
+        </article>
+      </section>
+
+      <section class="section" id="rollouts">
+        <h2>Example Evaluation Rollout</h2>
+        <p>
+          PRISM IPPO evaluation rollout in the heterogeneous warehouse setting.
+          The compact artifact package includes learned-policy and heuristic
+          rollouts for qualitative inspection.
+        </p>
+        <div class="rollout-grid">
+          <figure class="gif-toggle">
+            <button class="gif-control" type="button" aria-label="Pause PRISM IPPO rollout">
+              <img src="assets/eval_gifs/prism_ippo_81deliveries_5000steps.gif" alt="PRISM IPPO rollout with 81 deliveries">
+              <canvas hidden></canvas>
+              <span class="gif-state" aria-hidden="true"></span>
+            </button>
+            <figcaption>PRISM IPPO, 81 deliveries</figcaption>
+          </figure>
+        </div>
+      </section>
+    </main>
+
+    <section class="container" id="bibtex">
+      <h2>BibTeX</h2>
+      <p>If you find this work useful in your research, please consider citing:</p>
+      <div class="bibtex-box">
+        <button id="copyButton" type="button">Copy</button>
+        <pre><code id="bibtexCode">@article{niu2026prism,
+  title   = {PRISM: Policy-shaping via Reward decomposition for Inter-agent Symbiosis in Multi-Robot Cooperation},
+  author  = {Niu, Xuezhi and Broo, Didem Gurdur},
+  journal = {xxxxx},
+  year    = {2026}
+}</code></pre>
+      </div>
+      <hr>
+    </section>
+
+    <div class="zoom-overlay" id="zoomOverlay" hidden>
+      <button class="zoom-close" type="button" aria-label="Close zoomed image">Close</button>
+      <img alt="" id="zoomImage">
+    </div>
+
+    <script>
+      const copyButton = document.getElementById("copyButton");
+      const bibtexCode = document.getElementById("bibtexCode");
+
+      copyButton.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(bibtexCode.innerText);
+        copyButton.innerText = "Copied";
+        setTimeout(() => {
+          copyButton.innerText = "Copy";
+        }, 1400);
+      });
+
+      document.querySelectorAll("[data-zoomable]").forEach((image) => {
+        image.addEventListener("click", () => {
+          const overlay = document.getElementById("zoomOverlay");
+          const zoomImage = document.getElementById("zoomImage");
+          zoomImage.src = image.src;
+          zoomImage.alt = image.alt;
+          overlay.hidden = false;
+          document.body.classList.add("zoom-open");
+        });
+      });
+
+      const closeZoom = () => {
+        const overlay = document.getElementById("zoomOverlay");
+        const zoomImage = document.getElementById("zoomImage");
+        overlay.hidden = true;
+        zoomImage.removeAttribute("src");
+        document.body.classList.remove("zoom-open");
+      };
+
+      document.getElementById("zoomOverlay").addEventListener("click", () => {
+        closeZoom();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !document.getElementById("zoomOverlay").hidden) {
+          closeZoom();
+        }
+      });
+
+      document.querySelectorAll(".gif-control").forEach((button) => {
+        const image = button.querySelector("img");
+        const canvas = button.querySelector("canvas");
+        const source = image.getAttribute("src");
+        let playing = true;
+
+        button.addEventListener("click", () => {
+          if (playing) {
+            const width = image.naturalWidth || image.clientWidth;
+            const height = image.naturalHeight || image.clientHeight;
+            canvas.width = width;
+            canvas.height = height;
+            canvas.getContext("2d").drawImage(image, 0, 0, width, height);
+            canvas.hidden = false;
+            image.hidden = true;
+            image.removeAttribute("src");
+            button.classList.add("is-paused");
+            button.setAttribute("aria-label", button.getAttribute("aria-label").replace("Pause", "Play"));
+            playing = false;
+          } else {
+            image.hidden = false;
+            canvas.hidden = true;
+            image.src = `${source}?t=${Date.now()}`;
+            button.classList.remove("is-paused");
+            button.setAttribute("aria-label", button.getAttribute("aria-label").replace("Play", "Pause"));
+            playing = true;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

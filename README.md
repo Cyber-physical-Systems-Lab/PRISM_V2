@@ -4,9 +4,9 @@ This repository contains source code and compact evaluation artifacts to support
 our paper *"PRISM: Policy-shaping via Reward Decomposition for Inter-agent
 Symbiosis in Multi-Robot Cooperation"*.
 
-The project studies heterogeneous warehouse teams composed of AGV and picker
-agents, and evaluates whether reward decomposition can make cooperative
-multi-agent reinforcement learning produce stronger mutualistic behavior.
+<p align="center">
+  <img width="500" alt="PRISM symbiosis key idea" src="ChatGPT Image 2026年5月29日 19_05_02.png" />
+</p>
 
 ## Abstract
 
